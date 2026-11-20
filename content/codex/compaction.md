@@ -82,6 +82,67 @@ Codex 的做法非常克制而有效：
 1. **平时只发增量 Diff（保 Prompt Cache）**：只要某板块没变化，后续轮次**一字不发**；只有当权限、目录、后台命令或工具发生变化时，才把变化的那一小段增量（按 `Prefix` 置顶 / `Mergeable` 合并 / `Standalone` 独立三种放置策略）追加给模型。
 2. **压缩时一键“去碎片化”**：跑了四五十轮后，旧窗口里往往散落着好几条过时的“切换目录 / 改权限 / 已结束的后台进程”增量；压缩时直接把这些历史碎片全丢掉，用此刻最新的 `WorldState` **重新全量渲染一份干净基线**放进新窗口，后续轮次再以这份新基线为起点继续做增量 Diff。
 
+### 5.3 实例演示：一次真实对话里 `WorldState` 长什么样？
+
+下面以一次真实排障会话的 4 个节点，直接看 Codex 实际喂给模型的 `WorldState` 内容（格式取自 Codex 真实渲染快照）：
+
+**① 第 1 轮（开新会话：全量渲染初始基线）**
+在你的第一句话之前，Codex 按不同角色注入当前完整世界状态：
+
+```xml
+<!-- role: developer（权限与审批策略） -->
+<permissions instructions>
+Read only.
+Ask for approval.
+</permissions instructions>
+
+<!-- role: user（环境上下文：目录、Shell、日期、网络策略） -->
+<environment_context>
+  <environments>
+    <environment id="laptop" primary="true">
+      <cwd>/repo</cwd>
+      <shell>zsh</shell>
+    </environment>
+  </environments>
+  <current_date>2026-06-19</current_date>
+  <network enabled="true"><allowed>api.internal.example</allowed></network>
+</environment_context>
+
+<!-- role: user（当前目录生效的仓库规范） -->
+# AGENTS.md instructions
+<INSTRUCTIONS>
+Run unit tests with pnpm test before finishing.
+</INSTRUCTIONS>
+```
+紧接着才是你的消息：`帮我排查登录接口 500 报错`。
+
+**② 第 2 轮（环境、权限、规范都没变）**
+- Codex 拿当前 `WorldState` 和上一轮基线比对：**全部一致 → 一字不发**，只追加你的新消息，前半段上下文 100% 命中服务端 Prompt Cache。
+
+**③ 第 3 轮（中途你放开了写入权限，并更新了 `AGENTS.md`）**
+- `WorldState` **只针对发生变化的两个板块**发送最小增量 Diff（未变化的 `cwd`、`shell` 不会重发）：
+
+```xml
+<!-- role: developer（仅权限变化，增量下发） -->
+<permissions instructions>
+Workspace write.
+Ask for approval.
+</permissions instructions>
+
+<!-- role: user（规范变化，显式声明替换旧规范） -->
+# AGENTS.md instructions
+<INSTRUCTIONS>
+These AGENTS.md instructions replace all previously provided AGENTS.md instructions.
+
+Run pnpm test and pnpm lint before finishing.
+</INSTRUCTIONS>
+```
+（如果某个旧环境断开或规范被删除，则会精准发一句 `<environment id="old" status="unavailable" />` 或 `The previously provided AGENTS.md instructions no longer apply.`，防止模型产生幻觉。）
+
+**④ 第 40 轮（触发压缩：弃旧碎片，重算干净基线）**
+- 前面几十轮散落在对话里的“只读权限 → 可写权限”、“旧版规范 → 新版规范”等历史增量碎片**全部丢弃**；
+- Codex 用第 40 轮此刻的最新状态，在新窗口顶部重新全量渲染出一份**唯一、无冲突、干净的 `<permissions>` + `<environment_context>` + `<INSTRUCTIONS>`**，作为新窗口的起点。
+
 ---
 
 ## 6. 原子替换与持久化一致性
