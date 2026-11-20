@@ -58,6 +58,66 @@ Codex 的做法非常克制而有效：
 5. **⑤ 挂起未处理输入（Pending Mail）精准归位**：
    - 压缩瞬间刚好到达、尚未回应的新输入不会被摘要吞掉；系统按原始历史序号重新排序去重，并把**压缩摘要精准插在这些未处理输入之前**，确保每条新输入既不会丢失、也不会重复出现两次。
 
+### 4.2 完整实例：压缩后发给大模型的实际消息序列长什么样？
+
+把上面五层拼在一起，压缩完成后下一轮真正发给大模型的消息数组大致如下（每块标明了对应层级）：
+
+```xml
+==================== ① 稳定前缀（置顶，保 Prompt Cache） ====================
+[role: developer / base_instructions]
+You are Codex, a coding agent...（核心系统提示词 + 工具规范，跨轮字节级不变）
+
+==================== ② 重新渲染的最新 World State ====================
+[role: developer]
+<permissions instructions>
+Workspace write.
+Ask for approval.
+</permissions instructions>
+
+[role: user]
+<environment_context>
+  <environments>
+    <environment id="laptop" primary="true">
+      <cwd>/repo</cwd>
+      <shell>zsh</shell>
+    </environment>
+  </environments>
+  <current_date>2026-06-19</current_date>
+  <network enabled="true"><allowed>api.internal.example</allowed></network>
+</environment_context>
+
+# AGENTS.md instructions
+<INSTRUCTIONS>
+Run pnpm test and pnpm lint before finishing.
+</INSTRUCTIONS>
+
+==================== ④ 跨窗口硬保留物（按预算原样保留） ====================
+[role: tool_output · retain_across_windows=true]（独立保留工具输出）
+name: "check_release_policy"
+output: "Production auth changes must keep backward compatibility with v1 JWT."
+
+[role: user]（近期真实用户消息，20K/64K 预算内原话保留）
+不要改数据库表结构，只修鉴权中间件，顺便把单测补齐。
+[媒体裁剪示意：早期上传的 2 张报错大图若超媒体预算或引用已失效，会替换为占位说明，不撑爆新窗口]
+
+==================== ③ 压缩摘要 / 服务端压缩态 ====================
+[role: user / compaction_summary]（本地摘要形态；远端 V2 则为服务端结构化 Compaction Item）
+Another language model started to solve this problem and produced a summary of its thinking process...
+- 根因定位：登录接口 500 源于 auth.ts 中过期 token 未捕获异常。
+- 已完成改动：已在 src/middleware/auth.ts 修复异常捕获，未触碰任何数据库表结构。
+- 待办：补充 auth.test.ts 单元测试并跑通 pnpm test。
+（注：之前 40 轮读 15 个文件、8 次冗长报错日志已全部丢弃）
+
+==================== ⑤ 挂起未处理输入（Pending Mail，置于摘要之后） ====================
+[role: user · history_sequence=89]
+对了，顺便把 token 过期的错误码统一改成 401。
+```
+
+> [!TIP] 看懂这个排序的巧妙之处
+> 1. **最上面是 ① 稳定前缀**：保证新窗口第一轮就吃满缓存；
+> 2. **中间是 ② 最新环境 + ④ 硬保留物 + ③ 压缩摘要**：模型既拿到此刻真实环境、又不丢失你亲口说的硬约束和关键上下文；
+> 3. **最末尾是 ⑤ 挂起未处理输入**：紧跟在压缩摘要之后，模型下一轮推理的注意力天然聚焦在“先回应你刚插进来的 401 错误码需求，再继续补单测”。
+
 ---
 
 ## 5. 深入理解：`WorldState` 里面到底装了什么？
