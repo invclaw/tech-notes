@@ -47,3 +47,19 @@ Chromium/Edge 渲染进程、UWP 应用以及 Codex 的现代 Windows 沙箱都�
 - **资源硬封顶**：可限制沙箱内最大活跃进程数（防 Fork 炸弹）、CPU 速率上限、以及单进程/全 Job 内存提交上限；
 - **防逃逸出 Job**：禁止子进程通过 `CREATE_BREAKAWAY_FROM_JOB` 脱离管控；
 - **关闭即全灭（`JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE`）**：只要 Agent 取消任务或父进程异常退出导致 Job 句柄关闭，Windows 内核会**原子级终止该 Job 下的全部子孙进程**，彻底杜绝残留僵尸后台进程。
+
+---
+
+## 5. 最小实践单元与 Agent 交互方式
+
+Windows 没有类似 `bwrap` 的单行 CLI，Agent 运行时（如 Codex Windows 沙箱）通过 Win32 API 按固定四步拉起一个最小受控子进程，并通过匿名管道（Anonymous Pipes）或 ConPTY 交互：
+
+```text
+1. CreateAppContainerProfile(...)       → 申请唯一 Package SID（默认全拒绝宿主机文件与网络）
+2. SetNamedSecurityInfo(workdir, SID)   → 仅给目标项目工作区目录 ACL 加上该 Package SID 的读写权限
+3. CreateJobObject + KILL_ON_JOB_CLOSE  → 创建资源限额与“关闭即全灭”作业对象
+4. CreateProcessW(PROC_THREAD_ATTRIBUTE_SECURITY_CAPABILITIES)
+   + AssignProcessToJobObject           → 挂起创建进程、绑入 Job 后恢复运行，经 ConPTY/管道收发输出
+```
+
+- **交互结果**：子进程默认无法读取 `Documents`、`~/.ssh` 等个人目录，未授 `internetClient` 能力时无法联网；任务取消时父进程关闭 Job 句柄，内核瞬间清理整棵子孙进程树。

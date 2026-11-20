@@ -30,3 +30,29 @@
 ### 2.2 Kata Containers（把每个容器装进轻量 VM）
 - **核心原理**：表面上完全遵守 OCI 容器标准（和 Docker / K8s 无缝对接），底层则利用硬件虚拟化（KVM）为每个 Pod/容器拉起一个独立的极简 Linux 内核。
 - **权衡**：隔离强度直接跃升到虚拟机级别，且 100% 兼容真实 Linux 内核行为；代价是宿主机必须支持硬件虚拟化（嵌套虚拟化的云服务器往往受限），且每个容器的内存底噪比普通容器更高。
+
+---
+
+## 3. 最小实践单元与 Agent 交互方式
+
+与进程级沙箱“每条命令现拉现毁”不同，容器沙箱（如 OpenClaw 默认 Docker 后端）通常采用**「长驻休眠容器 + `docker exec` 复用」**模式：先拉起一个最小权限加固容器，后续每轮工具调用都通过 `docker exec` 注入同一容器，文件工具则通过宿主机 Bind Mount 映射桥接：
+
+```bash
+# 1. 启动最小加固长驻容器（断网 + 只读根 + 限容内存盘 + 丢弃全部能力 + 禁提权）
+docker run -d --name agent-box \
+  --network none \
+  --read-only \
+  --tmpfs /tmp:size=256m \
+  --cap-drop ALL \
+  --security-opt no-new-privileges \
+  -v "$(pwd)":/workspace:ro \
+  debian:bookworm-slim sleep infinity
+
+# 2. Agent 每轮工具调用通过 exec 注入执行，管道拿 stdout/stderr/exitCode
+docker exec -w /workspace agent-box ls -la
+
+# 3. 空闲休眠或任务结束后销毁
+docker rm -f agent-box
+```
+
+- **交互特点**：多轮工具复用同一个容器省去反复拉起开销；若切换为 gVisor 强化容器，只需在 `docker run` 时追加 `--runtime=runsc`，上层 Agent 交互协议完全不变。

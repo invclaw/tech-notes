@@ -15,8 +15,14 @@
 | **L4 · 强化容器级** | gVisor（用户态内核）、Kata Containers | gVisor 拦截系统调用；Kata 独立内核 | 数百毫秒～2 秒 | 能（gVisor 少数偏门 syscall 不兼容） | K8s 多租户 Agent 集群、半信任代码执行 |
 | **L5 · MicroVM / 云端沙箱** | Firecracker、Cloud Hypervisor、Apple Virtualization | **完全独立内核（硬件虚拟化）** | 快照恢复百毫秒；冷启秒级 | 能（完整独立 OS） | **E2B**、**Modal**、**Daytona / Crabbox**（云端多租户 SaaS） |
 
+## Agent 如何与不同沙箱交互？
+
+不管底层是本机子进程、Docker 容器还是云端 MicroVM，对大模型来说看到的都是同一套工具语义（`exec` / `read` / `write` / `run_code`）。真正的变化发生在**控制面到沙箱之间的物理通信通道**——每一类沙箱在各自章节中都会给出最小可运行启动单元与交互细节：
+
+![Agent 与四类沙箱的底层交互链路对比](./assets/agent-sandbox-interaction.svg)
+
 ## 本专题结构导览
 
-- **[02 · 轻量派：进程级与语言级沙箱](#/agent-sandbox/process-and-runtime)**：拆解 Codex / Claude Code 使用的 Seatbelt、`bwrap` + Landlock 原理，以及 WASM / QuickJS 的边界；
-- **[03 · 均衡派：标准容器与强化容器](#/agent-sandbox/container-and-gvisor)**：拆解 Docker/Podman 的内核三板斧，以及 gVisor、Kata 怎么进一步堵住“共享内核”风险；
-- **[04 · 强隔离派：MicroVM、云端沙箱与选型指南](#/agent-sandbox/microvm-and-cloud)**：拆解 Firecracker 快照秒启、云端工作区同步策略，以及不同业务场景下的沙箱选型决策树。
+- **[02 · 轻量派：进程级与语言级沙箱](#/agent-sandbox/process-and-runtime)**：macOS Seatbelt、Linux `bwrap` + Landlock + Seccomp、Windows AppContainer + Job Object 的内核原理与最小单元；
+- **[03 · 均衡派：标准容器与强化容器](#/agent-sandbox/container-and-gvisor)**：Docker/Podman 内核加固、最小容器复用单元，以及 gVisor / Kata 如何解决共享内核风险；
+- **[04 · 强隔离派：MicroVM、E2B 与云端沙箱](#/agent-sandbox/microvm-and-cloud)**：E2B 与本地沙箱的本质差异、Firecracker 快照秒启、最小 SDK 单元与选型决策树。

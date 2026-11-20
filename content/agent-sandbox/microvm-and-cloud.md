@@ -52,3 +52,26 @@
 | **本机不想装 Docker，但控制面留本地** | **L5 · 云端租约机** | Crabbox（Daytona）/ OpenShell 远端 | 控制面与凭据留本机，不可信执行全甩给用完即弃的云机器 |
 | **公网多租户 Agent SaaS 平台** | **L4 强化容器 / L5 MicroVM** | **E2B** / Firecracker / Modal / Kata | 面对完全不可信的陌生用户代码，必须守住独立内核硬隔离底线 |
 | **纯脚本 / 数据处理 / 插件扩展** | **L1 · 语言运行时** | WASM / QuickJS / V8 Isolate | 微秒级启动、极低内存、能力白名单精确可控 |
+
+---
+
+## 4. 最小实践单元与 Agent 交互方式（以 E2B 为例）
+
+云端 MicroVM 沙箱不需要本机装 Docker，也不靠本地管道交互：Agent 运行时通过 SDK 向云端网关发 HTTPS/gRPC 请求，由运行在 MicroVM 内部的轻量守护进程（**`envd`**）完成文件写入、命令流式执行与状态保持：
+
+```ts
+import { Sandbox } from "e2b";
+
+// 1. 从预热快照创建独立内核 MicroVM（自带 TTL 超时防僵尸机）
+const sbx = await Sandbox.create({ timeoutMs: 300_000 });
+
+// 2. 通过 VM 内置 envd 守护进程读写文件与执行命令
+await sbx.files.write("/workspace/hello.py", "print(6 * 7)");
+const res = await sbx.commands.run("python3 /workspace/hello.py");
+console.log(res.stdout); // "42"
+
+// 3. 任务结束后立即销毁释放计费资源
+await sbx.kill();
+```
+
+- **交互特点**：整个过程不碰本机文件系统、不消耗本机 CPU；结果经 HTTPS/gRPC 流式回传给 Agent Loop，若沙箱内启动了 Web 服务，还可通过 `sbx.getHost(port)` 直接拿到云端公网预览地址。

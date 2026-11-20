@@ -54,3 +54,25 @@ Linux 没有像 macOS Seatbelt 那样一套规则包打天下的单层机制，�
 - **关键局限（为什么 Seccomp 不能替代 `bwrap` / Landlock）**：
   - Seccomp-BPF **只能检查寄存器里的整数值**（如系统调用号、`socket()` 的地址族参数），**不能安全解引用指针指向的文件路径字符串**——因为多线程程序可以在内核检查完路径后、真正打开文件前的瞬间把内存里的字符串改掉（经典的 **TOCTOU 竞态漏洞**）。
   - 因此在 Linux 沙箱的分工里：**视野与路径隔离交给 `bwrap` + Landlock，系统调用攻击面收敛交给 Seccomp-BPF**，三者严丝合缝。
+
+---
+
+## 4. 最小实践单元与 Agent 交互方式
+
+Agent 运行时在 Linux 上与 macOS 类似：每条命令现拉现毁，直接 `spawn("bwrap", [...mounts, "--unshare-all", ...cmd])`，通过 `stdin` / `stdout` / `stderr` 管道或 PTY 收集输出，宿主机文件直接通过挂载点映射，延迟仅几毫秒：
+
+```bash
+# 最小单元：无 root 挂只读系统目录、仅暴露当前项目目录、隐藏家目录并彻底断网
+bwrap \
+  --ro-bind /usr /usr \
+  --ro-bind /lib /lib \
+  --ro-bind /bin /bin \
+  --bind "$(pwd)" /workspace \
+  --tmpfs /tmp \
+  --proc /proc --dev /dev \
+  --unshare-all \
+  --chdir /workspace \
+  /bin/sh -c 'ls -la / && ls -la /workspace'
+```
+
+- **交互结果**：沙箱内看到的根目录只有显式挂载的 `/usr`、`/workspace`、`/tmp`，宿主机的 `~/.ssh` 与其他进程完全不可见；`--unshare-all` 同时断开网络与 PID 命名空间，命令退出后命名空间随进程自动销毁。

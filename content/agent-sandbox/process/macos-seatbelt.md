@@ -43,3 +43,22 @@ flowchart LR
   - 苹果把命令行工具 `sandbox-exec` 标为废弃（希望第三方 App 上架用官方 Entitlements），但**底层的 MAC 框架与 `Sandbox.kext` 仍是整个 macOS 安全的命脉**，短期内不可能移除；这也是 Codex 和 Claude Code 依然广泛依赖它的原因。
 - **符号链接与路径规范化坑**：
   - Seatbelt 按真实解析后的路径做匹配（例如 macOS 上 `/tmp` 实际是 `/private/tmp` 的软链、`/var` 是 `/private/var` 的软链），写策略时必须放行规范化后的真实路径，否则命令会莫名其妙报 `EPERM`。
+
+---
+
+## 4. 最小实践单元与 Agent 交互方式
+
+Agent 运行时在 macOS 上每次执行命令时，直接 `spawn("sandbox-exec", ["-p", profile, ...cmd])`，通过操作系统标准流管道（`stdin` / `stdout` / `stderr`）或 PTY 实时收发输出，无需常驻守护进程：
+
+```bash
+# 最小单元：允许读系统库与当前目录，仅允许写当前目录和 /private/tmp，彻底禁网
+sandbox-exec -p '
+(version 1)
+(deny default)
+(allow process-exec process-fork)
+(allow file-read*)
+(allow file-write* (subpath "/private/tmp") (subpath "'"$(pwd)"'"))
+' /bin/bash -c 'echo "ok" > ./demo.txt && curl -I https://example.com'
+```
+
+- **交互结果**：写当前目录 `demo.txt` 成功；`curl` 立刻被内核拦截失败（未放行 `network*`）；任何改写 `~/.ssh` 或桌面的尝试都会直接返回 `Operation not permitted`，退出码与输出通过管道回传给 Agent Loop。

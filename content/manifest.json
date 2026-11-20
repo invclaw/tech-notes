@@ -186,17 +186,8 @@
           "file": "agent-sandbox/microvm-and-cloud.md",
           "status": "done",
           "updatedAt": "2026-11-20",
-          "summary": "E2B 与本地沙箱的本质区别（独立内核 + 托管平台 + envd）、Firecracker 快照秒启、云端同步取舍与选型决策表。",
+          "summary": "E2B 与本地沙箱的本质区别（独立内核 + 托管平台 + envd）、Firecracker 快照秒启、最小 SDK 单元与选型决策表。",
           "tags": ["E2B", "Firecracker", "MicroVM", "选型指南"]
-        },
-        {
-          "slug": "hands-on-interaction",
-          "title": "05 · 实战：最小单元启动与 Agent 交互链路",
-          "file": "agent-sandbox/hands-on-interaction.md",
-          "status": "done",
-          "updatedAt": "2026-11-20",
-          "summary": "Agent 与四类沙箱的底层通信通道全景，以及 Seatbelt / bwrap / Docker / E2B 最小可运行启动示例。",
-          "tags": ["交互链路", "最小示例", "Seatbelt", "bwrap", "E2B"]
         }
       ]
     }
