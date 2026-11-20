@@ -33,4 +33,5 @@ python3 -m http.server 8080
 ## 当前已沉淀专题
 
 - **OpenClaw 架构设计解析**：项目全景、Agent Loop 三层嵌套循环与 Steer 机制、Session 与多 Agent 隔离、分层记忆与 Dreaming、安全模型与五大沙箱后端
-- **AI Agent 沙箱技术全景**：L1–L5 五级隔离谱系、三大操作系统（macOS Seatbelt / Linux bwrap+Landlock+Seccomp / Windows AppContainer+Job）内核原理、容器与 gVisor/Kata、MicroVM 与云端沙箱选型
+- **AI Agent 沙箱技术全景**：L1–L5 五级隔离谱系、三大操作系统（macOS Seatbelt / Linux bwrap+Landlock+Seccomp / Windows AppContainer+Job）内核原理、容器与 gVisor/Kata、MicroVM / E2B 与各沙箱最小实践单元
+- **Codex 架构设计解析**：Rust 四层解耦架构、Thread/Turn/Item 模型与双轨压缩、App-Server 与 Exec-Server 双服务边界、三端原生沙箱与 ExecPolicy / Guardian 审批治理

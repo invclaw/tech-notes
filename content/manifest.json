@@ -190,6 +190,51 @@
           "tags": ["E2B", "Firecracker", "MicroVM", "选型指南"]
         }
       ]
+    },
+    {
+      "id": "codex",
+      "name": "Codex 架构设计解析",
+      "status": "active",
+      "description": "OpenAI 开源 Rust Coding Agent（openai/codex）架构剖析：四层解耦设计、Thread/Turn/Item 领域模型、App-Server 与 Exec-Server 双服务边界、三端原生沙箱与 ExecPolicy/Guardian 治理。",
+      "tags": ["Coding Agent", "Rust", "App-Server", "Exec-Server", "Sandbox"],
+      "docs": [
+        {
+          "slug": "overview",
+          "title": "01 · 项目全景与四层架构",
+          "file": "codex/overview.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "为什么 Codex 是完整的工业级可嵌入 Agent 底座、四层解耦全景图，以及与 OpenClaw 的核心定位对比。",
+          "tags": ["架构全景", "Rust", "对比"]
+        },
+        {
+          "slug": "core-and-loop",
+          "title": "02 · Thread/Turn 模型、核心循环与压缩",
+          "file": "codex/core-and-loop.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "Thread/Turn/Item 三级领域模型、turn/steer 插话、本地与远端双轨压缩、以及 apply_patch/Code Mode/MCP 生态。",
+          "tags": ["Thread/Turn", "Compaction", "Code Mode", "MCP"]
+        },
+        {
+          "slug": "app-and-exec-server",
+          "title": "03 · App-Server 与 Exec-Server 双服务层",
+          "file": "codex/app-and-exec-server.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "App-Server JSON-RPC 协议与断线审批重放，以及 Exec-Server 如何实现本地/远端透明执行、Shell 快照复用与防软链文件访问。",
+          "tags": ["App-Server", "Exec-Server", "JSON-RPC"]
+        },
+        {
+          "slug": "security-and-approval",
+          "title": "04 · 三端沙箱、ExecPolicy 与 Guardian 审批",
+          "file": "codex/security-and-approval.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "三端原生进程沙箱与网络代理、ExecPolicy 命令规范化与托管人工检查点、Guardian 自动审查及 Worktree 隔离。",
+          "tags": ["Sandbox", "ExecPolicy", "Guardian", "Worktree"]
+        }
+      ]
     }
   ]
 }

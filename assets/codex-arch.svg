@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 460" width="980" height="460" role="img" aria-label="OpenAI Codex 四层架构全景图">
+  <defs>
+    <linearGradient id="cx-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <marker id="cx-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569"/>
+    </marker>
+    <filter id="cx-shadow" x="-3%" y="-6%" width="106%" height="116%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="460" rx="14" fill="url(#cx-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">OpenAI Codex 整体架构：四层解耦的 Rust Coding Agent 运行时</text>
+
+  <!-- Layer 1: Clients / Entrypoints -->
+  <g filter="url(#cx-shadow)">
+    <rect x="28" y="56" width="924" height="72" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4"/>
+    <rect x="28" y="56" width="146" height="72" rx="10" fill="#1e293b"/>
+    <rect x="162" y="56" width="12" height="72" fill="#1e293b"/>
+    <text x="101" y="88" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">接入与形态层</text>
+    <text x="101" y="108" text-anchor="middle" fill="#cbd5e1" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">多端统一协议</text>
+
+    <rect x="190" y="70" width="166" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="273" y="96" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="600">TUI 交互终端</text>
+
+    <rect x="372" y="70" width="166" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="455" y="96" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="600">Headless Exec CLI</text>
+
+    <rect x="554" y="70" width="184" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="646" y="96" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="600">IDE 插件 / 桌面 App</text>
+
+    <rect x="754" y="70" width="182" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="845" y="96" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="600">TS / Python SDK &amp; 宿主</text>
+  </g>
+
+  <line x1="490" y1="128" x2="490" y2="152" stroke="#475569" stroke-width="2" marker-end="url(#cx-arr)"/>
+
+  <!-- Layer 2: App-Server Protocol Layer -->
+  <g filter="url(#cx-shadow)">
+    <rect x="28" y="158" width="924" height="72" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.6"/>
+    <rect x="28" y="158" width="146" height="72" rx="10" fill="#2563eb"/>
+    <rect x="162" y="158" width="12" height="72" fill="#2563eb"/>
+    <text x="101" y="190" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">App-Server 层</text>
+    <text x="101" y="210" text-anchor="middle" fill="#dbeafe" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">JSON-RPC 服务协议</text>
+
+    <text x="196" y="186" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">Thread / Turn / Item 标准化会话协议 · 跨端可嵌入网关</text>
+    <text x="196" y="210" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5">线程分叉与回滚 · 流式搜索 · 运行中 turn/steer · 断线重连审批重放 · 账号隔离历史</text>
+  </g>
+
+  <line x1="490" y1="230" x2="490" y2="254" stroke="#475569" stroke-width="2" marker-end="url(#cx-arr)"/>
+
+  <!-- Layer 3: Core Agent Engine -->
+  <g filter="url(#cx-shadow)">
+    <rect x="28" y="260" width="924" height="86" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
+    <rect x="28" y="260" width="146" height="86" rx="10" fill="#0f766e"/>
+    <rect x="162" y="260" width="12" height="86" fill="#0f766e"/>
+    <text x="101" y="299" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">Core 引擎层</text>
+    <text x="101" y="319" text-anchor="middle" fill="#ccfbf1" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">推理与编排核心</text>
+
+    <rect x="190" y="274" width="234" height="58" rx="7" fill="#ffffff" stroke="#86efac"/>
+    <text x="204" y="296" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">Agent Loop &amp; 上下文压缩</text>
+    <text x="204" y="317" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">Responses API · 本地/远端压缩</text>
+
+    <rect x="438" y="274" width="244" height="58" rx="7" fill="#ffffff" stroke="#86efac"/>
+    <text x="452" y="296" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">工具与扩展生态</text>
+    <text x="452" y="317" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">apply_patch · Code Mode · MCP · Skills</text>
+
+    <rect x="696" y="274" width="240" height="58" rx="7" fill="#ffffff" stroke="#86efac"/>
+    <text x="710" y="296" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">状态、记忆与多 Agent</text>
+    <text x="710" y="317" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">Rollout · 线程记忆 · Worktree · 角色图</text>
+  </g>
+
+  <line x1="490" y1="346" x2="490" y2="370" stroke="#475569" stroke-width="2" marker-end="url(#cx-arr)"/>
+
+  <!-- Layer 4: Exec-Server & Sandbox / Policy -->
+  <g filter="url(#cx-shadow)">
+    <rect x="28" y="376" width="924" height="68" rx="10" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.6"/>
+    <rect x="28" y="376" width="146" height="68" rx="10" fill="#7c3aed"/>
+    <rect x="162" y="376" width="12" height="68" fill="#7c3aed"/>
+    <text x="101" y="406" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">执行与安全层</text>
+    <text x="101" y="425" text-anchor="middle" fill="#ede9fe" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">Exec-Server + 沙箱</text>
+
+    <rect x="190" y="388" width="234" height="44" rx="7" fill="#ffffff" stroke="#c4b5fd"/>
+    <text x="307" y="414" text-anchor="middle" fill="#4c1d95" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="600">Exec-Server（本地/远端 + 快照）</text>
+
+    <rect x="438" y="388" width="244" height="44" rx="7" fill="#ffffff" stroke="#c4b5fd"/>
+    <text x="560" y="414" text-anchor="middle" fill="#4c1d95" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="600">三端原生进程沙箱 + 网络代理</text>
+
+    <rect x="696" y="388" width="240" height="44" rx="7" fill="#ffffff" stroke="#c4b5fd"/>
+    <text x="816" y="414" text-anchor="middle" fill="#4c1d95" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="600">ExecPolicy 规则 + Guardian 审批</text>
+  </g>
+</svg>
