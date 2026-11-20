@@ -1,0 +1,195 @@
+{
+  "site": {
+    "title": "Tech Notes",
+    "subtitle": "项目源码与架构设计知识库"
+  },
+  "home": "home.md",
+  "projects": [
+    {
+      "id": "openclaw",
+      "name": "OpenClaw 架构设计解析",
+      "status": "active",
+      "description": "多渠道本地 AI 控制面（openclaw/openclaw）的架构原理剖析：单控制面网关、Agent 执行循环与终止/插话机制、多 Agent 隔离、分层防投毒记忆与三层正交安全及沙箱架构。",
+      "tags": ["AI Gateway", "Agent Loop", "Memory", "Sandbox"],
+      "docs": [
+        {
+          "slug": "overview",
+          "title": "01 · 项目全景与分层架构",
+          "file": "openclaw/overview.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "单机单 Gateway 控制面设计、通信协议不变量、统一调度与两段式关停、核心与生态扩展解耦。",
+          "tags": ["架构全景", "Gateway", "控制面"]
+        },
+        {
+          "slug": "agent-loop",
+          "title": "02 · Agent Loop 与 Context Engine",
+          "file": "openclaw/agent-loop.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "单 Turn 执行管线、三层嵌套循环与终止判定、Steer 运行中插话协同、双层 Hook 与可插拔上下文引擎。",
+          "tags": ["Agent Loop", "Steer", "Turn 终止", "Context Engine"]
+        },
+        {
+          "slug": "sessions-and-agents",
+          "title": "03 · Session 路由与多 Agent 隔离",
+          "file": "openclaw/sessions-and-agents.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "多入口会话路由与隐私隔离、多 Agent 三件套物理隔离、创建者归属与有界团队协作。",
+          "tags": ["Session", "Multi-Agent", "路由隔离"]
+        },
+        {
+          "slug": "memory",
+          "title": "04 · 分层记忆架构总览",
+          "file": "openclaw/memory/index.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "无黑盒透明存储原则、记忆全景图与六类记忆载体速览（下设 4.1 ～ 4.3 三个子页面）。",
+          "tags": ["Memory", "架构总览"],
+          "children": [
+            {
+              "slug": "memory/storage-and-types",
+              "title": "4.1 六类记忆载体与编排",
+              "file": "openclaw/memory/storage-and-types.md",
+              "status": "done",
+              "updatedAt": "2026-11-20",
+              "summary": "逐一拆解指令层、长期事实、用户偏好、情景日志、前瞻意图与审阅层的物理位置、具体文件与编排格式。",
+              "tags": ["MEMORY.md", "USER.md", "AGENTS.md"]
+            },
+            {
+              "slug": "memory/updates-and-dreaming",
+              "title": "4.2 更新、冲突覆盖与 Dreaming",
+              "file": "openclaw/memory/updates-and-dreaming.md",
+              "status": "done",
+              "updatedAt": "2026-11-20",
+              "summary": "写入频率、压缩前预刷写、新旧事实合并与覆盖淘汰、乐观并发、Dreaming 三阶段及按会话血缘删除。",
+              "tags": ["Dreaming", "覆盖更新", "记忆删除"]
+            },
+            {
+              "slug": "memory/recall-and-security",
+              "title": "4.3 双车道召回与防投毒边界",
+              "file": "openclaw/memory/recall-and-security.md",
+              "status": "done",
+              "updatedAt": "2026-11-20",
+              "summary": "零延迟车道 1 vs 深度召回车道 2、多仓库项目作用域隔离、不可伪造血缘与三条防污染铁律。",
+              "tags": ["双车道召回", "项目隔离", "防投毒"]
+            }
+          ]
+        },
+        {
+          "slug": "security",
+          "title": "05 · 安全模型与沙箱总览",
+          "file": "openclaw/security/index.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "控制面与执行面分离、三层正交安全模型与沙箱全景图（下设 5.1 ～ 5.3 三个子页面）。",
+          "tags": ["Security", "Sandbox"],
+          "children": [
+            {
+              "slug": "security/sandbox-backends",
+              "title": "5.1 沙箱选型与五大后端对比",
+              "file": "openclaw/security/sandbox-backends.md",
+              "status": "done",
+              "updatedAt": "2026-11-20",
+              "summary": "拆解默认策略、Docker / Podman / SSH / OpenShell / Crabbox 五大后端，以及与 Codex / Claude Code / MicroVM 的横向对比。",
+              "tags": ["Docker", "Podman", "OpenShell", "Crabbox"]
+            },
+            {
+              "slug": "security/sandbox-internals",
+              "title": "5.2 沙箱底层隔离原理与生命周期",
+              "file": "openclaw/security/sandbox-internals.md",
+              "status": "done",
+              "updatedAt": "2026-11-20",
+              "summary": "断网、只读根与限容 tmpfs、剥离内核能力、工作区三级挂载、文件系统桥接防逃逸、Scope 复用与 15 分钟空闲休眠。",
+              "tags": ["隔离原理", "tmpfs", "FsBridge", "生命周期"]
+            },
+            {
+              "slug": "security/policy-and-defense",
+              "title": "5.3 工具策略、提权边界与纵深防御",
+              "file": "openclaw/security/policy-and-defense.md",
+              "status": "done",
+              "updatedAt": "2026-11-20",
+              "summary": "五层 Tool Policy 叠加与两个经典安全误区、Elevated 逃生阀硬边界、DM 配对与设备挑战签名认证。",
+              "tags": ["Tool Policy", "Elevated", "纵深防御"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "agent-sandbox",
+      "name": "AI Agent 沙箱技术全景",
+      "status": "done",
+      "description": "横向梳理主流 AI Agent 沙箱的五级隔离谱系：从 WASM / QuickJS、macOS Seatbelt 与 Linux bwrap，到 Docker / Podman、gVisor / Kata，再到 Firecracker MicroVM 与云端沙箱的底层原理与选型指南。",
+      "tags": ["Sandbox", "bwrap", "Docker", "gVisor", "Firecracker"],
+      "docs": [
+        {
+          "slug": "overview",
+          "title": "01 · 沙箱五级隔离谱系总览",
+          "file": "agent-sandbox/overview.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "为什么 Agent 必须有沙箱，以及 L1 语言运行时到 L5 MicroVM 五级隔离谱系的全景对比。",
+          "tags": ["隔离谱系", "全景对比"]
+        },
+        {
+          "slug": "process-and-runtime",
+          "title": "02 · 轻量派：进程级与语言级沙箱",
+          "file": "agent-sandbox/process/index.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "三大 OS 内核拦截链路全景对比与 WASM/QuickJS 语言级沙箱（下设 2.1 ～ 2.3 三个内核原理子页）。",
+          "tags": ["Seatbelt", "bwrap", "AppContainer", "WASM"],
+          "children": [
+            {
+              "slug": "process/macos-seatbelt",
+              "title": "2.1 macOS Seatbelt 内核原理",
+              "file": "agent-sandbox/process/macos-seatbelt.md",
+              "status": "done",
+              "updatedAt": "2026-11-20",
+              "summary": "XNU TrustedBSD MAC 框架、SBPL 编译为内核字节码、ucred 不可撤销遗传及本地代理与软链踩坑。",
+              "tags": ["macOS", "Seatbelt", "MAC"]
+            },
+            {
+              "slug": "process/linux-bwrap-landlock",
+              "title": "2.2 Linux bwrap + Landlock + Seccomp",
+              "file": "agent-sandbox/process/linux-bwrap-landlock.md",
+              "status": "done",
+              "updatedAt": "2026-11-20",
+              "summary": "非特权 UserNS + pivot_root 原理、Landlock 按 inode 不可撤销锁目录、Seccomp-BPF 局限与 Ubuntu AppArmor 坑。",
+              "tags": ["Linux", "bwrap", "Landlock", "Seccomp"]
+            },
+            {
+              "slug": "process/windows-sandbox",
+              "title": "2.3 Windows 令牌、AppContainer 与 Job",
+              "file": "agent-sandbox/process/windows-sandbox.md",
+              "status": "done",
+              "updatedAt": "2026-11-20",
+              "summary": "内核 SRM 访问控制模型、Restricted Token 双重校验、AppContainer 默认全拒绝与 Job Object 全树清理。",
+              "tags": ["Windows", "AppContainer", "Job Object"]
+            }
+          ]
+        },
+        {
+          "slug": "container-and-gvisor",
+          "title": "03 · 均衡派：标准容器与强化容器",
+          "file": "agent-sandbox/container-and-gvisor.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "Docker / Podman 的 Namespace + cgroups + 最小权限加固，以及 gVisor 用户态内核与 Kata Containers 如何解决共享内核风险。",
+          "tags": ["Docker", "Podman", "gVisor", "Kata"]
+        },
+        {
+          "slug": "microvm-and-cloud",
+          "title": "04 · 强隔离派：MicroVM、云端沙箱与选型",
+          "file": "agent-sandbox/microvm-and-cloud.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "Firecracker 极简设备模型与快照秒启、云端沙箱工作区同步与租约治理，以及不同业务形态的沙箱选型决策表。",
+          "tags": ["Firecracker", "E2B", "MicroVM", "选型指南"]
+        }
+      ]
+    }
+  ]
+}

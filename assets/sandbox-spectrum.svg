@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 420" width="980" height="420" role="img" aria-label="AI Agent 沙箱五级隔离谱系图">
+  <defs>
+    <linearGradient id="sp-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <linearGradient id="sp-bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="35%" stop-color="#3b82f6"/>
+      <stop offset="70%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+    <filter id="sp-shadow" x="-3%" y="-6%" width="106%" height="118%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="420" rx="14" fill="url(#sp-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">AI Agent 沙箱五级隔离谱系：从轻量极速到强隔离独立内核</text>
+
+  <!-- Spectrum Axis -->
+  <rect x="36" y="54" width="908" height="10" rx="5" fill="url(#sp-bar)"/>
+  <text x="36" y="82" fill="#059669" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">← 启动更快 · 零镜像 · 复用本机环境</text>
+  <text x="944" y="82" text-anchor="end" fill="#b91c1c" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">隔离更强 · 独立内核 · 适合多租户不可信代码 →</text>
+
+  <!-- 5 Cards -->
+  <!-- Card 1 -->
+  <g filter="url(#sp-shadow)">
+    <rect x="24" y="100" width="176" height="292" rx="10" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.6"/>
+    <rect x="24" y="100" width="176" height="32" rx="10" fill="#059669"/>
+    <rect x="24" y="120" width="176" height="12" fill="#059669"/>
+    <text x="112" y="121" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">L1 · 语言/运行时</text>
+    <text x="36" y="154" fill="#065f46" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">代表技术</text>
+    <text x="36" y="173" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">WASM · QuickJS</text>
+    <text x="36" y="190" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">V8 Isolate · Pyodide</text>
+    <text x="36" y="218" fill="#065f46" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">隔离边界</text>
+    <text x="36" y="237" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">内存与宿主 API 白名单</text>
+    <text x="36" y="265" fill="#065f46" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">启动耗时</text>
+    <text x="36" y="284" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">微秒 ～ 几毫秒</text>
+    <text x="36" y="312" fill="#065f46" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">典型场景</text>
+    <text x="36" y="331" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">纯脚本 / Code Mode</text>
+    <text x="36" y="348" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">不能跑通用 Linux CLI</text>
+    <text x="36" y="376" fill="#059669" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="600">共享宿主机进程/内核</text>
+  </g>
+
+  <!-- Card 2 -->
+  <g filter="url(#sp-shadow)">
+    <rect x="213" y="100" width="176" height="292" rx="10" fill="#ffffff" stroke="#93c5fd" stroke-width="1.6"/>
+    <rect x="213" y="100" width="176" height="32" rx="10" fill="#2563eb"/>
+    <rect x="213" y="120" width="176" height="12" fill="#2563eb"/>
+    <text x="301" y="121" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">L2 · OS 进程级</text>
+    <text x="225" y="154" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">代表技术</text>
+    <text x="225" y="173" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">macOS Seatbelt</text>
+    <text x="225" y="190" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">Linux bwrap + Landlock</text>
+    <text x="225" y="218" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">隔离边界</text>
+    <text x="225" y="237" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">单条子进程目录/网络罩</text>
+    <text x="225" y="265" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">启动耗时</text>
+    <text x="225" y="284" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">几毫秒 ～ 数十毫秒</text>
+    <text x="225" y="312" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">典型代表</text>
+    <text x="225" y="331" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">Codex · Claude Code</text>
+    <text x="225" y="348" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">单人本机写代码最优</text>
+    <text x="225" y="376" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="600">共享宿主机用户态/内核</text>
+  </g>
+
+  <!-- Card 3 -->
+  <g filter="url(#sp-shadow)">
+    <rect x="402" y="100" width="176" height="292" rx="10" fill="#ffffff" stroke="#a5b4fc" stroke-width="1.6"/>
+    <rect x="402" y="100" width="176" height="32" rx="10" fill="#4f46e5"/>
+    <rect x="402" y="120" width="176" height="12" fill="#4f46e5"/>
+    <text x="490" y="121" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">L3 · 标准容器级</text>
+    <text x="414" y="154" fill="#312e81" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">代表技术</text>
+    <text x="414" y="173" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">Docker · Podman</text>
+    <text x="414" y="190" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">Namespace + cgroups</text>
+    <text x="414" y="218" fill="#312e81" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">隔离边界</text>
+    <text x="414" y="237" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">独立根文件系统 + 网络栈</text>
+    <text x="414" y="265" fill="#312e81" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">启动耗时</text>
+    <text x="414" y="284" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">百毫秒 ～ 1 秒</text>
+    <text x="414" y="312" fill="#312e81" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">典型代表</text>
+    <text x="414" y="331" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">OpenClaw 默认后端</text>
+    <text x="414" y="348" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">多渠道 / 多访客隔离</text>
+    <text x="414" y="376" fill="#4f46e5" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="600">独立用户态 · 共享内核</text>
+  </g>
+
+  <!-- Card 4 -->
+  <g filter="url(#sp-shadow)">
+    <rect x="591" y="100" width="176" height="292" rx="10" fill="#ffffff" stroke="#c4b5fd" stroke-width="1.6"/>
+    <rect x="591" y="100" width="176" height="32" rx="10" fill="#7c3aed"/>
+    <rect x="591" y="120" width="176" height="12" fill="#7c3aed"/>
+    <text x="679" y="121" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">L4 · 强化容器级</text>
+    <text x="603" y="154" fill="#4c1d95" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">代表技术</text>
+    <text x="603" y="173" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">gVisor (用户态内核)</text>
+    <text x="603" y="190" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">Kata Containers</text>
+    <text x="603" y="218" fill="#4c1d95" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">隔离边界</text>
+    <text x="603" y="237" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">拦截系统调用 / 容器级 VM</text>
+    <text x="603" y="265" fill="#4c1d95" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">启动耗时</text>
+    <text x="603" y="284" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">数百毫秒 ～ 2 秒</text>
+    <text x="603" y="312" fill="#4c1d95" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">典型场景</text>
+    <text x="603" y="331" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">K8s 多租户 Agent 集群</text>
+    <text x="603" y="348" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">缩小内核攻击面</text>
+    <text x="603" y="376" fill="#7c3aed" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="600">用户态内核 / 轻量虚拟化</text>
+  </g>
+
+  <!-- Card 5 -->
+  <g filter="url(#sp-shadow)">
+    <rect x="780" y="100" width="176" height="292" rx="10" fill="#ffffff" stroke="#fca5a5" stroke-width="1.6"/>
+    <rect x="780" y="100" width="176" height="32" rx="10" fill="#dc2626"/>
+    <rect x="780" y="120" width="176" height="12" fill="#dc2626"/>
+    <text x="868" y="121" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">L5 · MicroVM / 云机</text>
+    <text x="792" y="154" fill="#7f1d1d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">代表技术</text>
+    <text x="792" y="173" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">Firecracker · QEMU</text>
+    <text x="792" y="190" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">Apple Virtualization</text>
+    <text x="792" y="218" fill="#7f1d1d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">隔离边界</text>
+    <text x="792" y="237" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">硬件虚拟化 · 独立内核</text>
+    <text x="792" y="265" fill="#7f1d1d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">启动耗时</text>
+    <text x="792" y="284" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">快照百毫秒 / 冷启秒级</text>
+    <text x="792" y="312" fill="#7f1d1d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">典型代表</text>
+    <text x="792" y="331" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">E2B · Modal · Daytona</text>
+    <text x="792" y="348" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">云端 SaaS / 不可信代码</text>
+    <text x="792" y="376" fill="#dc2626" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="600">最强隔离 · 硬件级边界</text>
+  </g>
+</svg>

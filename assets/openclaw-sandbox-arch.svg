@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 500" width="980" height="500" role="img" aria-label="OpenClaw 沙箱边界、五大后端与底层隔离原理架构图">
+  <defs>
+    <linearGradient id="sb-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <marker id="sb-arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+    <marker id="sb-arr-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#7c3aed"/>
+    </marker>
+    <filter id="sb-shadow" x="-3%" y="-5%" width="106%" height="114%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="500" rx="14" fill="url(#sb-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">OpenClaw 沙箱架构：可信宿主机控制面 vs 不可信隔离执行域</text>
+
+  <!-- Left: Trusted Host Control Plane -->
+  <g filter="url(#sb-shadow)">
+    <rect x="24" y="56" width="290" height="418" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+    <rect x="24" y="56" width="290" height="32" rx="12" fill="#2563eb"/>
+    <rect x="24" y="76" width="290" height="12" fill="#2563eb"/>
+    <text x="169" y="77" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">宿主机可信区（永不进沙箱）</text>
+
+    <rect x="40" y="102" width="258" height="74" rx="8" fill="#ffffff" stroke="#93c5fd"/>
+    <text x="54" y="124" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">Gateway 控制面 &amp; Agent Loop</text>
+    <text x="54" y="144" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 会话状态、路由与原生插件</text>
+    <text x="54" y="162" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 模型 API Key / GitHub 托管凭据</text>
+
+    <rect x="40" y="190" width="258" height="82" rx="8" fill="#ffffff" stroke="#93c5fd"/>
+    <text x="54" y="212" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">Tool Policy 策略闸门</text>
+    <text x="54" y="232" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 全局 + 沙箱二次工具过滤</text>
+    <text x="54" y="250" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 角色强制沙盒（不可被 Elevated 绕过）</text>
+
+    <rect x="40" y="286" width="258" height="86" rx="8" fill="#ffffff" stroke="#93c5fd"/>
+    <text x="54" y="308" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">受控桥接层（Bridge）</text>
+    <text x="54" y="328" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 命令转发（docker / ssh / crabbox）</text>
+    <text x="54" y="346" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 文件桥接（校验真实挂载 + 防软链逃逸）</text>
+
+    <rect x="40" y="386" width="258" height="72" rx="8" fill="#fef3c7" stroke="#f59e0b"/>
+    <text x="54" y="408" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">生命周期管家</text>
+    <text x="54" y="428" fill="#78350f" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• Scope 复用（agent / session / shared）</text>
+    <text x="54" y="446" fill="#78350f" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 15 分钟空闲休眠 · 过期回收 · 访客撤销即停</text>
+  </g>
+
+  <!-- Bridge Arrows -->
+  <line x1="314" y1="168" x2="366" y2="168" stroke="#2563eb" stroke-width="2.2" marker-end="url(#sb-arr-blue)"/>
+  <text x="340" y="156" text-anchor="middle" fill="#1d4ed8" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="600">仅工具</text>
+  <line x1="314" y1="330" x2="366" y2="330" stroke="#7c3aed" stroke-width="2.2" marker-end="url(#sb-arr-purple)"/>
+  <text x="340" y="318" text-anchor="middle" fill="#6d28d9" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="600">隔离执行</text>
+
+  <!-- Right: Untrusted Sandbox Execution Zone -->
+  <g filter="url(#sb-shadow)">
+    <rect x="374" y="56" width="582" height="418" rx="12" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.8" stroke-dasharray="6 4"/>
+    <rect x="374" y="56" width="582" height="32" rx="12" fill="#7c3aed"/>
+    <rect x="374" y="76" width="582" height="12" fill="#7c3aed"/>
+    <text x="665" y="77" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">沙箱不可信执行域（exec / ls / read / write / edit / process / 沙箱浏览器）</text>
+  </g>
+
+  <!-- Top Right: 5 Pluggable Backends -->
+  <text x="394" y="114" fill="#5b21b6" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">一、五大可插拔沙箱后端（按部署形态自由切换）</text>
+
+  <g filter="url(#sb-shadow)">
+    <rect x="392" y="126" width="174" height="106" rx="8" fill="#ffffff" stroke="#c4b5fd" stroke-width="1.4"/>
+    <text x="404" y="147" fill="#1e293b" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">Docker / Podman</text>
+    <text x="404" y="166" fill="#7c3aed" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="600">默认本地容器隔离</text>
+    <text x="404" y="186" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• Linux 命名空间 + cgroups</text>
+    <text x="404" y="203" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• Docker 另支持沙箱浏览器</text>
+    <text x="404" y="220" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• 支持只读/读写挂载与 GPU</text>
+  </g>
+
+  <g filter="url(#sb-shadow)">
+    <rect x="578" y="126" width="174" height="106" rx="8" fill="#ffffff" stroke="#c4b5fd" stroke-width="1.4"/>
+    <text x="590" y="147" fill="#1e293b" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">SSH / OpenShell</text>
+    <text x="590" y="166" fill="#0f766e" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="600">远端主机 / 托管沙箱</text>
+    <text x="590" y="186" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• SSH 卸载到独立远端机</text>
+    <text x="590" y="203" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• OpenShell 托管容器/虚拟化</text>
+    <text x="590" y="220" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• 支持 Mirror 双向 / Remote</text>
+  </g>
+
+  <g filter="url(#sb-shadow)">
+    <rect x="764" y="126" width="174" height="106" rx="8" fill="#ffffff" stroke="#c4b5fd" stroke-width="1.4"/>
+    <text x="776" y="147" fill="#1e293b" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">Crabbox 云端租约</text>
+    <text x="776" y="166" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="600">一次性云机器（如 Daytona）</text>
+    <text x="776" y="186" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• 网关留本地、工具跑云端</text>
+    <text x="776" y="203" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• 固定租约 ID 防重复开机</text>
+    <text x="776" y="220" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• TTL + 空闲超时双上限</text>
+  </g>
+
+  <!-- Bottom Right: 4-Layer Underlying Hardening -->
+  <text x="394" y="264" fill="#5b21b6" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">二、底层四重硬隔离防线（以默认 Docker/Podman 容器为例）</text>
+
+  <g filter="url(#sb-shadow)">
+    <rect x="392" y="276" width="264" height="82" rx="8" fill="#ffffff" stroke="#fca5a5"/>
+    <text x="406" y="298" fill="#991b1b" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">1. 默认彻底断网（network: none）</text>
+    <text x="406" y="318" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 容器无公网/内网出口，防数据外传与反弹 Shell</text>
+    <text x="406" y="336" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 仅显式配置网络策略时才放开出站</text>
+  </g>
+
+  <g filter="url(#sb-shadow)">
+    <rect x="674" y="276" width="264" height="82" rx="8" fill="#ffffff" stroke="#fca5a5"/>
+    <text x="688" y="298" fill="#991b1b" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">2. 只读根文件系统 + 限容 tmpfs</text>
+    <text x="688" y="318" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 系统根路径只读，防持久化篡改镜像</text>
+    <text x="688" y="336" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 临时目录内存盘严格封顶（防写爆宿主机）</text>
+  </g>
+
+  <g filter="url(#sb-shadow)">
+    <rect x="392" y="372" width="264" height="84" rx="8" fill="#ffffff" stroke="#93c5fd"/>
+    <text x="406" y="394" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">3. 剥离全部内核能力 + 禁提权</text>
+    <text x="406" y="414" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 丢弃全部 Linux Capabilities，开启禁止提权位</text>
+    <text x="406" y="432" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 内置 init 回收僵尸进程，对齐宿主机 UID/GID</text>
+  </g>
+
+  <g filter="url(#sb-shadow)">
+    <rect x="674" y="372" width="264" height="84" rx="8" fill="#ffffff" stroke="#93c5fd"/>
+    <text x="688" y="394" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">4. 工作区三级可见性（none / ro / rw）</text>
+    <text x="688" y="414" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• none：仅私有沙箱目录；ro：只读挂 /agent</text>
+    <text x="688" y="432" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 访客强制沙盒硬性封顶 ro，禁止改写共享工作区</text>
+  </g>
+</svg>
