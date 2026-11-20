@@ -1,0 +1,69 @@
+name: Deploy Tech Notes
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-tech-notes
+  cancel-in-progress: false
+
+jobs:
+  validate-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate manifest JSON and JS syntax
+        run: |
+          python3 -m json.tool content/manifest.json > /dev/null
+          node --check assets/app.js
+          python3 - <<'PY'
+          import json, pathlib, sys
+          manifest = json.loads(pathlib.Path("content/manifest.json").read_text(encoding="utf-8"))
+          missing = []
+          def check(docs):
+            for d in docs or []:
+              p = pathlib.Path("content") / d["file"]
+              if not p.is_file():
+                missing.append(str(p))
+              check(d.get("children"))
+          for proj in manifest.get("projects", []):
+            check(proj.get("docs"))
+          if missing:
+            print("Missing markdown files referenced by manifest.json:", missing, file=sys.stderr)
+            sys.exit(1)
+          print("All manifest references verified.")
+          PY
+
+      - name: Deploy static site via rsync over SSH
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${DEPLOY_HOST}" ] || [ -z "${DEPLOY_USER}" ] || [ -z "${DEPLOY_PATH}" ] || [ -z "${DEPLOY_SSH_KEY}" ]; then
+            echo "Missing required deploy secrets (DEPLOY_HOST, DEPLOY_USER, DEPLOY_PATH, DEPLOY_SSH_KEY)." >&2
+            exit 1
+          fi
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "${DEPLOY_SSH_KEY}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          rsync -az --delete \
+            --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new -o BatchMode=yes" \
+            index.html assets content vendor \
+            "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/"
+          rm -f ~/.ssh/deploy_key
+
+      - name: Verify live site
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          curl -fsS --max-time 15 "http://${DEPLOY_HOST}:8080/content/manifest.json" > /dev/null
+          echo "Live site verified: HTTP 200"
