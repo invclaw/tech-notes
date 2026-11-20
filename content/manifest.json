@@ -213,8 +213,19 @@
           "file": "codex/core-and-loop.md",
           "status": "done",
           "updatedAt": "2026-11-20",
-          "summary": "Thread/Turn/Item 三级领域模型、turn/steer 插话、本地与远端双轨压缩、以及 apply_patch/Code Mode/MCP 生态。",
-          "tags": ["Thread/Turn", "Compaction", "Code Mode", "MCP"]
+          "summary": "Thread/Turn/Item 三级领域模型、turn/steer 插话、双轨压缩总览，以及 apply_patch/Code Mode/MCP 生态（下设 2.1 压缩机制专题）。",
+          "tags": ["Thread/Turn", "Compaction", "Code Mode", "MCP"],
+          "children": [
+            {
+              "slug": "core/compaction",
+              "title": "2.1 上下文压缩机制深度解析",
+              "file": "codex/compaction.md",
+              "status": "done",
+              "updatedAt": "2026-11-20",
+              "summary": "三条压缩路线（远端 V2 / 本地摘要 / 预算重置）、后台投机预压缩、溢出自救与新窗口五层重建机制。",
+              "tags": ["Compaction", "Remote V2", "投机预压"]
+            }
+          ]
         },
         {
           "slug": "app-and-exec-server",
