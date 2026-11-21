@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 440" width="980" height="440" role="img" aria-label="Set-of-Mark (SoM) 视觉标号完整实现流水线图">
+  <defs>
+    <linearGradient id="som-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <marker id="som-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+    <filter id="som-shadow" x="-3%" y="-5%" width="106%" height="114%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="440" rx="14" fill="url(#som-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">Set-of-Mark（SoM）视觉标号原理：把“猜像素坐标”降维成“数字选择题”</text>
+
+  <!-- Step 1: Webpage with SoM boxes illustration -->
+  <g filter="url(#som-shadow)">
+    <rect x="24" y="58" width="290" height="232" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+    <rect x="24" y="58" width="290" height="26" rx="10" fill="#e2e8f0"/>
+    <rect x="24" y="74" width="290" height="10" fill="#e2e8f0"/>
+    <circle cx="40" cy="71" r="4" fill="#ef4444"/>
+    <circle cx="54" cy="71" r="4" fill="#f59e0b"/>
+    <circle cx="68" cy="71" r="4" fill="#22c55e"/>
+    <text x="175" y="75" text-anchor="middle" fill="#475569" font-family="Menlo,monospace" font-size="10.5">admin.example.com</text>
+
+    <!-- Mock UI elements with SoM bounding boxes -->
+    <!-- Input 1 -->
+    <rect x="44" y="106" width="250" height="32" rx="5" fill="#f8fafc" stroke="#2563eb" stroke-width="1.8" stroke-dasharray="4 2"/>
+    <text x="54" y="126" fill="#64748b" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5">alice@example.com</text>
+    <rect x="36" y="96" width="22" height="16" rx="3" fill="#2563eb"/>
+    <text x="47" y="108" text-anchor="middle" fill="#ffffff" font-family="Menlo,monospace" font-size="10.5" font-weight="700">1</text>
+
+    <!-- Input 2 -->
+    <rect x="44" y="156" width="250" height="32" rx="5" fill="#f8fafc" stroke="#16a34a" stroke-width="1.8" stroke-dasharray="4 2"/>
+    <text x="54" y="176" fill="#64748b" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5">••••••••</text>
+    <rect x="36" y="146" width="22" height="16" rx="3" fill="#16a34a"/>
+    <text x="47" y="158" text-anchor="middle" fill="#ffffff" font-family="Menlo,monospace" font-size="10.5" font-weight="700">2</text>
+
+    <!-- Button 3 -->
+    <rect x="44" y="210" width="130" height="34" rx="6" fill="#eff6ff" stroke="#dc2626" stroke-width="2"/>
+    <text x="109" y="231" text-anchor="middle" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">立即登录</text>
+    <rect x="36" y="200" width="22" height="16" rx="3" fill="#dc2626"/>
+    <text x="47" y="212" text-anchor="middle" fill="#ffffff" font-family="Menlo,monospace" font-size="10.5" font-weight="700">3</text>
+
+    <!-- Icon button 4 -->
+    <rect x="200" y="210" width="94" height="34" rx="6" fill="#f8fafc" stroke="#7c3aed" stroke-width="1.8"/>
+    <text x="247" y="231" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">忘记密码</text>
+    <rect x="192" y="200" width="22" height="16" rx="3" fill="#7c3aed"/>
+    <text x="203" y="212" text-anchor="middle" fill="#ffffff" font-family="Menlo,monospace" font-size="10.5" font-weight="700">4</text>
+
+    <text x="169" y="274" text-anchor="middle" fill="#64748b" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">截完图立刻移除覆盖层，不干扰页面</text>
+  </g>
+
+  <!-- Arrow 1 -> 2 -->
+  <line x1="314" y1="174" x2="352" y2="174" stroke="#2563eb" stroke-width="2" marker-end="url(#som-arr)"/>
+
+  <!-- Step 2: Runtime Map + VLM -->
+  <g filter="url(#som-shadow)">
+    <rect x="360" y="58" width="286" height="106" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="376" y="80" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">运行时内存映射表（不需模型猜坐标）</text>
+    <text x="376" y="102" fill="#334155" font-family="Menlo,monospace" font-size="10.8">[1] → input#email   (169, 122)</text>
+    <text x="376" y="121" fill="#334155" font-family="Menlo,monospace" font-size="10.8">[2] → input#pwd     (169, 172)</text>
+    <text x="376" y="140" fill="#dc2626" font-family="Menlo,monospace" font-size="10.8" font-weight="700">[3] → button.login  (109, 227)</text>
+  </g>
+
+  <g filter="url(#som-shadow)">
+    <rect x="360" y="182" width="286" height="108" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.6"/>
+    <text x="376" y="204" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">多模态大模型（只做“选编号”）</text>
+    <text x="376" y="226" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 输入：带红/蓝标号的截图 + 简短编号表</text>
+    <text x="376" y="246" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 输出极简：click(mark_id = 3)</text>
+    <text x="376" y="268" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">✓ 彻底规避像素坐标偏移，准确率大幅提升</text>
+  </g>
+
+  <!-- Arrow 2 -> 3 -->
+  <line x1="646" y1="236" x2="684" y2="236" stroke="#2563eb" stroke-width="2" marker-end="url(#som-arr)"/>
+
+  <!-- Step 3: Lookup & Execute -->
+  <g filter="url(#som-shadow)">
+    <rect x="692" y="58" width="264" height="232" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
+    <rect x="692" y="58" width="264" height="32" rx="10" fill="#0f766e"/>
+    <rect x="692" y="78" width="264" height="12" fill="#0f766e"/>
+    <text x="824" y="79" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">查表还原 &amp; 精准执行</text>
+
+    <text x="708" y="114" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">1. 查表取真实目标</text>
+    <text x="708" y="134" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">mark_id=3 → button.login (109, 227)</text>
+
+    <text x="708" y="168" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">2. 经 CDP / Playwright 点击</text>
+    <text x="708" y="188" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">触发原生 Input.dispatchMouseEvent</text>
+    <text x="708" y="206" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">（或直接调 Playwright locator.click）</text>
+
+    <text x="708" y="242" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">3. 下一帧重新打标</text>
+    <text x="708" y="262" fill="#0f766e" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">页面变化后重新扫描，旧编号自动作废</text>
+  </g>
+
+  <!-- Bottom Bar: Two Bounding-Box Sources -->
+  <g filter="url(#som-shadow)">
+    <rect x="24" y="312" width="932" height="104" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.4"/>
+    <text x="42" y="336" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">框是怎么找出来的？两种框选来源</text>
+
+    <rect x="42" y="348" width="440" height="54" rx="7" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="56" y="368" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">来源 A：浏览器 DOM 探针（Browser Use 主流）</text>
+    <text x="56" y="388" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">扫描可交互标签 → getBoundingClientRect 取框 → elementFromPoint 剔除被遮挡元素</text>
+
+    <rect x="500" y="348" width="438" height="54" rx="7" fill="#faf5ff" stroke="#c4b5fd"/>
+    <text x="514" y="368" fill="#4c1d95" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">来源 B：本地视觉检测模型（无 DOM 场景，如 OmniParser）</text>
+    <text x="514" y="388" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">用轻量 YOLO/图标检测模型 + OCR 直接从截图像素框出按钮，再画标号</text>
+  </g>
+</svg>

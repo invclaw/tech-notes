@@ -437,6 +437,15 @@
               "updatedAt": "2026-11-21",
               "summary": "CDP 到底是什么、真实 JSON-RPC 报文示例、Playwright 解决了哪些脏活，以及为何全面取代 Selenium。",
               "tags": ["CDP", "Playwright", "WebSocket"]
+            },
+            {
+              "slug": "browser-use/set-of-mark",
+              "title": "2.2 Set-of-Mark（SoM）视觉标号原理",
+              "file": "gui-automation/set-of-mark.md",
+              "status": "done",
+              "updatedAt": "2026-11-21",
+              "summary": "截图标号到底怎么画上去的？从 DOM 探针与遮挡剔除、覆盖层/离屏绘制、内存映射到查表点击的完整 5 步拆解。",
+              "tags": ["SoM", "视觉定位", "OmniParser"]
             }
           ]
         },
