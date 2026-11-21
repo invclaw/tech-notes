@@ -241,6 +241,41 @@
     els.sidebarNav.querySelectorAll('a').forEach((a) => {
       a.addEventListener('click', closeMobileSidebar);
     });
+
+    syncSidebarActive(route, true);
+  }
+
+  function syncSidebarActive(route, instant = false) {
+    const targetHash = route ? `#/${route}` : '#/';
+    let activeEl = null;
+
+    els.sidebarNav.querySelectorAll('a.nav-home-link, a.nav-doc-link').forEach((a) => {
+      const isMatch = a.getAttribute('href') === targetHash;
+      a.classList.toggle('active', isMatch);
+      if (isMatch) activeEl = a;
+    });
+
+    if (!activeEl) return;
+
+    // Auto-expand collapsed ancestor chapter & project
+    let node = activeEl.parentElement;
+    while (node && node !== els.sidebarNav) {
+      if (node.classList.contains('collapsed')) {
+        node.classList.remove('collapsed');
+      }
+      node = node.parentElement;
+    }
+
+    // Smoothly scroll active item into view if outside the visible sidebar viewport
+    const navRect = els.sidebarNav.getBoundingClientRect();
+    const itemRect = activeEl.getBoundingClientRect();
+    const margin = 24;
+    if (itemRect.top < navRect.top + margin || itemRect.bottom > navRect.bottom - margin) {
+      activeEl.scrollIntoView({
+        block: 'center',
+        behavior: instant ? 'auto' : 'smooth',
+      });
+    }
   }
 
   function getCurrentRoute() {
@@ -459,7 +494,7 @@
     if (!state.manifest) return;
     const route = getCurrentRoute();
     state.currentRoute = route;
-    renderSidebar();
+    syncSidebarActive(route);
 
     els.docContainer.innerHTML = '<div class="loading-state">正在加载…</div>';
     window.scrollTo({ top: 0 });

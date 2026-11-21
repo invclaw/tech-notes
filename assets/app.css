@@ -328,7 +328,12 @@ a:hover { text-decoration: underline; }
   line-height: 1.4;
 }
 .nav-doc-link:hover { background: var(--bg-hover); color: var(--text); text-decoration: none; }
-.nav-doc-link.active { background: var(--bg-active); color: var(--accent-text); font-weight: 600; }
+.nav-doc-link.active {
+  background: var(--bg-active);
+  color: var(--accent-text);
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--accent);
+}
 
 .nav-doc-row {
   display: flex;
