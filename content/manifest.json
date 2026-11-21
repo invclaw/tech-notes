@@ -191,6 +191,52 @@
       ]
     },
     {
+      "id": "opencode",
+      "category": "主流 Agent 解析",
+      "name": "OpenCode 架构设计解析",
+      "status": "active",
+      "description": "开源、模型无关的 AI Coding Agent（anomalyco/opencode v2）架构剖析：Client/Server 分离、Effect-TS 门铃协调器与预写恢复、四级渐进降采样压缩、通配符权限引擎与隐藏 Git 快照时光机。",
+      "tags": ["Coding Agent", "Effect-TS", "Compaction", "Snapshot", "Permission"],
+      "docs": [
+        {
+          "slug": "overview",
+          "title": "01 · 项目全景与三强架构对比",
+          "file": "opencode/overview.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "OpenCode v2 的 Client/Server + Effect-TS 架构全景图，以及 OpenClaw / Codex / OpenCode 三大主流 Agent 全维度横评。",
+          "tags": ["架构全景", "三强对比", "Effect-TS"]
+        },
+        {
+          "slug": "loop-and-compaction",
+          "title": "02 · 执行循环、门铃模型与上下文压缩",
+          "file": "opencode/loop-and-compaction.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "单 Fiber 门铃协调器（Doorbell）、Write-Ahead Claim 崩溃恢复、后台预计算压缩与四级渐进降采样机制。",
+          "tags": ["Agent Loop", "Doorbell", "Compaction"]
+        },
+        {
+          "slug": "agents-and-permissions",
+          "title": "03 · 多 Agent、权限引擎与快照回滚",
+          "file": "opencode/agents-and-permissions.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "build/plan/@general 角色分工、跨机器隔离通配符权限引擎、无人值守收敛，以及隐藏 Git 快照时光机与无沙箱边界对比。",
+          "tags": ["Permission", "Snapshot", "Multi-Agent"]
+        },
+        {
+          "slug": "server-and-ecosystem",
+          "title": "04 · 服务端协议、Code Mode 与插件生态",
+          "file": "opencode/server-and-ecosystem.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "HTTP/SSE Server 与多端接入、Location 抽象、process-daemon 与持久化 PTY、Code Mode 后台任务及 MCP/插件生态。",
+          "tags": ["Server", "PTY", "Code Mode", "MCP"]
+        }
+      ]
+    },
+    {
       "id": "agent-sandbox",
       "category": "Agent 基建",
       "name": "AI Agent 沙箱技术全景",

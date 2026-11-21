@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 460" width="980" height="460" role="img" aria-label="OpenCode (anomalyco/opencode) 整体分层架构图">
+  <defs>
+    <linearGradient id="oc2-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <marker id="oc2-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569"/>
+    </marker>
+    <filter id="oc2-shadow" x="-3%" y="-6%" width="106%" height="116%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="460" rx="14" fill="url(#oc2-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">OpenCode 整体架构：Client/Server 分离 + Effect-TS 函数式内核</text>
+
+  <!-- Layer 1: Multi-Client Surfaces -->
+  <g filter="url(#oc2-shadow)">
+    <rect x="28" y="56" width="924" height="70" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4"/>
+    <rect x="28" y="56" width="146" height="70" rx="10" fill="#1e293b"/>
+    <rect x="162" y="56" width="12" height="70" fill="#1e293b"/>
+    <text x="101" y="88" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">多端客户端层</text>
+    <text x="101" y="107" text-anchor="middle" fill="#cbd5e1" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">统一消费 HTTP/SSE</text>
+
+    <rect x="190" y="69" width="166" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="273" y="95" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="600">TUI 终端界面</text>
+
+    <rect x="372" y="69" width="166" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="455" y="95" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="600">Desktop 桌面 App</text>
+
+    <rect x="554" y="69" width="184" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="646" y="95" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="600">Web App / GUI 插件</text>
+
+    <rect x="754" y="69" width="182" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="845" y="95" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="600">ACP 桥接 / SDK</text>
+  </g>
+
+  <line x1="490" y1="126" x2="490" y2="150" stroke="#475569" stroke-width="2" marker-end="url(#oc2-arr)"/>
+
+  <!-- Layer 2: HTTP API & Event Feed Server -->
+  <g filter="url(#oc2-shadow)">
+    <rect x="28" y="156" width="924" height="66" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.6"/>
+    <rect x="28" y="156" width="146" height="66" rx="10" fill="#2563eb"/>
+    <rect x="162" y="156" width="12" height="66" fill="#2563eb"/>
+    <text x="101" y="186" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">Server 服务层</text>
+    <text x="101" y="205" text-anchor="middle" fill="#dbeafe" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">本地/远端同协议</text>
+
+    <text x="196" y="183" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">类型化 HTTP API + Event Feed 实时事件流 + 配对鉴权</text>
+    <text x="196" y="206" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5">支持本地拉起或远端常驻 · 统一位置（Location）路由 · 代码生成强类型客户端 SDK</text>
+  </g>
+
+  <line x1="490" y1="222" x2="490" y2="246" stroke="#475569" stroke-width="2" marker-end="url(#oc2-arr)"/>
+
+  <!-- Layer 3: Effect-TS Core Engine -->
+  <g filter="url(#oc2-shadow)">
+    <rect x="28" y="252" width="924" height="92" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
+    <rect x="28" y="252" width="146" height="92" rx="10" fill="#0f766e"/>
+    <rect x="162" y="252" width="12" height="92" fill="#0f766e"/>
+    <text x="101" y="293" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">Core 引擎层</text>
+    <text x="101" y="313" text-anchor="middle" fill="#ccfbf1" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">Effect-TS + SQLite</text>
+
+    <rect x="190" y="266" width="234" height="64" rx="7" fill="#ffffff" stroke="#86efac"/>
+    <text x="204" y="288" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">门铃协调器 &amp; 崩溃恢复</text>
+    <text x="204" y="307" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">单 Fiber 串行 · Doorbell 合并</text>
+    <text x="204" y="322" fill="#15803d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">Write-Ahead Claim 事务恢复</text>
+
+    <rect x="438" y="266" width="244" height="64" rx="7" fill="#ffffff" stroke="#86efac"/>
+    <text x="452" y="288" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">渐进式压缩 &amp; 后台预计算</text>
+    <text x="452" y="307" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">4 级降采样 · 85%→35% 缩容</text>
+    <text x="452" y="322" fill="#15803d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">后台预压 Fiber · 原生压缩兼容</text>
+
+    <rect x="696" y="266" width="240" height="64" rx="7" fill="#ffffff" stroke="#86efac"/>
+    <text x="710" y="288" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">多 Agent &amp; 推理适配层</text>
+    <text x="710" y="307" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">build / plan / @general 角色</text>
+    <text x="710" y="322" fill="#15803d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">@opencode/ai 多模型统一接入</text>
+  </g>
+
+  <line x1="490" y1="344" x2="490" y2="368" stroke="#475569" stroke-width="2" marker-end="url(#oc2-arr)"/>
+
+  <!-- Layer 4: Governance, Snapshot & Runtime Tools -->
+  <g filter="url(#oc2-shadow)">
+    <rect x="28" y="374" width="924" height="68" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="1.6"/>
+    <rect x="28" y="374" width="146" height="68" rx="10" fill="#b45309"/>
+    <rect x="162" y="374" width="12" height="68" fill="#b45309"/>
+    <text x="101" y="404" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">治理与工具层</text>
+    <text x="101" y="423" text-anchor="middle" fill="#fef3c7" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">规则 + 快照回滚</text>
+
+    <rect x="190" y="386" width="234" height="44" rx="7" fill="#ffffff" stroke="#fcd34d"/>
+    <text x="307" y="412" text-anchor="middle" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="600">通配符权限引擎（allow/ask/deny）</text>
+
+    <rect x="438" y="386" width="244" height="44" rx="7" fill="#ffffff" stroke="#fcd34d"/>
+    <text x="560" y="412" text-anchor="middle" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="600">隐藏 Git 快照时光机 + Worktree</text>
+
+    <rect x="696" y="386" width="240" height="44" rx="7" fill="#ffffff" stroke="#fcd34d"/>
+    <text x="816" y="412" text-anchor="middle" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="600">Persistent PTY · Code Mode · MCP</text>
+  </g>
+</svg>
