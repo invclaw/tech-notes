@@ -426,8 +426,19 @@
           "file": "gui-automation/browser-use.md",
           "status": "done",
           "updatedAt": "2026-11-21",
-          "summary": "Playwright/CDP 底层通道、无障碍树快照与 ref 编号实战示例、Set-of-Mark 视觉标注，以及 SPA/iframe/Cookie 四大难点。",
-          "tags": ["CDP", "Playwright", "AXTree", "SoM"]
+          "summary": "Playwright/CDP 底层通道、无障碍树快照与 ref 编号实战示例、Set-of-Mark 视觉标注，以及 SPA/iframe/Cookie 四大难点（下设 2.1 CDP 与 Playwright 底层原理）。",
+          "tags": ["CDP", "Playwright", "AXTree", "SoM"],
+          "children": [
+            {
+              "slug": "browser-use/cdp-and-playwright",
+              "title": "2.1 CDP 与 Playwright 底层原理",
+              "file": "gui-automation/cdp-and-playwright.md",
+              "status": "done",
+              "updatedAt": "2026-11-21",
+              "summary": "CDP 到底是什么、真实 JSON-RPC 报文示例、Playwright 解决了哪些脏活，以及为何全面取代 Selenium。",
+              "tags": ["CDP", "Playwright", "WebSocket"]
+            }
+          ]
         },
         {
           "slug": "computer-use",
