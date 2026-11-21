@@ -446,6 +446,15 @@
           "updatedAt": "2026-11-21",
           "summary": "间接提示词注入防护、独立容器/云桌面隔离、高敏动作人工审批，以及 2FA/验证码场景下的实时画面人工接管（HITL）。",
           "tags": ["安全防线", "HITL", "Prompt Injection"]
+        },
+        {
+          "slug": "agent-implementations",
+          "title": "05 · 四大 Agent 落地对比（OpenClaw/OpenCode/Codex/Pi）",
+          "file": "gui-automation/agent-implementations.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "源码级核实 OpenClaw、OpenCode、Codex、Pi 四家在 Browser Use 与 Computer Use 上的真实实现与架构取舍。",
+          "tags": ["OpenClaw", "OpenCode", "Codex", "Pi"]
         }
       ]
     }
