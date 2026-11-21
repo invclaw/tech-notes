@@ -402,6 +402,52 @@
           "tags": ["Anthropic", "Prompt Cache", "Context Editing"]
         }
       ]
+    },
+    {
+      "id": "gui-automation",
+      "category": "Agent 基建",
+      "name": "Browser Use 与 Computer Use",
+      "status": "done",
+      "description": "拆解 AI Agent 的 GUI 感知与操作基建：Browser Use（CDP / Playwright / AXTree 无障碍树 / SoM）与 Computer Use（屏幕视觉定位 / 键鼠注入 / Xvfb 虚拟桌面 / noVNC 人工接管）的底层原理与安全防线。",
+      "tags": ["Browser Use", "Computer Use", "CDP", "AXTree", "HITL"],
+      "docs": [
+        {
+          "slug": "overview",
+          "title": "01 · GUI 自动化全景与双路线对比",
+          "file": "gui-automation/overview.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "Browser Use 与 Computer Use 闭环全景图、核心维度对比，以及 API → Browser → Computer 逐级选型法则。",
+          "tags": ["全景对比", "选型法则"]
+        },
+        {
+          "slug": "browser-use",
+          "title": "02 · Browser Use：CDP、AXTree 与混合定位",
+          "file": "gui-automation/browser-use.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "Playwright/CDP 底层通道、无障碍树快照与 ref 编号实战示例、Set-of-Mark 视觉标注，以及 SPA/iframe/Cookie 四大难点。",
+          "tags": ["CDP", "Playwright", "AXTree", "SoM"]
+        },
+        {
+          "slug": "computer-use",
+          "title": "03 · Computer Use：视觉定位与虚拟桌面",
+          "file": "gui-automation/computer-use.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "纯视觉像素定位与 OS 控件树混合路线、Anthropic computer 工具真实报文示例，以及 Xvfb/uinput/noVNC 虚拟桌面架构。",
+          "tags": ["Computer Use", "Xvfb", "Grounding"]
+        },
+        {
+          "slug": "security-and-hitl",
+          "title": "04 · 安全防线、沙箱隔离与人机接管",
+          "file": "gui-automation/security-and-hitl.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "间接提示词注入防护、独立容器/云桌面隔离、高敏动作人工审批，以及 2FA/验证码场景下的实时画面人工接管（HITL）。",
+          "tags": ["安全防线", "HITL", "Prompt Injection"]
+        }
+      ]
     }
   ]
 }
