@@ -37,6 +37,32 @@ Agent 运行时在执行前抓取一帧 AXTree 快照，给每个可交互节点
 ### 2.2 补充方案：Set-of-Mark（SoM 视觉标注）
 当遇到自定义 `<canvas>`、图表、或无障碍属性缺失的奇葩网页时，运行时会在截图上把每个可点击区域画上带编号的彩色高亮框，把**标注后的截图 + 编号表**一起交给多模态模型，兼顾视觉理解与精准点击。
 
+### 2.3 动手试一试：3 种方式手动获取真实 AXTree
+
+1. **零代码（Chrome F12 直接看）**：
+   - 打开任意网页按 `F12` → 切到 **Elements** 面板 → 右侧子标签选 **Accessibility** → 勾选 **`Enable full-page accessibility tree`**（右上角会出现一个小人图标，点击即可把整个 DOM 树一键切换成完整的无障碍树视图）。
+2. **用 Playwright 一行拿 YAML 格式快照（最贴近 AI Agent 看到的样子）**：
+   ```js
+   import { chromium } from "playwright";
+
+   const browser = await chromium.launch();
+   const page = await browser.newPage();
+   await page.goto("https://example.com");
+
+   // 直接输出整页精简 YAML 无障碍树
+   const snapshot = await page.locator("body").ariaSnapshot();
+   console.log(snapshot);
+   await browser.close();
+   ```
+3. **直连原生 CDP 调 `Accessibility.getFullAXTree`（看浏览器内核原始结构）**：
+   ```js
+   // 同样可在 Playwright 里直接拿到底层 CDP Session
+   const cdp = await page.context().newCDPSession(page);
+   const { nodes } = await cdp.send("Accessibility.getFullAXTree");
+   console.log(nodes.slice(0, 5)); // 每个节点含 role / name / backendDOMNodeId / childIds
+   ```
+   > 若不用 Playwright，也可先用 `chrome --remote-debugging-port=9222` 启动浏览器，访问 `http://127.0.0.1:9222/json` 拿到目标 Tab 的 `webSocketDebuggerUrl`，连上 WebSocket 后发送 `{"id":1,"method":"Accessibility.getFullAXTree"}` 即可拿到一模一样的 JSON。
+
 ---
 
 ## 3. Browser Use 的四大实战难点
