@@ -1,26 +1,95 @@
-> [!FOCUS] 历史地位
-> **OpenAI Chat Completions（`/v1/chat/completions`）** 是整个大模型行业的“TCP/IP 最小公约数”。哪怕你用的是开源模型（vLLM / SGLang / Ollama）、云中转网关或各家国产大模型，几乎全部原生兼容这套协议。
+> [!FOCUS] 定位
+> **`POST /v1/chat/completions`** 是全行业通用“最小公约数”（Ollama、vLLM、几乎所有开源和国产模型都兼容）。特点：**完全无状态、扁平消息数组、流式碎片拼接**。
 
-## 1. 核心数据与交互模型
+## 1. 请求与返回完整示例（调用工具场景）
 
-它的设计诞生于“多轮聊天机器人”时代，结构极其简单直观：
-- **完全无状态（Stateless）**：服务端不保存对话历史，每次请求客户端都把完整的 `messages` 数组（`system` / `user` / `assistant` / `tool`）全量发过去；
-- **工具调用方式**：模型在 `assistant` 消息上附挂一个 `tool_calls` 数组（含 `id`、工具名、JSON 字符串参数）；客户端执行完后，追加对应 `role: "tool"` + `tool_call_id` 的结果消息，再发下一轮请求；
-- **流式传输与结束判定**：SSE 持续推送 `choices[0].delta` 碎片（文本和函数参数字符串被拆成碎片，客户端自行拼接），最后以 `finish_reason` 结束：
-  - `stop`：模型自然说完；
-  - `tool_calls`：模型请求执行工具；
-  - `length`：撞到最大输出 token 上限被截断。
+### ① 第 1 轮请求（客户端全量发送历史 + 工具定义）
+```json
+{
+  "model": "gpt-4o",
+  "messages": [
+    { "role": "system", "content": "你是一个简洁的助手。" },
+    { "role": "user", "content": "帮我查一下上海天气" }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "get_weather",
+        "description": "查询指定城市天气",
+        "parameters": {
+          "type": "object",
+          "properties": { "city": { "type": "string" } },
+          "required": ["city"]
+        }
+      }
+    }
+  ]
+}
+```
+
+### ② 模型返回（注意 `arguments` 是转义后的 JSON 字符串）
+```json
+{
+  "id": "chatcmpl-123",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_abc1",
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "arguments": "{\"city\":\"上海\"}"
+            }
+          }
+        ]
+      },
+      "finish_reason": "tool_calls"
+    }
+  ]
+}
+```
+
+### ③ 第 2 轮请求（必须把前面所有消息连同 `role: "tool"` 再次全量发回）
+```json
+{
+  "model": "gpt-4o",
+  "messages": [
+    { "role": "system", "content": "你是一个简洁的助手。" },
+    { "role": "user", "content": "帮我查一下上海天气" },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [{ "id": "call_abc1", "type": "function", "function": { "name": "get_weather", "arguments": "{\"city\":\"上海\"}" } }]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_abc1",
+      "content": "{\"temp\":22,\"weather\":\"晴\"}"
+    }
+  ]
+}
+```
+
+### ④ 流式 SSE 长什么样？（客户端需自行拼接参数碎片）
+```text
+data: {"choices":[{"delta":{"tool_calls":[{"index":0,"id":"call_abc1","function":{"name":"get_weather","arguments":""}}]}}]}
+data: {"choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\"city\":"}}]}}]}
+data: {"choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"\"上海\"}"}}]}}]}
+data: {"choices":[{"delta":{},"finish_reason":"tool_calls"}]}
+data: [DONE]
+```
 
 ---
 
-## 2. 为什么它在现代长程 Agent 场景下显得吃力？
+## 2. 对比新协议的 4 个核心短板
 
-当 Agent 从“单轮问答”演进到“连跑 40 轮工具、深度推理、多模态交互”后，Chat Completions 暴露出四个结构性短板：
-
-1. **没有标准的“思考块（Reasoning）”模型**：推理模型（o1/o3/DeepSeek-R1 等）出现后，思考过程只能靠各家私有的 `reasoning_content` 等非标准字段硬塞，跨工具轮次如何回传、如何防止思考被篡改没有统一契约；
-2. **工具调用碎片拼装脆弱**：流式阶段工具参数是散落的 JSON 字符串碎片，一旦在 `length` 截断或流中断时，客户端极易拿到半截非法 JSON（这也是 [OpenClaw Agent Loop](#/openclaw/agent-loop) 专门做了“输出上限截断工具调用缓控与恢复”的原因）；
-3. **缺乏原生服务端上下文治理**：没有服务端工具清理、也没有服务端压缩检查点，所有瘦身与压缩工作必须 100% 落在客户端自己实现（如 [OpenClaw 的客户端 `cache-ttl` 修剪与四段配额摘要](#/openclaw/agent-loop/compaction)）；
-4. **语义表达单一**：一条消息很难清晰地把“思考 → 文本进度 → 多次工具调用 → 多模态产物 → 压缩检查点”作为平等的一等结构化对象表达出来。
-
-> [!TIP] 现实选型建议
-> 如果你的 Agent 需要**开箱兼容一切本地模型（Ollama / LM Studio）和第三方聚合网关**，Chat Completions 依然是不可替代的兜底协议；但只要对接官方前沿 Agent 模型，主流框架（[Codex](#/codex/overview)、[OpenClaw](#/openclaw/overview)）都会优先升级到 **Responses API** 或 **Anthropic Messages API**。
+1. **无标准思考块**：推理模型的思考过程只能靠私有扩展字段（如 `reasoning_content`）硬塞，跨工具轮次缺乏统一续接规范；
+2. **工具参数易截断损坏**：`arguments` 是流式 JSON 字符串，撞到 `finish_reason: "length"` 时容易留下半截非法 JSON（见 [OpenClaw Agent Loop](#/openclaw/agent-loop) 的截断恢复处理）；
+3. **完全无状态、无服务端治理**：每轮必须全量重传历史，且没有服务端工具清理或压缩能力，瘦身全靠客户端（如 [OpenClaw 客户端修剪与摘要](#/openclaw/agent-loop/compaction)）；
+4. **表达力偏扁平**：难以把思考、进度文本、多工具调用和压缩检查点作为平等的一等结构表达。

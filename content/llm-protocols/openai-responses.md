@@ -1,33 +1,105 @@
-> [!FOCUS] 核心定位
-> **OpenAI Responses API（`/v1/responses`）** 是 OpenAI 为替代 Chat Completions、专门面向 **长程、多工具、强推理 Agent** 打造的新一代统一协议，也是 [Codex 架构设计解析](#/codex/overview) 的核心推理底座。
+> [!FOCUS] 定位
+> **`POST /v1/responses`** 是 OpenAI 面向长程 Agent 打造的新一代协议，也是 [Codex](#/codex/overview) 的核心推理底座。核心变化：**从扁平消息升级为类型化 Item 列表 + 语义流式事件 + 原生服务端状态与压缩**。
 
-## 1. 范式跃迁：从扁平消息数组 → 类型化 Item 列表
+## 1. 请求与返回完整示例（同一天气查询场景）
 
-Responses API 最根本的变化是**放弃了“所有东西都塞进一条 chat message”的扁平设计**，把一次交互中的所有输入与产出都抽象成平等的**类型化 Item**：
+### ① 第 1 轮请求（系统提示词独立为 `instructions`，工具结构更扁平）
+```json
+{
+  "model": "gpt-5.4",
+  "instructions": "你是一个简洁的助手。",
+  "input": [
+    { "role": "user", "content": "帮我查一下上海天气" }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "name": "get_weather",
+      "description": "查询指定城市天气",
+      "parameters": {
+        "type": "object",
+        "properties": { "city": { "type": "string" } },
+        "required": ["city"]
+      }
+    }
+  ]
+}
+```
 
-- **`message`**：普通用户或助手文本/多模态消息；
-- **`reasoning`**：一等推理思考项，支持服务端返回**加密思考状态（Encrypted Reasoning）**并在下一轮原样回传，实现多轮工具调用间的无损思维链续接；
-- **`function_call` / `function_call_output`**：客户端工具调用与结果作为独立 Item 存在，不再附挂在文本消息上；
-- **`compaction`**：**原生的服务端压缩状态项**，直接作为上下文历史中的合法一等对象，取代冗长的早期原始 Item。
+### ② 模型返回（`output[]` 是类型化 Item 列表：思考与工具调用是一等对象）
+```json
+{
+  "id": "resp_001",
+  "status": "completed",
+  "output": [
+    {
+      "type": "reasoning",
+      "id": "rs_01",
+      "summary": [{ "type": "summary_text", "text": "需要调用天气工具查询上海。" }],
+      "encrypted_content": "gAAAAAB..."
+    },
+    {
+      "type": "function_call",
+      "id": "fc_01",
+      "call_id": "call_abc1",
+      "name": "get_weather",
+      "arguments": "{\"city\":\"上海\"}"
+    }
+  ]
+}
+```
+
+### ③ 第 2 轮请求（支持 `previous_response_id` 增量续接，不必重传全量历史！）
+```json
+{
+  "model": "gpt-5.4",
+  "previous_response_id": "resp_001",
+  "input": [
+    {
+      "type": "function_call_output",
+      "call_id": "call_abc1",
+      "output": "{\"temp\":22,\"weather\":\"晴\"}"
+    }
+  ]
+}
+```
+> 注：若走无状态模式（不传 `previous_response_id`），则把上一轮的 `reasoning`（含 `encrypted_content`）和 `function_call` Item 原样放回 `input[]` 即可无损续接思维链。
+
+### ④ 语义化流式 SSE（事件自带明确生命周期，无需猜状态）
+```text
+event: response.created
+data: {"type":"response.created","response":{"id":"resp_001"}}
+
+event: response.output_item.added
+data: {"type":"response.output_item.added","item":{"type":"function_call","call_id":"call_abc1","name":"get_weather"}}
+
+event: response.function_call_arguments.delta
+data: {"type":"response.function_call_arguments.delta","delta":"{\"city\":\"上海\"}"}
+
+event: response.output_item.done
+data: {"type":"response.output_item.done","item":{"type":"function_call","status":"completed"}}
+
+event: response.completed
+data: {"type":"response.completed","response":{"id":"resp_001","status":"completed"}}
+```
 
 ---
 
-## 2. 语义化流式事件机与 `end_turn` 信号
+## 2. 专为长程 Agent 设计的两项杀手锏
 
-相比 Chat Completions 只能靠拼接 `choices[0].delta` 猜进度，Responses API 提供清晰的生命周期事件流：
-- `response.created` → `response.output_item.added` → 各类精细 delta（文本增量 / 推理增量 / 工具参数增量）→ `response.output_item.done` → `response.completed`。
-- **关键 Agent 信号：`end_turn: false`**：
-  - 即使某次 `response.completed` 里只输出了一段纯文本（没有工具调用），只要服务端标记了 `end_turn: false`，就表示模型“只是先说了一段阶段性进展，本轮任务还没干完”，客户端应自动继续发起下一次请求。
-  - 这正是 [OpenClaw Agent Loop 终止与续跑判定](#/openclaw/agent-loop) 中专门单独处理 `end_turn: false` 的协议根源。
+### ① 服务端原生压缩（`POST /v1/responses/compact`）
+当对话上下文膨胀时，客户端把历史送给服务端压缩端点，服务端返回一个**保留近期窗口 + 加密压缩检查点（`type: "compaction"`）**的精简数组：
 
----
+```json
+{
+  "output": [
+    { "type": "compaction", "encrypted_content": "gAAAAAB_compacted_state..." },
+    { "role": "user", "content": "不要改数据库表结构，只修鉴权中间件。" }
+  ]
+}
+```
+- **[Codex 远端压缩 V2](#/codex/core/compaction)** 正是基于这套机制，叠出了**后台投机预压缩**（几乎零等待秒装）；
+- **[OpenClaw](#/openclaw/agent-loop/compaction)** 在 OpenAI 直连路由上也消费了此端点，但做了压缩所有权保护（避免和自研 `ContextEngine` 打架，且在 Memory Flush 轮次禁用服务端压缩）。
 
-## 3. 服务端状态链与原生压缩（`/responses/compact`）
-
-Responses API 把过去完全由客户端硬扛的两件事搬进了协议原生能力：
-
-1. **可选服务端状态续接（`previous_response_id`）**：客户端不必每次把几百 KB 历史从头传一遍，可直接基于上一次的响应 ID 增量追加新输入或工具结果（同时也完全兼容无状态全量传入模式）。
-2. **原生服务端压缩（`/responses/compact`）**：
-   - 客户端把膨胀的历史交给服务端专用压缩端点，服务端返回一份**精简保留窗口 + 加密压缩状态项（Compaction Checkpoint）**；
-   - **[Codex 远端压缩 V2](#/codex/core/compaction)** 正是基于这套能力，进一步叠出了**后台投机预压缩（Speculative Background Compaction）**，让用户在长程写代码时几乎感受不到压缩卡顿；
-   - **[OpenClaw 上下文压缩](#/openclaw/agent-loop/compaction)** 在 OpenAI API 直连路由上同样原生消费了 `/responses/compact`，但为了防止和插件自研的 `ContextEngine` 互相打架，专门设计了**压缩所有权保护**（且在 Memory Flush 记忆提取轮次强制禁用服务端压缩，确保记忆系统看到未摘要的完整原文）。
+### ② `end_turn: false` 显式续跑信号
+即使某次 `response.completed` 里只有纯文本、没有工具调用，只要附带 `end_turn: false`，就代表模型“先汇报一下阶段进度，任务还没干完”，[OpenClaw Agent Loop](#/openclaw/agent-loop) 据此自动发起下一轮续跑而不会过早结束会话。
