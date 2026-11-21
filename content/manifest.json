@@ -237,6 +237,52 @@
       ]
     },
     {
+      "id": "pi",
+      "category": "主流 Agent 解析",
+      "name": "Pi 架构设计解析",
+      "status": "active",
+      "description": "极简高可塑 Agent Harness（earendil-works/pi）：可复用内核包矩阵、单文件树形 JSONL 会话与分支摘要、追加式非破坏压缩、全权 TS 扩展与外置微虚机/凭据代换隔离。",
+      "tags": ["Minimal Harness", "Tree Session", "Compaction", "MicroVM"],
+      "docs": [
+        {
+          "slug": "overview",
+          "title": "01 · 项目全景、极简哲学与四强对比",
+          "file": "pi/overview.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "Pi 极简可组装底座架构全景图，以及 OpenClaw / Codex / OpenCode / Pi 四大主流开源 Agent 全维度横评。",
+          "tags": ["架构全景", "四强对比", "极简底座"]
+        },
+        {
+          "slug": "tree-sessions",
+          "title": "02 · 树形 JSONL 会话与分支摘要",
+          "file": "pi/tree-sessions.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "单文件树形 JSONL（id/parentId）、/tree vs /fork vs /clone 差异，以及切换分支时保留有效结论的 Branch Summarization。",
+          "tags": ["Tree Session", "JSONL", "Branch Summary"]
+        },
+        {
+          "slug": "loop-and-compaction",
+          "title": "03 · Agent Loop 与追加式压缩机制",
+          "file": "pi/loop-and-compaction.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "Steer/Follow-up 清晰边界、追加式非破坏 CompactionEntry、超长单轮切分（Split Span）、摘要关缓存写与四家压缩横评。",
+          "tags": ["Agent Loop", "Compaction", "Split Span"]
+        },
+        {
+          "slug": "extensions-and-isolation",
+          "title": "04 · 扩展体系、外置隔离与供应链加固",
+          "file": "pi/extensions-and-isolation.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "全权 TS Extensions 与资源包、4 种外置沙箱模式（含凭据代换代理与 Gondolin MicroVM），以及 npm 零脚本供应链加固。",
+          "tags": ["Extensions", "Gondolin", "供应链安全"]
+        }
+      ]
+    },
+    {
       "id": "agent-sandbox",
       "category": "Agent 基建",
       "name": "AI Agent 沙箱技术全景",
