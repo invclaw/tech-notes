@@ -19,7 +19,7 @@ OpenClaw 是四家中唯一把 Browser Use 与 Computer Use 都做成一等内�
 - **Browser Use（隔离优先 + 四种形态通吃）**：
   - 默认拉起独立的 **`openclaw` 浏览器 Profile**（橙色标识），彻底隔离用户的个人主力浏览器；同时提供 `user` Profile 经 **Chrome DevTools MCP** 按需附着已登录 Chrome；
   - 支持四种部署形态：本机托管 Chromium、独立 **Docker 沙箱浏览器容器**（见 [OpenClaw 五大沙箱后端](#/openclaw/security/sandbox-backends)）、通过 Node 节点代理本机浏览器、以及直连云端托管 CDP（Browserless / Browserbase / Notte）；
-  - 随插件附带 **`browser-automation` Skill**，把“抓快照 → 锁定 Tab → 遇到过期 `ref` 自动重抓 → 遇登录/验证码交由人工处理”固化为标准操作流，并内置 **SSRF 导航拦截**、受管下载目录与纯文本模型截图视觉辅助。
+  - 随插件附带 **`browser-automation` Skill**，把“抓快照 → 锁定 Tab → 遇到过期 `ref` 自动重抓 → 遇登录/验证码交由人工处理”固化为标准操作流，并内置 **SSRF 导航拦截**、受管下载目录、基于 AXTree + Playwright `boundingBox` 的 **SoM 截图标号**（`screenshotWithLabelsViaPlaywright`）与纯文本模型截图视觉辅助（注：四家仓库均未内嵌本地 YOLO / OmniParser 目标检测模型）。
 - **Computer Use（`screen` 只管展示，`computer` 只管操作）**：
   - OpenClaw 刻意把“给人类看画面”和“让模型动键鼠”拆成两个工具：**`screen` 工具**只能在 Control UI 侧栏展开或切换浏览器/远端桌面面板，**没有读像素、截屏和点击权限**；
   - 真正的截屏、坐标点击与键盘输入由 **`computer` 工具**通过绑定的设备节点（Node）或远端桌面环境执行，并严格受节点能力声明与工具策略门控。
