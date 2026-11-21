@@ -8,7 +8,7 @@
 长会话撑爆窗口的头号元凶往往不是聊天文本，而是动辄几万字的 `toolResult`（命令输出、大文件读取、搜索结果）。OpenClaw 在触发正式压缩前，先通过 **Session Pruning** 轻量瘦身——**只裁剪老旧工具结果，不动普通对话，且绝不改写磁盘上的原始历史**（仅维护可跨重启恢复的投影视图）：
 
 - **Anthropic API 直连路由（服务端修剪）**：
-  - 直接委托给 Anthropic 服务端工具清理能力；当输入超过阈值（`max(50K, 窗口 30%)`）时，保留最近 3 次工具结果，且要求单次至少能清掉 `max(12.5K, 窗口 5%)` 才动手——避免清得太少反而打废 Prompt Cache 得不偿失。
+  - 直接委托给 [Anthropic Messages 协议](#/llm-protocols/anthropic-messages) 的服务端工具清理能力（`clear_tool_uses`）；当输入超过阈值（`max(50K, 窗口 30%)`）时，保留最近 3 次工具结果，且要求单次至少能清掉 `max(12.5K, 窗口 5%)` 才动手——避免清得太少反而打废 Prompt Cache 得不偿失。
 - **其他模型路由（客户端 `cache-ttl` 修剪）**：
   - **先等 Cache 过期再动刀**：只有当 Prompt Cache TTL 过期、且上下文占用超过 ~30% 时才启动新一轮修剪，不平白破坏热缓存；
   - **两级裁剪**：先做 **Soft-trim**（超 4,000 字符的工具结果只保留首尾各 1,500 字符）；若占用仍超 ~50% 且可裁剪内容够大，再做 **Hard-clear**（替换为 `[Old tool result content cleared]` 占位符）；
@@ -59,6 +59,6 @@ OpenClaw 默认开启更严格的 **`safeguard`** 压缩模式：
 | **适配对象** | 20+ 异构模型 + 长驻多渠道会话 | OpenAI Responses API 为主 + 专业长程 Coding |
 | **前置瘦身** | 独立的 **Session Pruning**（按 Cache TTL 软/硬裁剪老旧工具输出） | 直接在压缩时做媒体预算裁剪与工具输出筛选 |
 | **记忆联动** | 压缩前自动触发 **Memory Flush** 写入每日笔记 | 独立的线程记忆摘要（Thread Memory） |
-| **核心加速/质量手段** | **四段配额采样** + **Safeguard 质量审计** + 超时确定性裁剪 | **远端压缩 V2** + **后台投机预压缩**（零等待秒装） |
+| **核心加速/质量手段** | **四段配额采样** + **Safeguard 质量审计** + 超时确定性裁剪 | 基于 [Responses 协议](#/llm-protocols/openai-responses) 的 **[远端压缩 V2 + 后台投机预压缩](#/codex/core/compaction)**（零等待秒装） |
 | **环境状态更新** | 保留引导文件与每轮热刷新 `MEMORY.md` / `USER.md` | 压缩时弃旧增量，**全量重算最新 `WorldState` 基线** |
 | **可扩展性** | 支持 `ContextEngine` 插件插槽整体替换（如无损树状压缩） | 内建三条固定路线（远端 V2 / 本地摘要 / 预算开新窗） |

@@ -175,10 +175,22 @@
     }).join('');
   }
 
+  function groupProjectsByCategory(projects) {
+    const order = state.manifest.categories || [];
+    const groups = new Map();
+    for (const c of order) groups.set(c, []);
+    for (const proj of projects || []) {
+      const cat = proj.category || '专题知识';
+      if (!groups.has(cat)) groups.set(cat, []);
+      groups.get(cat).push(proj);
+    }
+    return Array.from(groups.entries()).filter(([, list]) => list.length > 0);
+  }
+
   function renderSidebar() {
     const projects = state.manifest.projects || [];
     const totalDocs = projects.reduce((sum, p) => sum + flattenDocs(p.docs || []).length, 0);
-    els.sidebarStats.textContent = `${projects.length} 个项目 · ${totalDocs} 篇知识文档`;
+    els.sidebarStats.textContent = `${projects.length} 个专题 · ${totalDocs} 篇知识文档`;
 
     const route = getCurrentRoute();
     let html = `
@@ -191,22 +203,25 @@
       </a>
     `;
 
-    for (const proj of projects) {
-      html += `
-        <div class="nav-project" data-project="${escapeHtml(proj.id)}">
-          <button class="nav-project-header" type="button">
-            <span class="nav-project-title">
-              <svg class="nav-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-              <span>${escapeHtml(proj.name)}</span>
-            </span>
-          </button>
-          <ul class="nav-doc-list">
-            ${renderNavItems(proj.id, proj.docs || [], route)}
-          </ul>
-        </div>
-      `;
+    for (const [category, catProjects] of groupProjectsByCategory(projects)) {
+      html += `<div class="nav-category-label">${escapeHtml(category)}</div>`;
+      for (const proj of catProjects) {
+        html += `
+          <div class="nav-project" data-project="${escapeHtml(proj.id)}">
+            <button class="nav-project-header" type="button">
+              <span class="nav-project-title">
+                <svg class="nav-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+                <span>${escapeHtml(proj.name)}</span>
+              </span>
+            </button>
+            <ul class="nav-doc-list">
+              ${renderNavItems(proj.id, proj.docs || [], route)}
+            </ul>
+          </div>
+        `;
+      }
     }
 
     els.sidebarNav.innerHTML = html;
@@ -413,9 +428,10 @@
   function renderProjectCardsHtml() {
     const projects = state.manifest.projects || [];
     if (!projects.length) return '';
-    return `
+    return groupProjectsByCategory(projects).map(([category, catProjects]) => `
+      <h2>${escapeHtml(category)}</h2>
       <div class="project-grid">
-        ${projects.map((p) => `
+        ${catProjects.map((p) => `
           <div class="project-card">
             <div class="project-card-head">
               <h3>${escapeHtml(p.name)}</h3>
@@ -436,7 +452,7 @@
           </div>
         `).join('')}
       </div>
-    `;
+    `).join('');
   }
 
   async function renderRoute() {
@@ -456,7 +472,6 @@
         els.docContainer.innerHTML = `
           <div class="markdown-body">
             ${rendered}
-            <h2>项目专题索引</h2>
             ${renderProjectCardsHtml()}
           </div>
         `;

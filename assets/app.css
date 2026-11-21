@@ -248,6 +248,22 @@ a:hover { text-decoration: underline; }
 .nav-home-link:hover { background: var(--bg-hover); color: var(--text); text-decoration: none; }
 .nav-home-link.active { background: var(--bg-active); color: var(--accent-text); font-weight: 600; }
 
+.nav-category-label {
+  margin: 14px 8px 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.nav-category-label:first-of-type {
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: none;
+}
+
 .nav-project {
   margin-bottom: 12px;
 }

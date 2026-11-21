@@ -1,12 +1,17 @@
 {
   "site": {
     "title": "Tech Notes",
-    "subtitle": "项目源码与架构设计知识库"
+    "subtitle": "主流 Agent 解析与底层基建知识库"
   },
   "home": "home.md",
+  "categories": [
+    "主流 Agent 解析",
+    "Agent 基建"
+  ],
   "projects": [
     {
       "id": "openclaw",
+      "category": "主流 Agent 解析",
       "name": "OpenClaw 架构设计解析",
       "status": "active",
       "description": "多渠道本地 AI 控制面（openclaw/openclaw）的架构原理剖析：单控制面网关、Agent 执行循环与终止/插话机制、多 Agent 隔离、分层防投毒记忆与三层正交安全及沙箱架构。",
@@ -26,7 +31,7 @@
           "title": "02 · Agent Loop 与 Context Engine",
           "file": "openclaw/agent-loop.md",
           "status": "done",
-          "updatedAt": "2026-11-20",
+          "updatedAt": "2026-11-21",
           "summary": "单 Turn 执行管线、三层嵌套循环与终止判定、Steer 运行中插话协同、双层 Hook 与可插拔上下文引擎（下设 2.1 上下文修剪与压缩专题）。",
           "tags": ["Agent Loop", "Steer", "Turn 终止", "Context Engine"],
           "children": [
@@ -102,7 +107,7 @@
               "title": "5.1 沙箱选型与五大后端对比",
               "file": "openclaw/security/sandbox-backends.md",
               "status": "done",
-              "updatedAt": "2026-11-20",
+              "updatedAt": "2026-11-21",
               "summary": "拆解默认策略、Docker / Podman / SSH / OpenShell / Crabbox 五大后端，以及与 Codex / Claude Code / MicroVM 的横向对比。",
               "tags": ["Docker", "Podman", "OpenShell", "Crabbox"]
             },
@@ -129,85 +134,12 @@
       ]
     },
     {
-      "id": "agent-sandbox",
-      "name": "AI Agent 沙箱技术全景",
-      "status": "done",
-      "description": "横向梳理主流 AI Agent 沙箱的五级隔离谱系：从 WASM / QuickJS、macOS Seatbelt 与 Linux bwrap，到 Docker / Podman、gVisor / Kata，再到 Firecracker MicroVM 与云端沙箱的底层原理与选型指南。",
-      "tags": ["Sandbox", "bwrap", "Docker", "gVisor", "Firecracker"],
-      "docs": [
-        {
-          "slug": "overview",
-          "title": "01 · 沙箱五级隔离谱系总览",
-          "file": "agent-sandbox/overview.md",
-          "status": "done",
-          "updatedAt": "2026-11-20",
-          "summary": "为什么 Agent 必须有沙箱，以及 L1 语言运行时到 L5 MicroVM 五级隔离谱系的全景对比。",
-          "tags": ["隔离谱系", "全景对比"]
-        },
-        {
-          "slug": "process-and-runtime",
-          "title": "02 · 轻量派：进程级与语言级沙箱",
-          "file": "agent-sandbox/process/index.md",
-          "status": "done",
-          "updatedAt": "2026-11-20",
-          "summary": "三大 OS 内核拦截链路全景对比与 WASM/QuickJS 语言级沙箱（下设 2.1 ～ 2.3 三个内核原理子页）。",
-          "tags": ["Seatbelt", "bwrap", "AppContainer", "WASM"],
-          "children": [
-            {
-              "slug": "process/macos-seatbelt",
-              "title": "2.1 macOS Seatbelt 内核原理",
-              "file": "agent-sandbox/process/macos-seatbelt.md",
-              "status": "done",
-              "updatedAt": "2026-11-20",
-              "summary": "XNU TrustedBSD MAC 框架、SBPL 编译为内核字节码、ucred 不可撤销遗传及本地代理与软链踩坑。",
-              "tags": ["macOS", "Seatbelt", "MAC"]
-            },
-            {
-              "slug": "process/linux-bwrap-landlock",
-              "title": "2.2 Linux bwrap + Landlock + Seccomp",
-              "file": "agent-sandbox/process/linux-bwrap-landlock.md",
-              "status": "done",
-              "updatedAt": "2026-11-20",
-              "summary": "非特权 UserNS + pivot_root 原理、Landlock 按 inode 不可撤销锁目录、Seccomp-BPF 局限与 Ubuntu AppArmor 坑。",
-              "tags": ["Linux", "bwrap", "Landlock", "Seccomp"]
-            },
-            {
-              "slug": "process/windows-sandbox",
-              "title": "2.3 Windows 令牌、AppContainer 与 Job",
-              "file": "agent-sandbox/process/windows-sandbox.md",
-              "status": "done",
-              "updatedAt": "2026-11-20",
-              "summary": "内核 SRM 访问控制模型、Restricted Token 双重校验、AppContainer 默认全拒绝与 Job Object 全树清理。",
-              "tags": ["Windows", "AppContainer", "Job Object"]
-            }
-          ]
-        },
-        {
-          "slug": "container-and-gvisor",
-          "title": "03 · 均衡派：标准容器与强化容器",
-          "file": "agent-sandbox/container-and-gvisor.md",
-          "status": "done",
-          "updatedAt": "2026-11-20",
-          "summary": "Docker / Podman 的 Namespace + cgroups + 最小权限加固，以及 gVisor 用户态内核与 Kata Containers 如何解决共享内核风险。",
-          "tags": ["Docker", "Podman", "gVisor", "Kata"]
-        },
-        {
-          "slug": "microvm-and-cloud",
-          "title": "04 · 强隔离派：MicroVM、E2B 与云端沙箱",
-          "file": "agent-sandbox/microvm-and-cloud.md",
-          "status": "done",
-          "updatedAt": "2026-11-20",
-          "summary": "E2B 与本地沙箱的本质区别（独立内核 + 托管平台 + envd）、Firecracker 快照秒启、最小 SDK 单元与选型决策表。",
-          "tags": ["E2B", "Firecracker", "MicroVM", "选型指南"]
-        }
-      ]
-    },
-    {
       "id": "codex",
+      "category": "主流 Agent 解析",
       "name": "Codex 架构设计解析",
       "status": "active",
-      "description": "OpenAI 开源 Rust Coding Agent（openai/codex）架构剖析：四层解耦设计、Thread/Turn/Item 领域模型、App-Server 与 Exec-Server 双服务边界、三端原生沙箱与 ExecPolicy/Guardian 治理。",
-      "tags": ["Coding Agent", "Rust", "App-Server", "Exec-Server", "Sandbox"],
+      "description": "OpenAI 开源 Rust Coding Agent（openai/codex）架构剖析：四层解耦设计、Thread/Turn/Item 领域模型、上下文压缩与 WorldState、App-Server 与 Exec-Server 双服务边界、三端原生沙箱与审批治理。",
+      "tags": ["Coding Agent", "Rust", "App-Server", "Exec-Server", "Compaction"],
       "docs": [
         {
           "slug": "overview",
@@ -223,7 +155,7 @@
           "title": "02 · Thread/Turn 模型、核心循环与压缩",
           "file": "codex/core-and-loop.md",
           "status": "done",
-          "updatedAt": "2026-11-20",
+          "updatedAt": "2026-11-21",
           "summary": "Thread/Turn/Item 三级领域模型、turn/steer 插话、双轨压缩总览，以及 apply_patch/Code Mode/MCP 生态（下设 2.1 压缩机制专题）。",
           "tags": ["Thread/Turn", "Compaction", "Code Mode", "MCP"],
           "children": [
@@ -232,9 +164,9 @@
               "title": "2.1 上下文压缩机制深度解析",
               "file": "codex/compaction.md",
               "status": "done",
-              "updatedAt": "2026-11-20",
-              "summary": "三条压缩路线（远端 V2 / 本地摘要 / 预算重置）、后台投机预压缩、溢出自救与新窗口五层重建机制。",
-              "tags": ["Compaction", "Remote V2", "投机预压"]
+              "updatedAt": "2026-11-21",
+              "summary": "三条压缩路线（远端 V2 / 本地摘要 / 预算重置）、后台投机预压缩、新窗口五层重建实例与 WorldState 增量基线机制。",
+              "tags": ["Compaction", "Remote V2", "WorldState"]
             }
           ]
         },
@@ -252,9 +184,130 @@
           "title": "04 · 三端沙箱、ExecPolicy 与 Guardian 审批",
           "file": "codex/security-and-approval.md",
           "status": "done",
-          "updatedAt": "2026-11-20",
-          "summary": "三端原生进程沙箱与网络代理、ExecPolicy 命令规范化与托管人工检查点、Guardian 自动审查及 Worktree 隔离。",
+          "updatedAt": "2026-11-21",
+          "summary": "三端原生进程沙箱、硬执行与规划对齐原则、ExecPolicy 命令规范化与托管人工检查点、Guardian 自动审查及 Worktree 隔离。",
           "tags": ["Sandbox", "ExecPolicy", "Guardian", "Worktree"]
+        }
+      ]
+    },
+    {
+      "id": "agent-sandbox",
+      "category": "Agent 基建",
+      "name": "AI Agent 沙箱技术全景",
+      "status": "done",
+      "description": "横向梳理主流 AI Agent 沙箱的五级隔离谱系：从 WASM / QuickJS、macOS Seatbelt 与 Linux bwrap / Windows AppContainer，到 Docker / gVisor / Kata，再到 Firecracker MicroVM 与 E2B 的原理与最小实践单元。",
+      "tags": ["Sandbox", "bwrap", "Docker", "gVisor", "E2B"],
+      "docs": [
+        {
+          "slug": "overview",
+          "title": "01 · 沙箱五级隔离谱系总览",
+          "file": "agent-sandbox/overview.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "为什么 Agent 必须有沙箱、L1–L5 五级隔离谱系对比，以及 Agent 与四类沙箱的底层通信通道全景。",
+          "tags": ["隔离谱系", "交互通道"]
+        },
+        {
+          "slug": "process-and-runtime",
+          "title": "02 · 轻量派：进程级与语言级沙箱",
+          "file": "agent-sandbox/process/index.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "三大 OS 内核拦截链路全景对比与 WASM/QuickJS 语言级沙箱（下设 2.1 ～ 2.3 三个内核原理子页）。",
+          "tags": ["Seatbelt", "bwrap", "AppContainer", "WASM"],
+          "children": [
+            {
+              "slug": "process/macos-seatbelt",
+              "title": "2.1 macOS Seatbelt 内核原理",
+              "file": "agent-sandbox/process/macos-seatbelt.md",
+              "status": "done",
+              "updatedAt": "2026-11-20",
+              "summary": "XNU TrustedBSD MAC 框架、SBPL 编译为内核字节码、ucred 不可撤销遗传及最小启动单元。",
+              "tags": ["macOS", "Seatbelt", "MAC"]
+            },
+            {
+              "slug": "process/linux-bwrap-landlock",
+              "title": "2.2 Linux bwrap + Landlock + Seccomp",
+              "file": "agent-sandbox/process/linux-bwrap-landlock.md",
+              "status": "done",
+              "updatedAt": "2026-11-20",
+              "summary": "非特权 UserNS + pivot_root 原理、Landlock 按 inode 锁目录、Seccomp-BPF 局限及最小启动单元。",
+              "tags": ["Linux", "bwrap", "Landlock", "Seccomp"]
+            },
+            {
+              "slug": "process/windows-sandbox",
+              "title": "2.3 Windows 令牌、AppContainer 与 Job",
+              "file": "agent-sandbox/process/windows-sandbox.md",
+              "status": "done",
+              "updatedAt": "2026-11-20",
+              "summary": "内核 SRM 访问控制模型、Restricted Token、AppContainer 默认全拒绝、Job Object 与最小启动流程。",
+              "tags": ["Windows", "AppContainer", "Job Object"]
+            }
+          ]
+        },
+        {
+          "slug": "container-and-gvisor",
+          "title": "03 · 均衡派：标准容器与强化容器",
+          "file": "agent-sandbox/container-and-gvisor.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "Docker / Podman 的 Namespace + cgroups + 最小加固复用单元，以及 gVisor 用户态内核与 Kata Containers。",
+          "tags": ["Docker", "Podman", "gVisor", "Kata"]
+        },
+        {
+          "slug": "microvm-and-cloud",
+          "title": "04 · 强隔离派：MicroVM、E2B 与云端沙箱",
+          "file": "agent-sandbox/microvm-and-cloud.md",
+          "status": "done",
+          "updatedAt": "2026-11-20",
+          "summary": "E2B 与本地沙箱的本质区别（独立内核 + 托管平台 + envd）、Firecracker 快照秒启、最小 SDK 单元与选型决策表。",
+          "tags": ["E2B", "Firecracker", "MicroVM", "选型指南"]
+        }
+      ]
+    },
+    {
+      "id": "llm-protocols",
+      "category": "Agent 基建",
+      "name": "大模型推理协议解析",
+      "status": "done",
+      "description": "拆解 AI Agent 底层三大核心推理协议：OpenAI Chat Completions、OpenAI Responses API 与 Anthropic Messages API 的数据结构、流式事件、Prompt Caching 与服务端上下文治理能力。",
+      "tags": ["Chat Completions", "Responses API", "Anthropic Messages", "Prompt Cache"],
+      "docs": [
+        {
+          "slug": "overview",
+          "title": "01 · 推理协议演进全景与横评",
+          "file": "llm-protocols/overview.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "为什么推理协议决定 Agent 的延迟、工具循环稳定性与上下文压缩能力，以及三大协议架构对比全景。",
+          "tags": ["协议演进", "全景横评"]
+        },
+        {
+          "slug": "openai-chat-completions",
+          "title": "02 · OpenAI Chat Completions 协议",
+          "file": "llm-protocols/openai-chat-completions.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "全行业最小公约数的无状态扁平消息模型，以及它在长程多工具 Agent 场景下的四大架构瓶颈。",
+          "tags": ["OpenAI", "Chat Completions"]
+        },
+        {
+          "slug": "openai-responses",
+          "title": "03 · OpenAI Responses 协议",
+          "file": "llm-protocols/openai-responses.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "类型化 Item 列表、加密思考块、end_turn: false 续跑信号、previous_response_id 与原生 /responses/compact 服务端压缩。",
+          "tags": ["OpenAI", "Responses API", "Compaction"]
+        },
+        {
+          "slug": "anthropic-messages",
+          "title": "04 · Anthropic Messages 协议",
+          "file": "llm-protocols/anthropic-messages.md",
+          "status": "done",
+          "updatedAt": "2026-11-21",
+          "summary": "统一 Content Block 模型、交错思考签名、显式 cache_control 前缀缓存断点，以及服务端 clear_tool_uses 工具清理。",
+          "tags": ["Anthropic", "Prompt Cache", "Context Editing"]
         }
       ]
     }
