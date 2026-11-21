@@ -20,6 +20,14 @@
   2. **遮挡剔除（Occlusion Check）**：对矩形框中心点调用 `document.elementFromPoint(cx, cy)`——如果命中的不是该元素本身或子孙，说明它**被弹窗或吸顶栏盖住了**，直接剔除不打标！
 - **无 DOM 场景（Canvas / 桌面软件，如微软 OmniParser）**：拿不到 DOM 时，先跑一个极轻量的本地目标检测模型（如微调的 YOLO）从截图像素里框出所有图标与按钮，再配合 OCR 识别文字。
 
+> [!NOTE] 真实业界案例：谁真的在用“YOLO + OCR”画标号？
+> 最典型的开源代表就是微软研究院的 **[OmniParser / OmniParser V2](https://github.com/microsoft/OmniParser)**：
+> 1. 用在数万张网页/桌面截图上微调的 **YOLOv8（`icon_detect`）** 框出所有可交互图标和按钮；
+> 2. 用 **EasyOCR / PaddleOCR** 提取屏幕文字；
+> 3. 再用微调的轻量视觉模型 **Florence-2（`icon_caption`）** 给没有文字的纯图标（如齿轮、放大镜、垃圾桶）补上语义标签，最后合成为 **SoM 标号图 + 结构化元素表**，让任意通用大模型都能精准操作桌面。
+>
+> **另一条演进路线（端到端 GUI Grounding）**：近两年也兴起了直接把定位能力训进多模态权重里的专用模型（如字节开源的 **UI-TARS**、**OS-Atlas**，以及 Anthropic Claude / OpenAI CUA 内置的 Computer Use 能力），跳过外挂 YOLO 流水线，直接看原图输出精确坐标。两者各有取舍：外挂 OmniParser 可让任意通用模型立刻具备高精度桌面定位；端到端模型则链路更短、延迟更低。
+
 ### 第 2 步：在内存中建立「数字编号 ↔ 真实目标」映射表
 按从上到下、从左到右给过滤后的元素编号 `1, 2, 3...`，把映射关系留在 Agent 运行时内存里：
 ```json
