@@ -477,6 +477,34 @@
           "tags": ["OpenClaw", "OpenCode", "Codex", "Pi"]
         }
       ]
+    },
+    {
+      "id": "system-prompts",
+      "category": "Agent 基建",
+      "name": "系统提示词与上下文工程",
+      "status": "done",
+      "description": "源码级横评 OpenClaw、Codex、OpenCode、Pi 四大主流 Agent 的系统提示词设计差异（为什么给 Claude 写 300B 给 Kimi 写 8.8KB），提炼工业级 System Prompt 的四大工程法则。",
+      "tags": ["System Prompt", "Prompt Cache", "Context Engineering"],
+      "docs": [
+        {
+          "slug": "four-agents-comparison",
+          "title": "01 · 四大 Agent 系统提示词源码横评",
+          "file": "system-prompts/four-agents-comparison.md",
+          "status": "done",
+          "updatedAt": "2026-11-22",
+          "summary": "性能差异有多少来自系统提示词？源码级对照 OpenClaw / Codex / OpenCode / Pi 的提示词体量、因模施教与缓存分层。",
+          "tags": ["四强横评", "因模施教", "源码证据"]
+        },
+        {
+          "slug": "engineering-principles",
+          "title": "02 · 工业级 System Prompt 四大法则",
+          "file": "system-prompts/engineering-principles.md",
+          "status": "done",
+          "updatedAt": "2026-11-22",
+          "summary": "Prompt Cache 静动切分、按模型家族对症下药、行动偏置与沙箱解耦、Skills 按需延迟加载。",
+          "tags": ["工程法则", "Prompt Cache", "Skills"]
+        }
+      ]
     }
   ]
 }

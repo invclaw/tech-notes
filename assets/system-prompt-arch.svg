@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 450" width="980" height="450" role="img" aria-label="四大主流 Agent 系统提示词架构与缓存分层对比图">
+  <defs>
+    <linearGradient id="sp2-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <filter id="sp2-shadow" x="-3%" y="-5%" width="106%" height="114%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="450" rx="14" fill="url(#sp2-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">四大主流 Agent 系统提示词架构对比：长度不是关键，分层与缓存边界才是</text>
+
+  <!-- 4 Columns -->
+  <!-- Col 1: OpenClaw -->
+  <g filter="url(#sp2-shadow)">
+    <rect x="24" y="56" width="222" height="370" rx="11" fill="#ffffff" stroke="#3b82f6" stroke-width="1.6"/>
+    <rect x="24" y="56" width="222" height="32" rx="11" fill="#2563eb"/>
+    <rect x="24" y="76" width="222" height="12" fill="#2563eb"/>
+    <text x="135" y="77" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">OpenClaw（精密分层派）</text>
+
+    <rect x="36" y="100" width="198" height="92" rx="7" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="46" y="119" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">↑ 缓存边界之上（稳定前缀）</text>
+    <text x="46" y="138" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 工作区指令 + 项目上下文</text>
+    <text x="46" y="155" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• Execution Bias 行动偏置</text>
+    <text x="46" y="172" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 模型家族插件契约（GPT-5）</text>
+
+    <line x1="36" y1="202" x2="234" y2="202" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="135" y="216" text-anchor="middle" fill="#dc2626" font-family="-apple-system,PingFang SC,sans-serif" font-size="10" font-weight="700">--- Prompt Cache 边界 ---</text>
+
+    <rect x="36" y="226" width="198" height="94" rx="7" fill="#fffbeb" stroke="#fcd34d"/>
+    <text x="46" y="245" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">↓ 缓存边界之下（易变段）</text>
+    <text x="46" y="264" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 动态工具目录 / Skills 简介</text>
+    <text x="46" y="281" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 渠道 / 沙箱 / 委派编排提示</text>
+    <text x="46" y="298" fill="#b45309" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 时间/活跃进程走独立载体</text>
+
+    <text x="135" y="348" text-anchor="middle" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">核心特色</text>
+    <text x="135" y="368" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">强行动偏置 + 承诺闭环</text>
+    <text x="135" y="386" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">保缓存的同时兼容 20+ 渠道</text>
+  </g>
+
+  <!-- Col 2: Codex -->
+  <g filter="url(#sp2-shadow)">
+    <rect x="260" y="56" width="222" height="370" rx="11" fill="#ffffff" stroke="#0f766e" stroke-width="1.6"/>
+    <rect x="260" y="56" width="222" height="32" rx="11" fill="#0f766e"/>
+    <rect x="260" y="76" width="222" height="12" fill="#0f766e"/>
+    <text x="371" y="77" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">Codex（联合训练+增量派）</text>
+
+    <rect x="272" y="100" width="198" height="92" rx="7" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="282" y="119" fill="#115e59" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">基础指令（与模型联合训练）</text>
+    <text x="282" y="138" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 高度契合 apply_patch 补丁</text>
+    <text x="282" y="155" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 作为稳定 Prefix 永久置顶</text>
+    <text x="282" y="172" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 极少废话，靠训练内化习惯</text>
+
+    <rect x="272" y="206" width="198" height="114" rx="7" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="282" y="225" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">WorldState 动态增量段</text>
+    <text x="282" y="244" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 权限/沙箱规划对齐说明</text>
+    <text x="282" y="261" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 目录级 AGENTS.md 替换</text>
+    <text x="282" y="278" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 增量工具 / 协作 / Guardian</text>
+    <text x="282" y="299" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">✓ 平时只发 Diff，压缩时重算</text>
+
+    <text x="371" y="348" text-anchor="middle" fill="#115e59" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">核心特色</text>
+    <text x="371" y="368" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">模型与提示词深度协同训练</text>
+    <text x="371" y="386" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">独立 Guardian 分类器审查提示</text>
+  </g>
+
+  <!-- Col 3: OpenCode -->
+  <g filter="url(#sp2-shadow)">
+    <rect x="496" y="56" width="222" height="370" rx="11" fill="#ffffff" stroke="#d97706" stroke-width="1.6"/>
+    <rect x="496" y="56" width="222" height="32" rx="11" fill="#b45309"/>
+    <rect x="496" y="76" width="222" height="12" fill="#b45309"/>
+    <text x="607" y="77" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">OpenCode（因模施教派）</text>
+
+    <rect x="508" y="100" width="198" height="114" rx="7" fill="#fffbeb" stroke="#fcd34d"/>
+    <text x="518" y="119" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">按模型家族定制不同提示词</text>
+    <text x="518" y="140" fill="#334155" font-family="Menlo,monospace" font-size="10.5">anthropic.txt  → 仅 300B !</text>
+    <text x="518" y="159" fill="#334155" font-family="Menlo,monospace" font-size="10.5">gpt.txt        → 2.8 KB</text>
+    <text x="518" y="178" fill="#334155" font-family="Menlo,monospace" font-size="10.5">meta/trinity   → ~7.9 KB</text>
+    <text x="518" y="197" fill="#b45309" font-family="Menlo,monospace" font-size="10.5">kimi.txt       → 8.8 KB</text>
+
+    <rect x="508" y="226" width="198" height="94" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="518" y="245" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">动态工具指引注入</text>
+    <text x="518" y="264" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 按实际启用工具拼装纪律</text>
+    <text x="518" y="281" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 区分中间解说 vs 最终结论</text>
+    <text x="518" y="298" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 规范 Steer 融入与防删改动</text>
+
+    <text x="607" y="348" text-anchor="middle" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">核心特色</text>
+    <text x="607" y="368" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">拒绝“一份提示词打天下”</text>
+    <text x="607" y="386" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">强模型做减法，弱模型补纪律</text>
+  </g>
+
+  <!-- Col 4: Pi -->
+  <g filter="url(#sp2-shadow)">
+    <rect x="732" y="56" width="224" height="370" rx="11" fill="#ffffff" stroke="#7c3aed" stroke-width="1.6"/>
+    <rect x="732" y="56" width="224" height="32" rx="11" fill="#7c3aed"/>
+    <rect x="732" y="76" width="224" height="12" fill="#7c3aed"/>
+    <text x="844" y="77" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">Pi（极简留白派）</text>
+
+    <rect x="744" y="100" width="200" height="114" rx="7" fill="#faf5ff" stroke="#c4b5fd"/>
+    <text x="754" y="119" fill="#4c1d95" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">极短基础模板 + 工具自述</text>
+    <text x="754" y="140" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 仅保留极少通用规则</text>
+    <text x="754" y="159" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 每启用一个工具只拼 1 行规则</text>
+    <text x="754" y="178" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 隐藏工具从提示词中彻底剔除</text>
+    <text x="754" y="197" fill="#7c3aed" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 完整 Skill 正文按需延迟读取</text>
+
+    <rect x="744" y="226" width="200" height="94" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="754" y="245" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">具名 XML 可替换 Section</text>
+    <text x="754" y="264" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• preamble + 独立 XML 标签段</text>
+    <text x="754" y="281" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 扩展可精准替换任意 Section</text>
+    <text x="754" y="298" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 零说教，不稀释模型注意力</text>
+
+    <text x="844" y="348" text-anchor="middle" fill="#4c1d95" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">核心特色</text>
+    <text x="844" y="368" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">把上下文空间留给真实代码</text>
+    <text x="844" y="386" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">和用户的 AGENTS.md / 扩展</text>
+  </g>
+</svg>

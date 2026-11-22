@@ -39,3 +39,4 @@ python3 -m http.server 8080
 - **AI Agent 沙箱技术全景**：L1–L5 五级隔离谱系、三大操作系统（macOS Seatbelt / Linux bwrap+Landlock+Seccomp / Windows AppContainer+Job）内核原理、容器与 gVisor/Kata、MicroVM / E2B 与各沙箱最小实践单元
 - **大模型推理协议解析**：OpenAI Chat Completions、OpenAI Responses API 与 Anthropic Messages API 的真实请求/返回/SSE 报文对照与服务端上下文治理
 - **Browser Use 与 Computer Use**：CDP/Playwright + AXTree 无障碍树定位、纯视觉像素定位与 Xvfb/noVNC 虚拟桌面架构、间接注入防护与人机协同接管（HITL）
+- **系统提示词与上下文工程**：四大主流 Agent 系统提示词源码级横评（因模施教、缓存边界切分、行动偏置）与工业级设计法则
