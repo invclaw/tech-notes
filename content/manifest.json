@@ -503,6 +503,15 @@
           "updatedAt": "2026-11-22",
           "summary": "Prompt Cache 静动切分、按模型家族对症下药、行动偏置与沙箱解耦、Skills 按需延迟加载。",
           "tags": ["工程法则", "Prompt Cache", "Skills"]
+        },
+        {
+          "slug": "verbatim-prompts",
+          "title": "03 · 四家核心系统提示词原文对照",
+          "file": "system-prompts/verbatim-prompts.md",
+          "status": "done",
+          "updatedAt": "2026-11-22",
+          "summary": "直接贴出 Pi、OpenCode、OpenClaw、Codex 四家源码中的真实系统提示词原文，直观对比行文密度与工程约束。",
+          "tags": ["提示词原文", "Pi", "OpenCode", "OpenClaw", "Codex"]
         }
       ]
     }
