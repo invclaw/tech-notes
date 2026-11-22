@@ -510,8 +510,17 @@
           "file": "system-prompts/verbatim-prompts.md",
           "status": "done",
           "updatedAt": "2026-11-22",
-          "summary": "直接贴出 Pi、OpenCode、OpenClaw、Codex 四家源码中的真实系统提示词原文，直观对比行文密度与工程约束。",
+          "summary": "直接贴出 Pi、OpenCode、OpenClaw、Codex 四家源码中的真实系统提示词中英对照，直观对比行文密度与工程约束。",
           "tags": ["提示词原文", "Pi", "OpenCode", "OpenClaw", "Codex"]
+        },
+        {
+          "slug": "builtin-tools",
+          "title": "04 · 四大 Agent 内置工具、提示词与参数",
+          "file": "system-prompts/builtin-tools.md",
+          "status": "done",
+          "updatedAt": "2026-11-22",
+          "summary": "源码级盘点 Pi（7个）、Codex（~12个）、OpenCode（~20个）、OpenClaw（40+分组）全部内置工具、真实工具提示词与参数设计。",
+          "tags": ["Built-in Tools", "Tool Schema", "apply_patch"]
         }
       ]
     }
