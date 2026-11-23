@@ -46,6 +46,27 @@ flowchart TD
 - **绝不原地改写旧代际文件**：当旧版本格式需要升级迁移时，系统解码校验后在旁边**排他发布新一代文件**，旧文件永不重命名或覆盖；
 - **成功与失败流严格分离**：成功的 `assistant/message` 直接嵌入精确的带时间戳紧凑流；失败、重试或取消的尝试则记为 `assistant/attempt`（供遥测、排障和回放审计，但**绝不混入派生给模型的对话历史**）。
 
+### 2.1 跨进程会话写锁（`SessionWriteLease`：“已在另一个应用中打开”）
+
+当你在桌面端和 Web/CLI 同时打开同一个会话时，DSH 会弹出锁提示并提供「重试 / 创建聊天分叉」。它的锁**完全交由操作系统内核仲裁，刻意不设超时过期**（避免卡顿的旧进程醒来后继续追加把日志写撕裂）：
+
+```mermaid
+flowchart TD
+    Open["应用尝试以写模式打开会话"] --> OS{"操作系统分支"}
+    OS -->|"macOS / Linux (POSIX)"| Flock["原生 addon 对 session.lock 调非阻塞 flock(2)<br/>+ 二次校验 fd 与路径的 (ino, dev) 一致<br/>（释放锁只 close fd，永不删 lock 文件）"]
+    OS -->|"Windows"| Sem["Win32 CreateSemaphoreW 命名内核信号量<br/>（不占文件句柄，不阻塞读取与删目录）"]
+    Flock -->|"EAGAIN / EWOULDBLOCK"| Busy["抛出 SessionAlreadyOwnedError"]
+    Sem -->|"EBUSY"| Busy
+    Flock -->|"成功"| Hold["持有写租约直到关闭句柄<br/>（进程崩溃/SIGKILL 由内核自动秒放锁）"]
+    Sem -->|"成功"| Hold
+    Busy --> UI["UI 提示：已在另一个应用中打开"]
+    UI --> R1["重试：重新尝试抢内核锁"]
+    UI --> R2["创建分叉：只读拷贝前缀到新会话（不碰锁）"]
+```
+
+- **崩溃不留僵尸锁**：锁绑定在内核 fd / 信号量句柄上，进程崩溃或 `kill -9` 时内核自动关闭句柄秒放锁；
+- **读操作完全无锁**：列表、搜索、回放和「创建分叉」均不碰写锁，因此即使被锁住也能随时分叉出新会话继续聊。
+
 ---
 
 ## 3. 模块化压缩家族（`packages/compaction`）
