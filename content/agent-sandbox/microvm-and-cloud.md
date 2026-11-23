@@ -1,6 +1,10 @@
 > [!FOCUS] 强隔离派的核心诉求
 > 如果你要做一个**面向公网的多租户 Agent 平台**，或者用户本机不想装 Docker，却要放手让 Agent 执行任意安装、编译、爬虫和不可信脚本——**硬件虚拟化级别的轻量虚拟机（MicroVM）与 E2B 这类云端沙箱平台**就是终极防线。
 
+![E2B 底层全栈架构与快照秒启原理](./assets/e2b-arch.svg)
+
+> 更细致的 Firecracker UFFD 内存快照秒启、`envd` 内部守护进程与 Pause/Resume 跨天复活机制见子页 **[4.1 E2B 深度架构解析](#/agent-sandbox/microvm-and-cloud/e2b)**。
+
 ## 1. E2B 这种云端沙箱，和前面讲的沙箱到底有什么本质区别？
 
 很多人把 E2B 理解成“跑在云上的 Docker”，这其实是误解。E2B 与前面讲的 Seatbelt / `bwrap` / Docker 有**两层本质区别**：
