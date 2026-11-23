@@ -11,6 +11,29 @@ Codex 把核心引擎封装为常驻/可拉起的 **`app-server`（JSON-RPC 协�
 3. **能力协商与实验特性隔离**：客户端在握手初始化时声明自己支持的能力（如是否能响应强制人工命令检查点），服务端按能力精准路由请求；
 4. **优雅关停准入保护**：服务进入关闭流程时，立即以明确错误码拒绝新任务准入，让正在收尾的回合安全落盘。
 
+### 1.1 跨应用线程写锁（为什么会提示“已在另一个应用中打开”？）
+
+当你在 **Codex 桌面端** 与 **Codex CLI / IDE 插件** 同时打开同一个本地线程时，界面会提示「🔒 已在另一个应用中打开（重试 / 创建聊天分叉）」。
+
+底层由 `WriterLockCoordinator`（`codex-rs/rollout/src/writer_lock.rs`）用**「两级 OS 文件锁」**实现，极其巧妙地解决了“多线程并发加锁”与“删锁文件竞态”的经典难题：
+
+```mermaid
+flowchart TD
+    Req["应用尝试打开线程写入（thread_id）"] --> Coord["1. 先对 .coordination.lock 拿共享锁<br/>（不同线程可并发打开，但阻止此时有人删文件）"]
+    Coord --> TLock["2. 对 &lt;thread_id&gt;.lock 调非阻塞排他锁 try_lock()"]
+    TLock -->|"成功"| Own["持有 WriterLockGuard<br/>（进程崩溃由内核自动回收释放）"]
+    TLock -->|"WouldBlock<br/>另一应用已持有"| UI["UI 提示：已在另一个应用中打开"]
+    UI --> R1["重试：等那边关闭释放后重新 try_lock()"]
+    UI --> R2["创建聊天分叉：只读历史生成新 thread_id<br/>抢全新 &lt;new_id&gt;.lock，互不冲突"]
+    Own -->|"关闭会话 Drop"| Clean["尝试非阻塞抢 .coordination.lock 排他锁<br/>抢到才先关句柄再删文件；抢不到直接放锁留待后续清扫"]
+```
+
+- **统一锁目录**：所有锁文件集中在 `~/.codex/thread-writer-locks/` 下，全局协调锁 `.coordination.lock` + 每线程 `<thread_id>.lock`；
+- **为什么需要外层 `.coordination.lock` 读写锁？**
+  - **加锁拿共享锁**：A、B 两个不同线程可以同时打开各自锁文件互不阻塞；
+  - **删文件必须拿排他锁**：确保不会出现“进程 A 刚打开锁文件准备加锁，进程 B 恰好把它 `unlink` 删掉导致两人锁到不同 inode”的经典 POSIX 竞态（可对比 [DeepSeek Harness 永不删锁文件 + inode 二次校验](#/deepseek-harness/loop-and-compaction) 的另一种解法）；
+- **兼容 Windows**：清理时刻意先 `drop(file)` 关闭句柄再 `remove_file`，避免 Windows 文件句柄占用导致删除失败。
+
 ---
 
 ## 2. `exec-server`：把“执行环境”彻底从 Agent 逻辑里抽离
