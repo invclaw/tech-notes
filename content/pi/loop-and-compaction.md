@@ -19,18 +19,15 @@ Pi 的主循环刻意保持极简、无隐藏魔法：
 
 ### 2.1 触发时机与非破坏结构
 - **自动触发公式**：`contextTokens > contextWindow - reserveTokens`（默认预留 **16,384 tokens**），在多轮工具完成后的 `prepareNextTurn` 阶段检查（若当前工具批次刚好终结整轮且无排队消息，则跳过无意义的压缩）；同时支持 `/compact [聚焦指令]` 手动触发，以及溢出 / `length` 截断后的一次性压缩重试；
-- **倒推确定保留边界（`firstKeptEntryId`）**：从最新记录往前累加 token，凑够 **`keepRecentTokens`（默认 20K）** 找到切分点，把更早历史送给模型生成结构化摘要，最后在树尾追加一条 `CompactionEntry`：
+- **倒推确定保留边界（`firstKeptEntryId`）**：从最新记录往前累加 token，凑够 **`keepRecentTokens`（默认 20K）** 找到切分点，把更早历史送给模型生成结构化摘要，最后在树尾追加一条 `CompactionEntry`（旧记录永不删除）：
 
-```text
-压缩前（会话树完整记录）：
-  [hdr] [usr1] [ass1] [tool1] | [usr2] [ass2] [tool2] [ass3] [tool3]
-         └── 送去生成摘要 ──┘   ↑ firstKeptEntryId（原样保留近期 20K）
-
-压缩后（仅在末尾追加 cmp 节点，旧记录永不删）：
-  [hdr] [usr1] [ass1] [tool1] | [usr2] [ass2] [tool2] [ass3] [tool3] [cmp]
-
-下一轮发给模型的实际视图：
-  [system prompt] + [cmp 摘要] + [usr2] [ass2] [tool2] [ass3] [tool3]
+```mermaid
+flowchart LR
+    subgraph Disk["磁盘 JSONL 会话树（仅追加，旧记录永不删）"]
+        Old["usr1 → ass1 → tool1<br/>（送去生成摘要 · 后续不再发给模型）"] --> Kept["usr2 → ass2 → tool2 → ass3 → tool3<br/>↑ firstKeptEntryId（原样保留近期 20K）"]
+        Kept --> Cmp["追加节点：CompactionEntry<br/>（含摘要文本 + firstKeptEntryId）"]
+    end
+    Cmp -.->|"下一轮发给模型的实际视图"| LLM["system prompt → cmp 摘要 → usr2..tool3"]
 ```
 
 ### 2.2 三个极其细腻的工程细节

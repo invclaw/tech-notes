@@ -25,6 +25,19 @@ Codex 在三个桌面操作系统上全部做了原生进程级沙箱实现（�
 
 ## 2. ExecPolicy 策略引擎与托管人工检查点
 
+```mermaid
+flowchart TD
+    Cmd["模型发出命令调用"] --> Canon["1. 命令规范化（Canonicalization）<br/>还原可执行路径映射，防别名绕过"]
+    Canon --> Rule{"2. ExecPolicy 前缀规则匹配"}
+    Rule -->|"命中 prompt-user<br/>托管人工检查点"| Human["强制全新人工确认<br/>（自动审查与历史授权均不可跳过）"]
+    Rule -->|"命中白名单"| Run["3. 进入三端原生进程沙箱执行<br/>(Seatbelt / bwrap / AppContainer) + network-proxy"]
+    Rule -->|"未命中默认规则"| Guard{"Guardian 上下文自动审查"}
+    Guard -->|"低风险放行"| Run
+    Guard -->|"高风险升级"| Human
+    Human -->|"批准"| Run
+    Human -->|"拒绝"| Deny["拦截并返回拒绝原因给模型"]
+```
+
 光靠沙箱挡不住“在工作区内部删库、强推分支或误跑危险脚本”。Codex 因此在执行前叠了一层**命令级静态策略引擎（`execpolicy`）**：
 
 1. **命令规范化（Canonicalization）**：先解析命令行结构、还原可执行文件路径映射，防止模型用路径别名或花式拼接绕过规则；

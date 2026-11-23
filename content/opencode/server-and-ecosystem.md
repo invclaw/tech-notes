@@ -5,6 +5,21 @@
 
 ## 1. Client / Server 分离与多端接入
 
+```mermaid
+flowchart LR
+    subgraph Clients["无状态多端客户端"]
+        TUI["TUI 终端"]
+        Desk["Desktop 桌面端"]
+        Web["Web / GUI 插件"]
+        ACP["ACP 外部 IDE"]
+    end
+    Clients -->|"强类型 HTTP API + Event Feed SSE"| Srv["OpenCode Server<br/>(配对鉴权 · 请求追踪)"]
+    Srv --> Loc["Location 统一位置路由<br/>（本地目录 / 远端开发机透明切换）"]
+    Loc --> PD["process-daemon + persistent-pty<br/>（断线不杀后台服务）"]
+    Loc --> CM["codemode 后台脚本任务<br/>（完成回投 Inbox 按响门铃）"]
+    Loc --> Eco["MCP / Skills / Plugin Hooks"]
+```
+
 - **一套类型化 HTTP API + Event Feed**：`packages/server` 对外提供统一的 REST API（带代码生成的强类型 SDK）和实时事件流（Event Feed），并支持配对鉴权（Pairing）与请求追踪；
 - **统一 Location（位置）模型**：把“本地目录”与“远端开发机”抽象为统一的 `Location` 服务映射，上层会话和文件操作按 Location 透明路由，使本地桌面 App 可以无缝操控远端机器上的 OpenCode Server；
 - **原生支持 ACP 桥接**：CLI 内置 ACP 适配层，可直接被支持 ACP 协议的外部 IDE 或多 Agent 宿主（如 Zed 等）作为标准 Coding Agent 挂载。

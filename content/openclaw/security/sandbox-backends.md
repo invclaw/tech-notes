@@ -15,6 +15,17 @@
 
 ## 2. 五大可插拔沙箱后端对比
 
+```mermaid
+flowchart TD
+    Start{"工具执行跑在哪里？"} --> Local{"本机有容器引擎？"}
+    Local -->|"有 Docker（需沙箱浏览器/默认）"| D["Docker 后端（默认）"]
+    Local -->|"偏好无守护进程 Rootless"| P["Podman 后端"]
+    Start --> Remote{"卸载到远端 / 云端？"}
+    Remote -->|"自有独立测试机"| S["SSH 后端（远端真源）"]
+    Remote -->|"企业托管网关 + 双向同步"| O["OpenShell 后端（Mirror / Remote）"]
+    Remote -->|"用完即弃云机器（免装 Docker）"| C["Crabbox 后端（固定租约 ID）"]
+```
+
 OpenClaw 没有把沙箱绑死在单一技术上，而是抽象出统一后端接口，内置支持 **5 种后端**：
 
 | 沙箱后端 | 底层载体 / 运行位置 | 工作区同步模式 | 网络与浏览器能力 | 最适合的场景 |

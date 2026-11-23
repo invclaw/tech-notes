@@ -5,6 +5,14 @@
 
 ## 1. 底层通道：CDP 与 Playwright
 
+```mermaid
+flowchart LR
+    A["1. 抓取网页感知<br/>CDP 拉取 AXTree 无障碍树<br/>分配短编号 ref=e4 / e12"] --> B["2. 模型语义决策<br/>输出 click(ref='e12')<br/>或 fill(ref='e4', '...')"]
+    B --> C["3. Playwright 精准执行<br/>穿透 Shadow DOM / iframe<br/>自动等待可见与动画停止"]
+    C --> D["4. 状态校验<br/>等待 SPA 局部刷新稳定<br/>重新抓帧验证结果"]
+    D -->|"多步任务"| A
+```
+
 几乎所有主流 Browser Use 框架（Playwright MCP、Browser-Use、OpenClaw 沙箱浏览器）底层都建立在 **CDP（Chrome DevTools Protocol）** 或封装了 CDP 的 **Playwright** 之上：
 - 通过 WebSocket 直接控制真实 Chromium 进程，能精确拿到 DOM、无障碍树、网络请求、Console 日志与截图；
 - 自动处理“等待元素可见、滚入视口、等待动画稳定、触发真实浏览器事件”，比拼凑模拟点击稳定得多。

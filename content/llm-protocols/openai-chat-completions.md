@@ -3,6 +3,17 @@
 
 ## 1. 请求与返回完整示例（调用工具场景）
 
+```mermaid
+sequenceDiagram
+    participant C as Agent 客户端
+    participant S as Chat Completions 服务端（无状态）
+    C->>S: 第 1 轮：全量 [system, user] + tools[]
+    S-->>C: 流式 choices[0].delta 碎片 → finish_reason: tool_calls
+    Note over C: 执行 get_weather("上海")
+    C->>S: 第 2 轮：全量重传 [system, user, assistant(tool_calls), role:tool]
+    S-->>C: 最终文本回复 → finish_reason: stop
+```
+
 ### ① 第 1 轮请求（客户端全量发送历史 + 工具定义）
 ```json
 {

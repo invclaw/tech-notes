@@ -30,6 +30,18 @@
 
 ## 2. 云端托管沙箱的三大工程难题
 
+```mermaid
+flowchart LR
+    subgraph M["模式 A：Mirror 双向同步（本地为真源）"]
+        L1["本地工作区"] -->|"执行前上传改动"| R1["云端沙箱执行"]
+        R1 -->|"执行后拉回产物"| L1
+    end
+    subgraph RM["模式 B：Remote 远端真源（如 E2B / Crabbox）"]
+        L2["本地 / Git 仓库"] -->|"首次播种 / clone"| R2["云端长期驻留工作区"]
+        R2 -->|"完成后推 PR 或下载产物"| L2
+    end
+```
+
 把沙箱搬到云端（E2B、Daytona、OpenClaw 的 Crabbox / OpenShell）后，隔离问题解决了，但会引入三个新的架构取舍：
 
 1. **工作区谁是真源？（本地 vs 云端同步）**

@@ -15,6 +15,16 @@
 
 ## 2. 外置隔离：为什么不内置沙箱，以及 4 种官方隔离模式？
 
+```mermaid
+flowchart TD
+    Need{"Pi 需要什么强度的隔离？"} --> W["整进程进隔离环境"]
+    Need --> T["Pi 留宿主机，仅隔离工具"]
+    W --> M1["1. Plain Docker<br/>最简单，Key 需进容器"]
+    W --> M2["2. Docker Sandboxes（推荐）<br/>真实 API Key 留宿主机代理动态代换"]
+    W --> M3["3. NVIDIA OpenShell<br/>企业策略级网络/文件/推理管控"]
+    T --> M4["4. Gondolin 扩展<br/>内置工具与 ! 命令进本地 Linux MicroVM"]
+```
+
 Pi 在文档中非常坦诚：**内置权限弹窗既拖慢开发节奏，又很难做成真正的安全边界**。默认情况下 Pi 以启动它的 OS 用户权限运行；一旦需要强隔离，官方推荐根据场景选择 **4 种外置隔离方案**（与 [AI Agent 沙箱技术全景](#/agent-sandbox/overview) 的 L3/L5 层级直接对应）：
 
 | 隔离模式 | Pi 进程跑在哪 | 隔离范围 | 凭据（API Key）放哪 | 核心取舍 |

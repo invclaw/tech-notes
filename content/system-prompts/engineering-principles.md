@@ -1,6 +1,8 @@
 > [!FOCUS] 核心提炼
 > 看完 OpenClaw、Codex、OpenCode、Pi 四家真实源码，可以抽取出编写工业级 Agent System Prompt 的**四条通用工程法则**——它们比任何“Prompt 技巧话术”都更直接地决定线上效果与成本。
 
+![工业级 System Prompt 静动切分与 Prompt Cache 保护架构](./assets/prompt-cache-boundary.svg)
+
 ---
 
 ## 法则 1：死守 Prompt Cache 边界（静态在上，动态在下）

@@ -5,6 +5,16 @@
 
 ## 1. 核心原则：放在 `messages` 与 System Prompt 之外
 
+```mermaid
+flowchart LR
+    Base["模型核心输入（零改动）<br/>System Prompt + Tools + messages[]<br/>✓ 零额外 Token · 100% 保 Prompt Cache"] --> HTTP["同一个 HTTP 请求体"]
+    Ext1["顶层带外扩展：dsh_plugin_packages<br/>存活插件包 (name, version) 清单"] --> HTTP
+    Ext2["顶层带外扩展：dsh_session_log<br/>增量水位后缀 afterSeq → throughSeq"] --> HTTP
+    HTTP --> Resp{"端点返回 HTTP 2xx ?"}
+    Resp -->|"是"| Acc["运行 accept() 事务<br/>推进会话日志水位线"]
+    Resp -->|"否 / 序列化异常"| Retry["不推进水位线，下轮重发<br/>优雅降级绝不阻塞主推理"]
+```
+
 所有 DSH 专用扩展（HTTP 标头 + 保留 `dsh_` 前缀的顶层 JSON 字段）都严格位于 `messages`、系统提示词和工具 Schema **之外**：
 - **不增加 1 个模型输入 Token**；
 - **绝不改变模型可见前缀**，完全不影响 Prompt Cache 命中（对比 [大模型推理协议解析](#/llm-protocols/overview)）；

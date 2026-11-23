@@ -20,6 +20,14 @@
 
 ## 2. 工作区可见性与文件桥接原理
 
+```mermaid
+flowchart LR
+    Tool["模型调用文件工具<br/>ls / read / write / edit"] --> Bridge["SandboxFsBridge 桥接层<br/>• 同一物理文件串行化防写坏<br/>• 校验容器真实挂载表<br/>• 双重路径校验防软链逃逸"]
+    Bridge -->|"workspaceAccess: none"| Priv["仅私有沙箱目录<br/>（不可见宿主机工作区）"]
+    Bridge -->|"workspaceAccess: ro<br/>（访客强制封顶）"| RO["宿主机工作区只读挂 /agent<br/>写操作一律拒绝"]
+    Bridge -->|"workspaceAccess: rw"| RW["宿主机工作区读写挂 /workspace"]
+```
+
 ### 2.1 工作区三级可见性
 沙箱能看到宿主机工作区的多少内容，由三级模式精确控制：
 - **`none`（默认最严）**：完全不挂载 Agent 宿主机工作区，只给一个私有的隔离沙箱目录；

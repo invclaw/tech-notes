@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 400" width="980" height="400" role="img" aria-label="工业级 System Prompt 静动切分与 Prompt Cache 保护架构图">
+  <defs>
+    <linearGradient id="pcb-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <filter id="pcb-shadow" x="-3%" y="-5%" width="106%" height="114%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="400" rx="14" fill="url(#pcb-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">工业级 System Prompt 静动切分：死守 Prompt Cache 命中率的四层结构</text>
+
+  <!-- Left: Good Architecture -->
+  <g filter="url(#pcb-shadow)">
+    <rect x="24" y="56" width="590" height="316" rx="12" fill="#ffffff" stroke="#16a34a" stroke-width="1.8"/>
+    <rect x="24" y="56" width="590" height="32" rx="12" fill="#0f766e"/>
+    <rect x="24" y="76" width="590" height="12" fill="#0f766e"/>
+    <text x="319" y="77" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">✓ 推荐结构：静态前缀置顶 + 动态事实后置（缓存命中率 90%+）</text>
+
+    <rect x="42" y="102" width="554" height="60" rx="8" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.4"/>
+    <text x="56" y="124" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">第 1 层 · 永久稳定前缀（跨轮字节级不变 → 100% 吃满缓存）</text>
+    <text x="56" y="145" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">核心身份 · 模型家族行为契约（行动偏置）· 工作区常驻规范（AGENTS.md / SOUL.md）</text>
+
+    <line x1="42" y1="173" x2="596" y2="173" stroke="#2563eb" stroke-width="1.6" stroke-dasharray="5 3"/>
+    <text x="319" y="187" text-anchor="middle" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="700">🔖 Prompt Cache 断点（cache_control）</text>
+
+    <rect x="42" y="196" width="554" height="58" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="56" y="218" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">第 2 层 · 低频变化段（工具目录 / Skills 简短触发索引）</text>
+    <text x="56" y="239" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">仅放核心工具 Schema + 技能一行目录（完整 SKILL.md 命中时按需延迟加载）</text>
+
+    <rect x="42" y="266" width="554" height="44" rx="8" fill="#fffbeb" stroke="#fcd34d"/>
+    <text x="56" y="293" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">第 3 层 · 历史对话（只追加不篡改旧消息，超限时按代次压缩）</text>
+
+    <rect x="42" y="320" width="554" height="38" rx="8" fill="#faf5ff" stroke="#c4b5fd"/>
+    <text x="56" y="344" fill="#5b21b6" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">第 4 层 · 当轮动态载体（当前时间 / 活跃进程 / WorldState 增量 Diff）</text>
+  </g>
+
+  <!-- Right: Anti-pattern -->
+  <g filter="url(#pcb-shadow)">
+    <rect x="636" y="56" width="320" height="316" rx="12" fill="#ffffff" stroke="#dc2626" stroke-width="1.6"/>
+    <rect x="636" y="56" width="320" height="32" rx="12" fill="#dc2626"/>
+    <rect x="636" y="76" width="320" height="12" fill="#dc2626"/>
+    <text x="796" y="77" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">✗ 反面教材（缓存全毁 · 延迟暴涨）</text>
+
+    <rect x="654" y="104" width="284" height="66" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.4"/>
+    <text x="668" y="126" fill="#991b1b" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">1. 顶部写精确时间戳</text>
+    <text x="668" y="146" fill="#7f1d1d" font-family="Menlo,monospace" font-size="10.2">Now: 2026-11-23 11:20:05</text>
+    <text x="668" y="162" fill="#b91c1c" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">→ 每轮第 1 行就变，后面几万 Token 全失效！</text>
+
+    <rect x="654" y="184" width="284" height="76" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.4"/>
+    <text x="668" y="206" fill="#991b1b" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">2. 把 50 个 Skill 全文塞进顶部</text>
+    <text x="668" y="226" fill="#7f1d1d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• 白烧海量输入费用</text>
+    <text x="668" y="245" fill="#7f1d1d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• 稀释注意力，强模型反变笨</text>
+
+    <rect x="654" y="274" width="284" height="80" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.4"/>
+    <text x="668" y="296" fill="#991b1b" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">3. 拿提示词当安全边界</text>
+    <text x="668" y="316" fill="#7f1d1d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• 写满“每步都要小心询问用户”</text>
+    <text x="668" y="335" fill="#7f1d1d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">→ 既防不住注入，又让 Agent 极度磨叽</text>
+  </g>
+</svg>

@@ -5,6 +5,16 @@
 
 ## 1. 四条生产级安全防线
 
+```mermaid
+flowchart TD
+    Web["网页 / 桌面弹窗（高危不可信输入）"] --> Box["1. 独立沙箱浏览器 / 云桌面<br/>不共用主力 Profile、密码库与 ~/.ssh"]
+    Box --> Taint["2. 轮次污点隔离<br/>外部抓取内容禁入长期记忆"]
+    Taint --> Guard{"3. 高敏动作门控<br/>支付 / 删除 / 外发 / 2FA / 验证码？"}
+    Guard -->|"常规浏览"| Auto["Agent 继续自动执行"]
+    Guard -->|"命中高敏或 2FA"| HITL["4. 人机协同接管（HITL）<br/>noVNC / WebRTC 画面交由人类操作"]
+    HITL -->|"人类完成后交回"| Auto
+```
+
 1. **独立沙箱容器 / 云桌面隔离（绝不共用主力环境）**
    - 浏览器与桌面会话必须运行在独立容器或云端 MicroVM 中（参考 [OpenClaw 独立沙箱浏览器](#/openclaw/security/sandbox-backends) 与 [AI Agent 沙箱技术全景](#/agent-sandbox/overview)）；
    - **严禁把宿主机主力浏览器 Profile、系统钥匙串或 `~/.ssh` 暴露进 GUI 沙箱**；默认限制出网或通过网络代理做域名白名单。

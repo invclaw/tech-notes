@@ -8,7 +8,15 @@
 - 每个文件、目录、注册表键、命名管道上都挂着一张**访问控制列表（DACL）**，写着“允许或拒绝哪些 SID 做什么操作”。
 - 每次进程试图打开任何资源，内核的**安全引用监视器（SRM，Security Reference Monitor）**就会拿“令牌”去核对“DACL”。
 
-Windows 进程级沙箱的本质，就是**给子进程发一张“极度缩水的特制令牌”，让内核 SRM 自动把一切未授权访问挡在门外**。
+Windows 进程级沙箱的本质，就是**给子进程发一张“极度缩水的特制令牌”，让内核 SRM 自动把一切未授权访问挡在门外**：
+
+```mermaid
+flowchart LR
+    P["受限子进程<br/>(AppContainer 唯一 Package SID<br/>+ Low Integrity 低完整性)"] --> SRM{"Windows 内核<br/>安全引用监视器 (SRM)"}
+    SRM -->|"宿主机个人目录 (~/.ssh)<br/>ACL 无此 Package SID"| Deny["天然拒绝 Access Denied"]
+    SRM -->|"项目工作区目录<br/>显式授予 Package SID 读写"| Allow["放行读写"]
+    P -.->|"关入 Job Object"| Job["资源封顶 + KILL_ON_JOB_CLOSE<br/>取消即原子杀全树"]
+```
 
 ---
 

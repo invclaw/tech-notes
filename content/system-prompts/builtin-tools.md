@@ -5,6 +5,13 @@
 
 ## 1. 四家内置工具规模与设计哲学总览
 
+```mermaid
+flowchart LR
+    P["Pi（极简 7 个）<br/>默认只开 4 个原语<br/>搜索交由 bash"] --> C["Codex（精炼 ~12 个）<br/>无独立 read/grep<br/>Freeform apply_patch + 持久 PTY"]
+    C --> O["OpenCode（均衡 ~20 个）<br/>专用读写/搜索齐全<br/>shell 超时自动转后台"]
+    O --> OC["OpenClaw（全栈 40+ 个）<br/>12 个 group:* 策略组<br/>+ tool_search 延迟激活"]
+```
+
 | Agent | 内置工具规模 | 核心设计哲学 | 最具代表性的工具巧思 |
 |---|---|---|---|
 | **[Pi](#/pi/overview)** | **极简 7 个**（默认仅启用 4 个） | 只给最小原子原语，搜索/列目录默认交由 `bash` | 超长输出自动落盘临时文件并返回 `full_output_path` |

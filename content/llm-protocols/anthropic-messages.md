@@ -3,6 +3,14 @@
 
 ## 1. 请求与返回完整示例（同一天气查询场景）
 
+```mermaid
+flowchart LR
+    Req["请求前缀结构"] --> Sys["system[]<br/>🔖 cache_control (1h)"]
+    Sys --> Tools["tools[]<br/>🔖 cache_control (5m)"]
+    Tools --> Hist["messages[] 历史块<br/>text / thinking(+signature)<br/>tool_use ↔ tool_result 紧邻"]
+    Hist --> Edit["可选 context_management<br/>服务端 clear_tool_uses 清旧工具结果"]
+```
+
 ### ① 第 1 轮请求（注意 `cache_control` 显式缓存断点与 `thinking` 开关）
 ```json
 {

@@ -1,6 +1,22 @@
 > [!NOTE] 本页聚焦
 > 回答两个核心问题：**OpenClaw 里一共有哪六类记忆？每一类具体存在哪儿、包含哪些文件、内容是怎么编排组织的？**
 
+```mermaid
+flowchart TD
+    Root["Agent 本地物理存储"] --> WS["工作区目录 ~/.openclaw/workspace/"]
+    Root --> DB["独立数据库 openclaw-agent.sqlite"]
+
+    WS --> Inst["1. 指令层<br/>AGENTS.md · SOUL.md · IDENTITY.md · skills/"]
+    WS --> Mem["2. 长期事实记忆<br/>MEMORY.md（含触发短语 / 重要度 / 出处锚点）"]
+    WS --> User["3. 用户偏好模型<br/>USER.md + users/&lt;ID&gt;/USER.md（祈使句）"]
+    WS --> Daily["4. 情景日志（笔记）<br/>memory/YYYY-MM-DD.md · memory/imports/*"]
+    WS --> Dream["6. 人工审阅层<br/>DREAMS.md · memory/dreaming/*"]
+
+    DB --> Trans["4. 情景日志（原始会话 Transcripts）"]
+    DB --> Int["5. 前瞻意图层<br/>Standing Intents 表 + Cron 定时任务"]
+    DB --> Snap["6. 审阅备份 + 血缘索引<br/>MEMORY.md 改写前快照 + Provenance 表"]
+```
+
 ## 1. 指令层（Instructions）—— Agent 的“宪法与岗位手册”
 
 - **存在哪儿**：Agent 工作区根目录（默认 `~/.openclaw/workspace/`，多 Agent 时为 `~/.openclaw/workspace-<agentId>/`）。

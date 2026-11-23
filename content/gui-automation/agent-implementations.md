@@ -3,6 +3,14 @@
 
 ## 1. 四大主流 Agent 落地全景对比
 
+```mermaid
+flowchart LR
+    OC["OpenClaw<br/>原生全栈内置"] --> OC1["Browser：独立 Profile / Docker 沙箱 / SoM 标号<br/>Computer：screen(仅展示) 与 computer(真点击) 拆权"]
+    OP["OpenCode<br/>官方内置插件"] --> OP1["plugin-browser：ref 定位 + frameID 穿透<br/>内置 Proxy/Tunnel 联调远端 Dev Server"]
+    CX["Codex<br/>纯内核 + MCP"] --> CX1["经 MCP 挂载 Playwright / Computer Use<br/>由 Guardian 审查 + App-Server 弹窗审批"]
+    PI["Pi<br/>极简 7 工具"] --> PI1["内核零内置 GUI 能力<br/>全部交由 TS Extensions 或 MCP 按需装配"]
+```
+
 | Agent | Browser Use 实现方式 | Computer Use 实现方式 | 最具特色的架构设计 |
 |---|---|---|---|
 | **[OpenClaw](#/openclaw/overview)** | **原生全栈内置**（`extensions/browser`，CDP + Playwright） | **原生内置**（`computer` 工具 + Node 设备/云桌面节点） | **独立隔离 Profile + 沙箱浏览器容器**；`screen`（仅展示）与 `computer`（真操作）严格拆权；内置 SSRF 防护与多远端 CDP 接入 |

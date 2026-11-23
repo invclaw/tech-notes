@@ -3,6 +3,19 @@
 
 ## 1. 请求与返回完整示例（同一天气查询场景）
 
+```mermaid
+sequenceDiagram
+    participant C as Agent 客户端（如 Codex）
+    participant S as OpenAI Responses 服务端
+    C->>S: 第 1 轮：instructions + input[] + tools[]
+    S-->>C: 语义 SSE 事件 → output[reasoning(加密), function_call] (id: resp_001)
+    Note over C: 本地执行工具
+    C->>S: 第 2 轮：previous_response_id="resp_001" + function_call_output（增量！）
+    S-->>C: response.completed（若 end_turn: false 则自动续跑）
+    C->>S: 上下文膨胀时：POST /v1/responses/compact
+    S-->>C: 返回精简保留窗 + type: compaction 加密检查点
+```
+
 ### ① 第 1 轮请求（系统提示词独立为 `instructions`，工具结构更扁平）
 ```json
 {

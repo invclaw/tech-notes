@@ -1,7 +1,15 @@
 > [!NOTE] 本页聚焦
 > 深入拆解 Linux 进程级沙箱的“三件套组合拳”：**Bubblewrap（`bwrap`）怎么做到无 root 改挂载？Landlock LSM 怎么按 inode 锁死目录？Seccomp-BPF 为什么不能过滤文件路径？**
 
-Linux 没有像 macOS Seatbelt 那样一套规则包打天下的单层机制，而是遵循**正交原语组合**哲学——每一层只干一件事，叠在一起构成严密防线。
+Linux 没有像 macOS Seatbelt 那样一套规则包打天下的单层机制，而是遵循**正交原语组合**哲学——每一层只干一件事，叠在一起构成严密防线：
+
+```mermaid
+flowchart LR
+    Cmd["目标命令<br/>(bash / pytest / git)"] --> B["1. Bubblewrap (bwrap)<br/>UserNS 虚拟 root → MountNS 拼视图<br/>→ pivot_root 切根 + 断 Net/PID"]
+    B --> L["2. Landlock LSM<br/>PR_SET_NO_NEW_PRIVS<br/>按目录 fd/inode 锁死权限树"]
+    L --> S["3. Seccomp-BPF<br/>内核 syscall 入口过滤<br/>封杀 ptrace / mount / io_uring"]
+    S --> K["宿主机 Linux 内核"]
+```
 
 ---
 

@@ -5,6 +5,17 @@
 
 ## 1. 三端本地进程沙箱：逐调用策略、诚实降级与故障分类
 
+```mermaid
+flowchart LR
+    Call["每次工具/命令调用"] --> Pol["ctx.sandboxPolicy.resolve()<br/>按 Session 不可变 cwd 解析逐调用策略"]
+    Pol -->|"danger-full-access"| Raw["直接 spawn 原始 argv"]
+    Pol -->|"read-only / workspace-write"| Box["ctx.sandbox 包装 argv<br/>Linux: bwrap→Landlock<br/>macOS: Seatbelt<br/>Win: 原始 ACL 受限令牌"]
+    Box --> Out{"stderr 正交双分类"}
+    Out -->|"命中 runnerFailureRules"| Infra["上报沙箱基础设施故障"]
+    Out -->|"命中 denialSignatures"| Denied["上报沙箱正常拦截<br/>（可经人工批准一次性升权重试）"]
+    Out -->|"正常退出"| OK["返回结果 + 诚实标注 full / partial"]
+```
+
 `packages/sandbox` 将子进程执行限制在三档文件效果策略之下：**`read-only`（只读）**、**`workspace-write`（仅工作区与私有临时目录可写）**、**`danger-full-access`（绕过隔离）**，被策略拦截的命令支持经用户批准做**一次性升权重试**。此外还有四个非常硬核的工程细节：
 
 1. **各平台后端选型与 Windows 特殊取舍**（可对照 [AI Agent 沙箱技术全景 → 第 2 章](#/agent-sandbox/process-and-runtime)）：
