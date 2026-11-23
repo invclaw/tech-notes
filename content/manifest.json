@@ -397,9 +397,20 @@
           "title": "04 · 强隔离派：MicroVM、E2B 与云端沙箱",
           "file": "agent-sandbox/microvm-and-cloud.md",
           "status": "done",
-          "updatedAt": "2026-11-20",
-          "summary": "E2B 与本地沙箱的本质区别（独立内核 + 托管平台 + envd）、Firecracker 快照秒启、最小 SDK 单元与选型决策表。",
-          "tags": ["E2B", "Firecracker", "MicroVM", "选型指南"]
+          "updatedAt": "2026-11-23",
+          "summary": "E2B 与本地沙箱的本质区别（独立内核 + 托管平台 + envd）、Firecracker 快照秒启、最小 SDK 单元与选型决策表（下设 4.1 E2B 深度架构解析）。",
+          "tags": ["E2B", "Firecracker", "MicroVM", "选型指南"],
+          "children": [
+            {
+              "slug": "microvm-and-cloud/e2b",
+              "title": "4.1 E2B 深度架构解析",
+              "file": "agent-sandbox/e2b-deep-dive.md",
+              "status": "done",
+              "updatedAt": "2026-11-23",
+              "summary": "四层全栈架构（SDK → Edge Proxy → Orchestrator → Firecracker）、UFFD 内存快照 150ms 秒启、envd 守护进程与 Pause/Resume 跨天复活。",
+              "tags": ["E2B", "Firecracker", "Snapshot", "envd"]
+            }
+          ]
         }
       ]
     },

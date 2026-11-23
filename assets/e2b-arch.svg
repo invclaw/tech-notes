@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 480" width="980" height="480" role="img" aria-label="E2B 云端 MicroVM 沙箱四层架构与快照秒启原理图">
+  <defs>
+    <linearGradient id="e2b-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <marker id="e2b-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+    <marker id="e2b-arr-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#dc2626"/>
+    </marker>
+    <filter id="e2b-shadow" x="-3%" y="-5%" width="106%" height="114%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="480" rx="14" fill="url(#e2b-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">E2B 底层全栈架构：Control Plane · Orchestrator 快照秒启 · Firecracker MicroVM · envd</text>
+
+  <!-- Left: Client + Edge/Control Plane -->
+  <g filter="url(#e2b-shadow)">
+    <rect x="24" y="56" width="240" height="176" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4"/>
+    <rect x="24" y="56" width="240" height="30" rx="10" fill="#1e293b"/>
+    <rect x="24" y="74" width="240" height="12" fill="#1e293b"/>
+    <text x="144" y="76" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">1. Agent 侧 SDK</text>
+    <text x="38" y="108" fill="#0f172a" font-family="Menlo,monospace" font-size="11">Sandbox.create(template)</text>
+    <text x="38" y="128" fill="#475569" font-family="Menlo,monospace" font-size="10.8">sbx.commands.run(...)</text>
+    <text x="38" y="147" fill="#475569" font-family="Menlo,monospace" font-size="10.8">sbx.files.write / watch</text>
+    <text x="38" y="166" fill="#475569" font-family="Menlo,monospace" font-size="10.8">sbx.pause() / connect()</text>
+    <text x="38" y="196" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="600">无需 SSH 密钥，纯 HTTPS/gRPC</text>
+    <text x="38" y="215" fill="#64748b" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">TS / Python SDK 统一接入</text>
+  </g>
+
+  <line x1="144" y1="232" x2="144" y2="262" stroke="#2563eb" stroke-width="2" marker-end="url(#e2b-arr)"/>
+
+  <g filter="url(#e2b-shadow)">
+    <rect x="24" y="268" width="240" height="186" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.6"/>
+    <rect x="24" y="268" width="240" height="30" rx="10" fill="#2563eb"/>
+    <rect x="24" y="286" width="240" height="12" fill="#2563eb"/>
+    <text x="144" y="288" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">2. Edge Proxy &amp; 控制面</text>
+    <text x="38" y="320" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">• 鉴权、配额与按秒计费</text>
+    <text x="38" y="344" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 调度分配空闲 KVM 宿主机</text>
+    <text x="38" y="368" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 动态域名反向代理：</text>
+    <text x="38" y="388" fill="#2563eb" font-family="Menlo,monospace" font-size="10.2">&lt;port&gt;-&lt;id&gt;.e2b.app</text>
+    <text x="38" y="410" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">  直达目标 MicroVM 内部端口</text>
+    <text x="38" y="434" fill="#1d4ed8" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 维护 sandboxId → 宿主机路由表</text>
+  </g>
+
+  <!-- Arrow to Orchestrator -->
+  <line x1="264" y1="360" x2="306" y2="360" stroke="#2563eb" stroke-width="2" marker-end="url(#e2b-arr)"/>
+
+  <!-- Center + Right: Host Node (Orchestrator + Snapshot Pool + Firecracker MicroVM) -->
+  <g filter="url(#e2b-shadow)">
+    <rect x="314" y="56" width="642" height="398" rx="12" fill="#ffffff" stroke="#7c3aed" stroke-width="1.8"/>
+    <rect x="314" y="56" width="642" height="32" rx="12" fill="#7c3aed"/>
+    <rect x="314" y="76" width="642" height="12" fill="#7c3aed"/>
+    <text x="635" y="77" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">3. 裸金属 KVM 宿主机（Orchestrator 调度器 + 快照池 + Firecracker MicroVM）</text>
+
+    <!-- Snapshot Restore Box -->
+    <rect x="332" y="104" width="286" height="162" rx="9" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="346" y="126" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">Snapshot Restore（~150ms 秒启秘密）</text>
+    <text x="346" y="148" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">① 模板构建期预先开机一次，冻结三件套：</text>
+    <text x="356" y="167" fill="#78350f" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• RAM 内存快照 + vCPU 寄存器态</text>
+    <text x="356" y="185" fill="#78350f" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• ext4 只读根磁盘基线</text>
+    <text x="346" y="208" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">② 创建时调 LoadSnapshot + UFFD 按需缺页</text>
+    <text x="346" y="227" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">③ 叠加 Copy-on-Write 可写差异盘</text>
+    <text x="346" y="249" fill="#b45309" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="600">⚡ 跳过 BIOS/内核启动，直接从就绪态复活</text>
+
+    <!-- Pause / Resume Box -->
+    <rect x="332" y="280" width="286" height="156" rx="9" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.4"/>
+    <text x="346" y="302" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">Pause / Resume（跨天状态冻结）</text>
+    <text x="346" y="324" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• pause() 将此刻完整内存页 + 磁盘增量</text>
+    <text x="356" y="342" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">持久化到对象存储并释放宿主机算力</text>
+    <text x="346" y="366" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 隔天 connect(id) 毫秒恢复：</text>
+    <text x="356" y="385" fill="#15803d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">连后台进程、已装依赖、Python 内存变量全在</text>
+    <text x="346" y="414" fill="#0f766e" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">• 同时受 TTL + Idle Timeout 双重回收保护</text>
+
+    <!-- Arrow Snapshot -> MicroVM -->
+    <line x1="618" y1="185" x2="646" y2="185" stroke="#dc2626" stroke-width="2" marker-end="url(#e2b-arr-red)"/>
+
+    <!-- Right: Firecracker MicroVM -->
+    <rect x="654" y="104" width="284" height="332" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+    <rect x="654" y="104" width="284" height="30" rx="10" fill="#dc2626"/>
+    <rect x="654" y="122" width="284" height="12" fill="#dc2626"/>
+    <text x="796" y="124" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">4. Firecracker MicroVM（独立内核）</text>
+
+    <rect x="670" y="148" width="252" height="126" rx="8" fill="#ffffff" stroke="#fca5a5"/>
+    <text x="684" y="169" fill="#991b1b" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">envd 内部守护进程（Go · :49983）</text>
+    <text x="684" y="190" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• Process / PTY：流式命令 + 伪终端</text>
+    <text x="684" y="209" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• Filesystem：读写 / 上传 / File Watcher</text>
+    <text x="684" y="228" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• Connect/gRPC + HTTP 统一协议</text>
+    <text x="684" y="249" fill="#b91c1c" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">（替代传统 SSH，低开销、强类型）</text>
+
+    <rect x="670" y="286" width="252" height="72" rx="8" fill="#ffffff" stroke="#fca5a5"/>
+    <text x="684" y="307" fill="#991b1b" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">Code Interpreter（可选 Jupyter）</text>
+    <text x="684" y="328" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">• 跨轮保留 Python/JS 内存变量</text>
+    <text x="684" y="346" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8">• 自动捕获 Matplotlib 图表与表格</text>
+
+    <rect x="670" y="370" width="252" height="52" rx="8" fill="#fee2e2" stroke="#f87171"/>
+    <text x="796" y="392" text-anchor="middle" fill="#7f1d1d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">独立 Guest Linux 内核 + virtio</text>
+    <text x="796" y="410" text-anchor="middle" fill="#991b1b" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">硬件级隔离 · 独立网络栈 · 内部可跑任意进程</text>
+  </g>
+</svg>
