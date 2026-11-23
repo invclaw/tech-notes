@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 460" width="980" height="460" role="img" aria-label="DeepSeek Harness (dsh) 一切皆插件与 Cordis 架构全景图">
+  <defs>
+    <linearGradient id="dsh-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <marker id="dsh-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569"/>
+    </marker>
+    <filter id="dsh-shadow" x="-3%" y="-6%" width="106%" height="116%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="460" rx="14" fill="url(#dsh-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">DeepSeek Harness（dsh）架构：一切皆插件（Cordis）· 能力接缝 · 事件溯源日志</text>
+
+  <!-- Layer 1: Profiles & Bundles -->
+  <g filter="url(#dsh-shadow)">
+    <rect x="28" y="56" width="924" height="68" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.4"/>
+    <rect x="28" y="56" width="150" height="68" rx="10" fill="#1e293b"/>
+    <rect x="166" y="56" width="12" height="68" fill="#1e293b"/>
+    <text x="103" y="86" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">Profile 声明装配</text>
+    <text x="103" y="105" text-anchor="middle" fill="#cbd5e1" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">Bundle + YAML Patch</text>
+
+    <rect x="194" y="68" width="138" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="263" y="94" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="600">web (Web UI)</text>
+
+    <rect x="344" y="68" width="142" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="415" y="94" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="600">desktop (Electron)</text>
+
+    <rect x="498" y="68" width="140" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="568" y="94" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="600">headless CLI</text>
+
+    <rect x="650" y="68" width="140" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="720" y="94" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="600">sdk / sdk-minimal</text>
+
+    <rect x="802" y="68" width="134" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="869" y="94" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="600">acp 自动化服务</text>
+  </g>
+
+  <line x1="490" y1="124" x2="490" y2="148" stroke="#475569" stroke-width="2" marker-end="url(#dsh-arr)"/>
+
+  <!-- Layer 2: Cordis Plugin Tree & 3 Event Domains -->
+  <g filter="url(#dsh-shadow)">
+    <rect x="28" y="154" width="924" height="96" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.6"/>
+    <rect x="28" y="154" width="150" height="96" rx="10" fill="#2563eb"/>
+    <rect x="166" y="154" width="12" height="96" fill="#2563eb"/>
+    <text x="103" y="196" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">Cordis 插件底座</text>
+    <text x="103" y="216" text-anchor="middle" fill="#dbeafe" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">无特权内核·可逆卸载</text>
+
+    <rect x="194" y="168" width="236" height="68" rx="7" fill="#ffffff" stroke="#93c5fd"/>
+    <text x="208" y="190" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">Event-Sourced 会话日志</text>
+    <text x="208" y="210" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">模型可见即已记录 · 纯函数派生历史</text>
+    <text x="208" y="226" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">多代不可变 session.vN.jsonl[.zstd]</text>
+
+    <rect x="444" y="168" width="242" height="68" rx="7" fill="#ffffff" stroke="#93c5fd"/>
+    <text x="458" y="190" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">可替换 Agent Loop &amp; 三域事件</text>
+    <text x="458" y="210" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">Session（持久）/ Agent（瀑布）/ 能力事件</text>
+    <text x="458" y="226" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">pre-step 拦截 · turn-stopping 检查点</text>
+
+    <rect x="700" y="168" width="236" height="68" rx="7" fill="#ffffff" stroke="#93c5fd"/>
+    <text x="714" y="190" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">模块化压缩家族</text>
+    <text x="714" y="210" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="11">先工具修剪 → 再摘要 → 图片超限卸载</text>
+    <text x="714" y="226" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">按压力与溢出事件插件化触发</text>
+  </g>
+
+  <line x1="490" y1="250" x2="490" y2="274" stroke="#475569" stroke-width="2" marker-end="url(#dsh-arr)"/>
+
+  <!-- Layer 3: Capability Seams -->
+  <g filter="url(#dsh-shadow)">
+    <rect x="28" y="280" width="924" height="82" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
+    <rect x="28" y="280" width="150" height="82" rx="10" fill="#0f766e"/>
+    <rect x="166" y="280" width="12" height="82" fill="#0f766e"/>
+    <text x="103" y="317" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">能力接缝（Seam）</text>
+    <text x="103" y="337" text-anchor="middle" fill="#ccfbf1" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">定义 · 提供方 · 消费方</text>
+
+    <rect x="194" y="294" width="176" height="54" rx="7" fill="#ffffff" stroke="#86efac"/>
+    <text x="282" y="316" text-anchor="middle" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">执行与三端沙箱</text>
+    <text x="282" y="335" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">bwrap/Landlock·Seatbelt·ACL</text>
+
+    <rect x="382" y="294" width="176" height="54" rx="7" fill="#ffffff" stroke="#86efac"/>
+    <text x="470" y="316" text-anchor="middle" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">PTC 代码执行运行时</text>
+    <text x="470" y="335" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">run_code 异步/REPL/VM</text>
+
+    <rect x="570" y="294" width="176" height="54" rx="7" fill="#ffffff" stroke="#86efac"/>
+    <text x="658" y="316" text-anchor="middle" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">Browser / Computer Use</text>
+    <text x="658" y="335" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">独占注册 · CUA / Playwright</text>
+
+    <rect x="758" y="294" width="178" height="54" rx="7" fill="#ffffff" stroke="#86efac"/>
+    <text x="847" y="316" text-anchor="middle" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">多 Agent 与协同</text>
+    <text x="847" y="335" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5">Subagent · Team · Goal · LSP</text>
+  </g>
+
+  <line x1="490" y1="362" x2="490" y2="384" stroke="#475569" stroke-width="2" marker-end="url(#dsh-arr)"/>
+
+  <!-- Layer 4: LLM & Wire Extensions -->
+  <g filter="url(#dsh-shadow)">
+    <rect x="28" y="388" width="924" height="54" rx="10" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.5"/>
+    <rect x="28" y="388" width="150" height="54" rx="10" fill="#7c3aed"/>
+    <rect x="166" y="388" width="12" height="54" fill="#7c3aed"/>
+    <text x="103" y="420" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">模型与协议扩展</text>
+    <text x="196" y="420" fill="#4c1d95" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="600">ctx.llm 多模型适配（含 llm-pi-ai）+ DeepSeek 官方带外协议扩展（dsh_plugin_packages / dsh_session_log，零前缀污染）</text>
+  </g>
+</svg>

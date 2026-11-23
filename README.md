@@ -36,6 +36,7 @@ python3 -m http.server 8080
 - **Codex 架构设计解析**：Rust 四层解耦架构、Thread/Turn/Item 模型与远端压缩 V2 / WorldState、App-Server 与 Exec-Server 双服务边界、三端原生沙箱与 ExecPolicy / Guardian 审批
 - **OpenCode 架构设计解析**：Client/Server 分离与 Effect-TS 内核、单 Fiber 门铃模型与崩溃恢复、后台预压与四级渐进降采样、通配符权限引擎与隐藏 Git 快照时光机
 - **Pi 架构设计解析**：极简可组装底座、单文件树形 JSONL 会话与分支摘要、追加式非破坏压缩与超长单轮切分、外置微虚机/凭据代换隔离与供应链加固
+- **DeepSeek Harness 架构解析**：Cordis「一切皆插件」底座、Capability Seam 三角色拆分、Event-Sourced 多代日志、模块化压缩四件套、三端进程沙箱、PTC 运行时与带外协议扩展
 - **AI Agent 沙箱技术全景**：L1–L5 五级隔离谱系、三大操作系统（macOS Seatbelt / Linux bwrap+Landlock+Seccomp / Windows AppContainer+Job）内核原理、容器与 gVisor/Kata、MicroVM / E2B 与各沙箱最小实践单元
 - **大模型推理协议解析**：OpenAI Chat Completions、OpenAI Responses API 与 Anthropic Messages API 的真实请求/返回/SSE 报文对照与服务端上下文治理
 - **Browser Use 与 Computer Use**：CDP/Playwright + AXTree 无障碍树定位、纯视觉像素定位与 Xvfb/noVNC 虚拟桌面架构、间接注入防护与人机协同接管（HITL）

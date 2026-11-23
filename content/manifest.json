@@ -283,6 +283,52 @@
       ]
     },
     {
+      "id": "deepseek-harness",
+      "category": "主流 Agent 解析",
+      "name": "DeepSeek Harness 架构解析",
+      "status": "active",
+      "description": "DeepSeek AI 开源的「一切皆插件」智能体框架（deepseek-ai/deepseek-harness）：Cordis 插件树、Capability Seam 接缝、Event-Sourced 多代日志、模块化压缩、三端进程沙箱与 PTC 运行时。",
+      "tags": ["Cordis", "Plugin Tree", "Event Sourcing", "PTC", "Sandbox"],
+      "docs": [
+        {
+          "slug": "overview",
+          "title": "01 · 项目全景、一切皆插件与五强对比",
+          "file": "deepseek-harness/overview.md",
+          "status": "done",
+          "updatedAt": "2026-11-23",
+          "summary": "Cordis 无特权内核哲学、Profile/Bundle 声明装配、Capability Seam 三角色模型，以及五大主流开源 Agent 全景横评。",
+          "tags": ["一切皆插件", "Cordis", "五强对比"]
+        },
+        {
+          "slug": "loop-and-compaction",
+          "title": "02 · 三域事件循环、溯源日志与压缩",
+          "file": "deepseek-harness/loop-and-compaction.md",
+          "status": "done",
+          "updatedAt": "2026-11-23",
+          "summary": "Turn/Step 生命周期、Session/Agent/Capability 三域事件、不可变多代 JSONL 日志，以及插件化压缩四件套。",
+          "tags": ["Agent Loop", "Event Sourcing", "Compaction"]
+        },
+        {
+          "slug": "sandbox-ptc-gui",
+          "title": "03 · 三端沙箱、PTC 运行时与 GUI 接缝",
+          "file": "deepseek-harness/sandbox-ptc-gui.md",
+          "status": "done",
+          "updatedAt": "2026-11-23",
+          "summary": "Linux bwrap→Landlock / macOS Seatbelt / Windows 原始 ACL 受限令牌取舍、PTC run_code 运行时，以及独占注册的 Browser/Computer Use。",
+          "tags": ["Sandbox", "PTC", "Browser Use", "Computer Use"]
+        },
+        {
+          "slug": "wire-extensions",
+          "title": "04 · DeepSeek 官方带外协议扩展",
+          "file": "deepseek-harness/wire-extensions.md",
+          "status": "done",
+          "updatedAt": "2026-11-23",
+          "summary": "零前缀污染的带外 HTTP 标头与 dsh_plugin_packages / dsh_session_log 增量水位事务同步设计。",
+          "tags": ["Wire Extensions", "Prompt Cache", "Telemetry"]
+        }
+      ]
+    },
+    {
       "id": "agent-sandbox",
       "category": "Agent 基建",
       "name": "AI Agent 沙箱技术全景",
