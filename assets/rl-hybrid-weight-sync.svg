@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 490" width="980" height="490" role="img" aria-label="RL 训推混合集群：Colocated 同卡共置 vs Disaggregated 训推分离与权重热同步引擎对比">
+  <defs>
+    <linearGradient id="hs-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <filter id="hs-shadow" x="-3%" y="-5%" width="106%" height="114%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+    <marker id="hs-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f766e"/>
+    </marker>
+  </defs>
+
+  <rect width="980" height="490" rx="14" fill="url(#hs-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">RL 训推混合集群拓扑：Colocated 同卡共置 vs Disaggregated 训推分离与热同步</text>
+
+  <!-- Left: Colocated -->
+  <g filter="url(#hs-shadow)">
+    <rect x="24" y="54" width="456" height="270" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="1.6"/>
+    <rect x="24" y="54" width="456" height="32" rx="12" fill="#2563eb"/>
+    <rect x="24" y="74" width="456" height="12" fill="#2563eb"/>
+    <text x="252" y="75" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">模式 A · Colocated 同卡共置（时分复用 GPU）</text>
+
+    <rect x="40" y="98" width="424" height="58" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="52" y="117" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">1. Rollout 期：推理引擎占卡 → 结束 Sleep 释显存</text>
+    <text x="52" y="135" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">SGLang release_memory_occupation() / vLLM sleep → 腾空权重与 KV</text>
+    <text x="52" y="149" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">Actor 权重与优化器状态从 CPU 载回 HBM 执行 FSDP2 / Megatron 训练</text>
+
+    <rect x="40" y="166" width="424" height="78" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="52" y="185" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">2. 两阶段唤醒防 OOM（verl &amp; slime 共同铁律）</text>
+    <text x="52" y="203" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">① resume(tags=["weights"]) 仅唤醒权重槽 → 同卡 CUDA IPC 流式覆写</text>
+    <text x="52" y="219" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">② actor.to("cpu") + barrier() 确保训练侧彻底退场</text>
+    <text x="52" y="235" fill="#15803d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">③ resume(tags=["kv_cache"]) 唤醒 KV 池，开始下一轮采样</text>
+
+    <rect x="40" y="254" width="424" height="56" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="52" y="273" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6" font-weight="700">适用边界：中小集群 / 100% On-Policy</text>
+    <text x="52" y="291" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">优点：无训推卡配比失衡、零跨机权重带宽；短板：休眠重建 KV + 长尾气泡</text>
+  </g>
+
+  <!-- Right: Disaggregated -->
+  <g filter="url(#hs-shadow)">
+    <rect x="500" y="54" width="456" height="270" rx="12" fill="#ffffff" stroke="#0f766e" stroke-width="1.6"/>
+    <rect x="500" y="54" width="456" height="32" rx="12" fill="#0f766e"/>
+    <rect x="500" y="74" width="456" height="12" fill="#0f766e"/>
+    <text x="728" y="75" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">模式 B · Disaggregated 训推分离（空间隔离 + 流水重叠）</text>
+
+    <rect x="516" y="98" width="176" height="96" rx="8" fill="#faf5ff" stroke="#c4b5fd"/>
+    <text x="604" y="118" text-anchor="middle" fill="#5b21b6" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">Actor 训练 GPU 池</text>
+    <text x="526" y="138" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• FSDP2 / Megatron-LM</text>
+    <text x="526" y="155" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• 持续消费 TransferQueue</text>
+    <text x="526" y="172" fill="#6d28d9" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">• 空闲可动态切为 Rollout</text>
+    <text x="526" y="186" fill="#6d28d9" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">  (verl HybridEngineMode)</text>
+
+    <line x1="694" y1="130" x2="758" y2="130" stroke="#0f766e" stroke-width="2" marker-end="url(#hs-arrow)"/>
+    <text x="726" y="121" text-anchor="middle" fill="#0f766e" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.5" font-weight="700">热推权重</text>
+    <line x1="758" y1="166" x2="694" y2="166" stroke="#2563eb" stroke-width="2" stroke-dasharray="4 2" marker-end="url(#hs-arrow)"/>
+    <text x="726" y="181" text-anchor="middle" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.5" font-weight="700">异步轨迹</text>
+
+    <rect x="764" y="98" width="176" height="96" rx="8" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="852" y="118" text-anchor="middle" fill="#115e59" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">Rollout 推理 GPU 池</text>
+    <text x="774" y="138" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• 独立 vLLM / SGLang</text>
+    <text x="774" y="155" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• 原生支持 PD / EPD 分离</text>
+    <text x="774" y="172" fill="#0f766e" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">• 训练崩溃不中断沙箱轨迹</text>
+    <text x="774" y="186" fill="#0f766e" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">• pause_admission 保活</text>
+
+    <rect x="516" y="206" width="424" height="104" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="528" y="225" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8" font-weight="700">解耦 Publish / Commit 与长尾保活</text>
+    <text x="528" y="244" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• Trainer 发布不可变权重快照后立刻继续训练，后台异步 commit 到 Rollout</text>
+    <text x="528" y="261" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 推理侧仅释放 KV 保留权重显存位原地覆写，极大缩短同步暂停窗口</text>
+    <text x="528" y="278" fill="#0f766e" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 适用：长周期多轮 Coding Agent（需配套陈旧度上界与 TIS/OPSM 校正）</text>
+    <text x="528" y="295" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• 实证：verl PPOTrainerSeparateAsync / slime 独立 actor_pg + rollout_pg</text>
+  </g>
+
+  <!-- Bottom Row: 4 Weight Sync Transports -->
+  <g filter="url(#hs-shadow)">
+    <rect x="24" y="340" width="932" height="132" rx="12" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+    <rect x="24" y="340" width="932" height="28" rx="12" fill="#b45309"/>
+    <rect x="24" y="356" width="932" height="12" fill="#b45309"/>
+    <text x="490" y="359" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.8" font-weight="700">四代权重热同步通道演进（verl/checkpoint_engine 与 slime/update_weight 源码对照）</text>
+
+    <rect x="38" y="378" width="218" height="82" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="48" y="396" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6" font-weight="700">1. 同卡 CUDA IPC</text>
+    <text x="48" y="413" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">verl naive / slime FlattenedBucket</text>
+    <text x="48" y="429" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">零网络开销；slime 每次新分配</text>
+    <text x="48" y="444" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.6">张量防 SGLang 异步拷贝覆写</text>
+
+    <rect x="266" y="378" width="218" height="82" rx="8" fill="#f0fdfa" stroke="#99f6e4"/>
+    <text x="276" y="396" fill="#115e59" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6" font-weight="700">2. 分桶 NCCL 广播</text>
+    <text x="276" y="413" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">verl 双缓冲桶 + NVLink 扇出</text>
+    <text x="276" y="429" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">slime 每 PP 阶段独立 NCCL 组</text>
+    <text x="276" y="444" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.6">非专家与 MoE 专家两段同步</text>
+
+    <rect x="494" y="378" width="218" height="82" rx="8" fill="#faf5ff" stroke="#d8b4fe"/>
+    <text x="504" y="396" fill="#5b21b6" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6" font-weight="700">3. RDMA 单边读 / P2P</text>
+    <text x="504" y="413" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">verl NIXL / Mooncake / KIMI PS</text>
+    <text x="504" y="429" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">与推理引擎 PD 分离复用底层</text>
+    <text x="504" y="444" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.6">免维护脆弱跨集群全量 NCCL 组</text>
+
+    <rect x="722" y="378" width="218" height="82" rx="8" fill="#fffbeb" stroke="#fcd34d"/>
+    <text x="732" y="396" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6" font-weight="700">4. 稀疏字节差分 Delta</text>
+    <text x="732" y="413" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">verl delta_sharded / slime DiskDelta</text>
+    <text x="732" y="429" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">仅传单步变更的 (idx, val) 补丁</text>
+    <text x="732" y="444" fill="#b45309" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.6">大幅压缩跨机带宽，支持原地打补丁</text>
+  </g>
+</svg>

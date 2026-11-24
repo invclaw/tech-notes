@@ -22,7 +22,7 @@ flowchart LR
 
 - **一套类型化 HTTP API + Event Feed**：`packages/server` 对外提供统一的 REST API（带代码生成的强类型 SDK）和实时事件流（Event Feed），并支持配对鉴权（Pairing）与请求追踪；
 - **统一 Location（位置）模型**：把“本地目录”与“远端开发机”抽象为统一的 `Location` 服务映射，上层会话和文件操作按 Location 透明路由，使本地桌面 App 可以无缝操控远端机器上的 OpenCode Server；
-- **原生支持 ACP 桥接**：CLI 内置 ACP 适配层，可直接被支持 ACP 协议的外部 IDE 或多 Agent 宿主（如 Zed 等）作为标准 Coding Agent 挂载。
+- **原生支持 ACP 桥接**：CLI 内置 ACP 适配层，可直接被支持 [ACP 协议](#/agent-protocols/acp-and-a2a) 的外部 IDE 或多 Agent 宿主（如 Zed 等）作为标准 Coding Agent 挂载。
 
 ---
 
@@ -38,6 +38,6 @@ flowchart LR
 
 ## 3. 生态扩展边界（MCP · Skills · Plugins）
 
-- **MCP（Model Context Protocol）**：原生接入外部工具与数据源，统一纳入权限引擎管控；
+- **MCP（Model Context Protocol）**：原生接入外部工具与数据源，统一纳入权限引擎管控（协议机制与安全治理详见 [Agent 互操作协议：MCP 架构演进](#/agent-protocols/mcp-architecture)）；
 - **Skills 与目录级指令发现**：支持可复用的技能包与自动向上扫描项目 `AGENTS.md` 工程规范；
 - **双层插件体系**：既有核心侧的 **Plugin Hooks**（可介入权限判定、会话压缩等生命周期），也有面向前端的 **GUI Plugins**（扩展桌面/Web 界面能力）。

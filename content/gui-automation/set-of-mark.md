@@ -26,7 +26,7 @@
 > 2. 用 **EasyOCR / PaddleOCR** 提取屏幕文字；
 > 3. 再用微调的轻量视觉模型 **Florence-2（`icon_caption`）** 给没有文字的纯图标（如齿轮、放大镜、垃圾桶）补上语义标签，最后合成为 **SoM 标号图 + 结构化元素表**，让任意通用大模型都能精准操作桌面。
 >
-> **另一条演进路线（端到端 GUI Grounding）**：近两年也兴起了直接把定位能力训进多模态权重里的专用模型（如字节开源的 **UI-TARS**、**OS-Atlas**，以及 Anthropic Claude / OpenAI CUA 内置的 Computer Use 能力），跳过外挂 YOLO 流水线，直接看原图输出精确坐标。两者各有取舍：外挂 OmniParser 可让任意通用模型立刻具备高精度桌面定位；端到端模型则链路更短、延迟更低。
+> **另一条演进路线（端到端 GUI Grounding）**：近两年也兴起了直接把定位能力训进多模态权重里的专用模型（如字节开源的 **UI-TARS**、**OS-Atlas**，以及 Anthropic Claude / OpenAI CUA 内置的 Computer Use 能力），跳过外挂 YOLO 流水线，直接看原图输出精确坐标（后训练与环境强化学习机制详见 [Agent 后训练与 RL 基础设施](#/agent-post-training/overview)）。两者各有取舍：外挂 OmniParser 可让任意通用模型立刻具备高精度桌面定位；端到端模型则链路更短、延迟更低。
 
 ### 第 2 步：在内存中建立「数字编号 ↔ 真实目标」映射表
 按从上到下、从左到右给过滤后的元素编号 `1, 2, 3...`，把映射关系留在 Agent 运行时内存里：

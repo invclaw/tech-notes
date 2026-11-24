@@ -48,4 +48,6 @@ python3 -m http.server 8080
 - **大模型推理协议解析**：OpenAI Chat Completions、OpenAI Responses API 与 Anthropic Messages API 的真实请求/返回/SSE 报文对照与服务端上下文治理
 - **Browser Use 与 Computer Use**：CDP/Playwright + AXTree 无障碍树定位、纯视觉像素定位与 Xvfb/noVNC 虚拟桌面架构、间接注入防护与人机协同接管（HITL）
 - **系统提示词与上下文工程**：四大主流 Agent 系统提示词源码级横评（因模施教、缓存边界切分、行动偏置）与工业级设计法则
+- **Agent 互操作协议（MCP / ACP / A2A）**：三协议正交边界全景、MCP `2026-07-28` 无状态重构与 MRTR、Schema 膨胀治理与 OAuth 2.1（CIMD）/ 六大安全防线、ACP v1/v2 与 A2A v1.0 深度解析及五大 Agent 映射
 - **大模型推理引擎解析**（AI Infra 底层原理）：Prefill/Decode 物理模型与 KV Cache 显存账本、vLLM V1 / SGLang / TensorRT-LLM 1.4 的 Prefix Caching、多级卸载与缓存路由、异步重叠调度、PD 分离、投机/受约束解码及七段源码架构横评
+- **Agent 后训练与 RL 基础设施**（AI Infra 底层原理）：静态权重诞生链路与 Harness-Model 联合训练、RLVR/GRPO/DAPO 与训推偏差稳定化（R3 MoE 路由回放 / TIS / OPSM）、`verl` & `slime` 训推混合集群与稀疏权重热同步、多轮 Agentic Rollout 与万级并发沙箱治理

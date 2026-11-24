@@ -583,6 +583,52 @@
       ]
     },
     {
+      "id": "agent-protocols",
+      "category": "Agent 基建",
+      "name": "Agent 互操作协议（MCP / ACP / A2A）",
+      "status": "done",
+      "description": "一手规范级剖析 Agent 生态三层正交互操作协议：MCP（2026-07-28 无状态重构、二代 Streamable HTTP、MRTR、OAuth 2.1 CIMD 与安全防线）、ACP（IDE↔Coding Agent 的 LSP 标准）与 A2A v1.0（跨组织不透明协作与 Task 状态机）。",
+      "tags": ["MCP", "ACP", "A2A", "OAuth 2.1", "MRTR"],
+      "docs": [
+        {
+          "slug": "overview",
+          "title": "01 · 三协议全景：MCP vs ACP vs A2A",
+          "file": "agent-protocols/overview.md",
+          "status": "done",
+          "updatedAt": "2026-11-24",
+          "summary": "纵向工具总线 MCP、人机宿主协议 ACP 与横向跨组织委派 A2A 的正交边界对照、同义词消歧与协同拓扑。",
+          "tags": ["协议全景", "MCP", "ACP", "A2A"]
+        },
+        {
+          "slug": "mcp-architecture",
+          "title": "02 · MCP 架构演进：无状态与 MRTR",
+          "file": "agent-protocols/mcp-architecture.md",
+          "status": "done",
+          "updatedAt": "2026-11-24",
+          "summary": "核验 MCP 2026-07-28 范式重构：移除 initialize/Session、二代纯 POST Streamable HTTP 与 L7 镜像头、MRTR 反问机制、Elicitation 与核心原语瘦身。",
+          "tags": ["MCP", "Streamable HTTP", "MRTR", "Elicitation"]
+        },
+        {
+          "slug": "mcp-governance-and-security",
+          "title": "03 · MCP 生产治理、OAuth 2.1 与安全防线",
+          "file": "agent-protocols/mcp-governance-and-security.md",
+          "status": "done",
+          "updatedAt": "2026-11-24",
+          "summary": "Tool Schema 膨胀与 Prompt Cache 协同治理、OAuth 2.1（CIMD 取代 DCR、PKCE S256、RFC 8707/9207）与六大威胁纵深防线。",
+          "tags": ["Schema 治理", "OAuth 2.1", "CIMD", "Tool Poisoning"]
+        },
+        {
+          "slug": "acp-and-a2a",
+          "title": "04 · ACP 与 A2A 深度解析及五大 Agent 映射",
+          "file": "agent-protocols/acp-and-a2a.md",
+          "status": "done",
+          "updatedAt": "2026-11-24",
+          "summary": "ACP v1/v2 富交互会话与权限审批、A2A v1.0.1 a2a.proto / AgentCard / 不可变 Task 状态机，以及五大主流开源 Agent 协议落地映射。",
+          "tags": ["ACP", "A2A", "AgentCard", "五大 Agent 映射"]
+        }
+      ]
+    },
+    {
       "id": "inference-engines",
       "category": "AI Infra 底层原理",
       "name": "大模型推理引擎解析",
@@ -625,6 +671,52 @@
           "updatedAt": "2026-11-24",
           "summary": "一条多轮 Agent 工具调用请求穿透 vLLM V1、SGLang 与 TensorRT-LLM 1.4 的七段端到端源码路径对照，以及面向六大生产场景的选型决策矩阵。",
           "tags": ["源码横评", "vLLM V1", "SGLang", "TensorRT-LLM", "选型矩阵"]
+        }
+      ]
+    },
+    {
+      "id": "agent-post-training",
+      "category": "AI Infra 底层原理",
+      "name": "Agent 后训练与 RL 基础设施",
+      "status": "active",
+      "description": "打通「训—推—用」闭环的 Agent 后训练与大规模强化学习基础设施剖析（源码核验 verl & slime）：静态权重诞生链路、RLVR/GRPO/DAPO 与训推偏差稳定化、同卡共置 vs 训推分离权重热同步、多轮 Agentic Rollout 与万级并发沙箱治理。",
+      "tags": ["RLVR", "GRPO", "verl", "slime", "Weight Sync", "Agentic Rollout"],
+      "docs": [
+        {
+          "slug": "overview",
+          "title": "01 · 从随机权重到 Agent 纪律与联合训练",
+          "file": "agent-post-training/overview.md",
+          "status": "done",
+          "updatedAt": "2026-11-24",
+          "summary": "静态 .safetensors 权重四段诞生链路、为何纯 SFT 训不出真 Agent、Harness-Model 联合训练的三大投影，以及 verl / slime 双强核验基线。",
+          "tags": ["后训练全景", "SFT vs RLVR", "联合训练"]
+        },
+        {
+          "slug": "rl-algorithms-and-stability",
+          "title": "02 · RLVR、GRPO/DAPO 与训推偏差稳定化",
+          "file": "agent-post-training/rl-algorithms-and-stability.md",
+          "status": "done",
+          "updatedAt": "2026-11-24",
+          "summary": "无 Critic 组内相对优势（GRPO/DAPO/GSPO/CISPO）、训推数值不一致与 MoE 路由漂移暗礁，以及 TIS/IcePop、R3 路由回放、OPSM 与沙箱校验工程。",
+          "tags": ["GRPO", "DAPO", "Routing Replay", "TIS/OPSM"]
+        },
+        {
+          "slug": "hybrid-engine-and-weight-sync",
+          "title": "03 · 训推混合集群与毫秒级权重热同步",
+          "file": "agent-post-training/hybrid-engine-and-weight-sync.md",
+          "status": "done",
+          "updatedAt": "2026-11-24",
+          "summary": "verl CheckpointEngine 与 slime 垂直栈源码对比：Colocated 两阶段显存唤醒防 OOM、Disaggregated 分离架构，以及 CUDA IPC / NCCL / NIXL / 稀疏字节差分四代同步。",
+          "tags": ["CheckpointEngine", "CUDA IPC", "Delta Sync", "Sleep/WakeUp"]
+        },
+        {
+          "slug": "agentic-rollout-and-sandbox",
+          "title": "04 · 多轮 Agentic Rollout、长尾治理与沙箱并发",
+          "file": "agent-post-training/agentic-rollout-and-sandbox.md",
+          "status": "done",
+          "updatedAt": "2026-11-24",
+          "summary": "状态机 ToolAgentLoop vs 协议代理 TITO 树（直跑 Claude Code/Codex CLI）、Partial Rollout 长尾治理、E2B setsid 保活与 Reward Hacking 防护。",
+          "tags": ["AgentLoop", "TITO", "Partial Rollout", "Reward Hacking"]
         }
       ]
     }
