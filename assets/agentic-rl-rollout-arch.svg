@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 480" width="980" height="480" role="img" aria-label="多轮 Agentic RL Rollout 两大范式与长尾沙箱并发治理全景">
+  <defs>
+    <linearGradient id="ar-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <filter id="ar-shadow" x="-3%" y="-5%" width="106%" height="114%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="480" rx="14" fill="url(#ar-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">多轮 Agentic RL Rollout 两大架构流派与长尾沙箱并发治理</text>
+
+  <!-- Left: Paradigm 1 - In-Framework State Machine (verl) -->
+  <g filter="url(#ar-shadow)">
+    <rect x="24" y="54" width="456" height="238" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="1.6"/>
+    <rect x="24" y="54" width="456" height="32" rx="12" fill="#2563eb"/>
+    <rect x="24" y="74" width="456" height="12" fill="#2563eb"/>
+    <text x="252" y="75" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">流派 A · 框架内状态机（verl ToolAgentLoop）</text>
+
+    <rect x="40" y="98" width="424" height="58" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="52" y="117" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">强掌控 ReAct 状态机（PENDING → GENERATING → TOOLS）</text>
+    <text x="52" y="135" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">asyncio.gather 并发调 BaseTool；严格标注 response_mask（模型=1，工具=0）</text>
+    <text x="52" y="149" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">Continuous Token 增量拼接，根除多轮重分词漂移</text>
+
+    <rect x="40" y="166" width="424" height="54" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="52" y="185" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8" font-weight="700">透明断点续推（FullyAsyncLLMServerClient）</text>
+    <text x="52" y="203" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">权重热更触发 abort 时，客户端自动拼接已生成 token 续推，上层无感知</text>
+
+    <rect x="40" y="228" width="424" height="50" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="52" y="247" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6" font-weight="700">取舍：极低延迟、支持细粒度 Sticky Session 与 Prefix Cache</text>
+    <text x="52" y="264" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">但对接外部复杂生产级 Coding CLI 需在框架内重写适配层</text>
+  </g>
+
+  <!-- Right: Paradigm 2 - Proxy TITO Harness (slime) -->
+  <g filter="url(#ar-shadow)">
+    <rect x="500" y="54" width="456" height="238" rx="12" fill="#ffffff" stroke="#0f766e" stroke-width="1.6"/>
+    <rect x="500" y="54" width="456" height="32" rx="12" fill="#0f766e"/>
+    <rect x="500" y="74" width="456" height="12" fill="#0f766e"/>
+    <text x="728" y="75" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">流派 B · 协议代理 + TITO 树（slime BaseAdapter）</text>
+
+    <rect x="516" y="98" width="424" height="58" rx="8" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="528" y="117" fill="#115e59" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">零侵入直跑真实 CLI（ClaudeCodeHarness / CodexHarness）</text>
+    <text x="528" y="135" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">本地代理拦截 OpenAI/Anthropic/Responses API，直接复用真实 Agent 逻辑</text>
+    <text x="528" y="149" fill="#0f766e" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">TITO 优先拼接原始 prompt_ids + output_ids，消除客户端改写漂移</text>
+
+    <rect x="516" y="166" width="424" height="54" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="528" y="185" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8" font-weight="700">TrajectoryManager 树状轨迹（CLEAN / REALIGN / FORK）</text>
+    <text x="528" y="203" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">遇到上下文 Compaction 改写历史时自动 FORK 切段，且保证共享前缀只训一次</text>
+
+    <rect x="516" y="228" width="424" height="50" rx="8" fill="#fffbeb" stroke="#fcd34d"/>
+    <text x="528" y="247" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6" font-weight="700">取舍：真正实现 Harness-Model 联合训练，所训即所用</text>
+    <text x="528" y="264" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">但已关闭的沙箱会话不可仅凭 Token 续推，故障须整条轨迹重跑</text>
+  </g>
+
+  <!-- Bottom: 3 Engineering Challenges & Solutions -->
+  <g filter="url(#ar-shadow)">
+    <rect x="24" y="310" width="932" height="150" rx="12" fill="#ffffff" stroke="#6d28d9" stroke-width="1.5"/>
+    <rect x="24" y="310" width="932" height="28" rx="12" fill="#6d28d9"/>
+    <rect x="24" y="326" width="932" height="12" fill="#6d28d9"/>
+    <text x="490" y="329" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.8" font-weight="700">万级并发沙箱 Rollout 的三大实战治理难题（联动 AI Agent 沙箱专题）</text>
+
+    <rect x="38" y="348" width="292" height="98" rx="8" fill="#faf5ff" stroke="#d8b4fe"/>
+    <text x="50" y="367" fill="#5b21b6" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8" font-weight="700">1. 长尾拖尾治理（Straggler）</text>
+    <text x="50" y="385" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• 100 条轨迹里 1 条编译跑 5 分钟拖死整批</text>
+    <text x="50" y="401" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• 解法：异步超额预取 + Partial Rollout</text>
+    <text x="50" y="417" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• verl 陈旧度双策：drop（有界）vs wait</text>
+    <text x="50" y="433" fill="#6d28d9" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">  （dropless 保长尾高难样本不被系统丢弃）</text>
+
+    <rect x="344" y="348" width="292" height="98" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="356" y="367" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8" font-weight="700">2. 沙箱连接保活与高并发隔离</text>
+    <text x="356" y="385" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• 大型仓库构建极易撑断 HTTP/2 长连接</text>
+    <text x="356" y="401" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• slime E2BSandbox 用 setsid 后台执行</text>
+    <text x="356" y="417" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">  + 每 5s 短 RPC 轮询标记文件兼具保活</text>
+    <text x="356" y="433" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">• 权重同步期 pause_admission 不杀在途沙箱</text>
+
+    <rect x="650" y="348" width="292" height="98" rx="8" fill="#fef2f2" stroke="#fca5a5"/>
+    <text x="662" y="367" fill="#991b1b" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8" font-weight="700">3. Reward Hacking 与沙箱逃逸防护</text>
+    <text x="662" y="385" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• RL 模型极擅长钻空子：改测试文件、</text>
+    <text x="662" y="401" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">  绕过断言、读隐藏评测脚本或写死输出</text>
+    <text x="662" y="417" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• 防线：评测集后置只读注入 + 断网容器</text>
+    <text x="662" y="433" fill="#b91c1c" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">  / MicroVM 隔离 + 进程树超时强杀</text>
+  </g>
+</svg>

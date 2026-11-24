@@ -17,7 +17,7 @@ flowchart LR
 | **[Pi](#/pi/overview)** | **极简 7 个**（默认仅启用 4 个） | 只给最小原子原语，搜索/列目录默认交由 `bash` | 超长输出自动落盘临时文件并返回 `full_output_path` |
 | **[Codex](#/codex/overview)** | **精炼 ~12 个**（无独立 `read`/`grep`/`ls`） | 读文件与搜索统一走 `exec_command`；写代码靠专用补丁 | **Freeform 自由格式 `apply_patch`**（不包 JSON 防转义出错）+ `exec_command` 持久化 PTY 与每命令提权参数 |
 | **[OpenCode](#/opencode/overview)** | **均衡 ~20 个** | 专用文件/搜索工具齐全，减少模型手写复杂 Shell | `read` 兼顾读文件与列目录；`shell` 超时自动转后台；`subagent` 支持向已完成子 Agent 追问 |
-| **[OpenClaw](#/openclaw/overview)** | **全栈 40+ 个**（按 12 个 `group:*` 管理） | 覆盖 IM 消息、定时任务、记忆、浏览器、桌面与多模态 | 工具按 `group:runtime`/`fs`/`memory`/`ui`/`messaging` 分组授权 + 延迟 `tool_search` 防 Schema 撑爆 |
+| **[OpenClaw](#/openclaw/overview)** | **全栈 40+ 个**（按 12 个 `group:*` 管理） | 覆盖 IM 消息、定时任务、记忆、浏览器、桌面与多模态 | 工具按 `group:runtime`/`fs`/`memory`/`ui`/`messaging` 分组授权 + 延迟 `tool_search` 防 Schema 撑爆（MCP 大规模挂载治理详见 [MCP 生产治理与安全防线](#/agent-protocols/mcp-governance-and-security)） |
 
 ---
 

@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 490" width="980" height="490" role="img" aria-label="Agent 三层正交互操作协议全景：ACP 宿主层、MCP 工具数据层与 A2A 跨组织协作层">
+  <defs>
+    <linearGradient id="mp-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <filter id="mp-shadow" x="-3%" y="-5%" width="106%" height="114%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+    <marker id="mp-arrow-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+    <marker id="mp-arrow-t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f766e"/>
+    </marker>
+    <marker id="mp-arrow-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect width="980" height="490" rx="14" fill="url(#mp-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">Agent 互操作协议三层正交全景：ACP（宿主）× MCP（工具）× A2A（跨组织协作）</text>
+
+  <!-- Top Topology Diagram -->
+  <g filter="url(#mp-shadow)">
+    <rect x="24" y="52" width="932" height="204" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.4"/>
+
+    <!-- IDE / Host -->
+    <rect x="44" y="88" width="166" height="96" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+    <text x="127" y="114" text-anchor="middle" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">IDE / 宿主 UI</text>
+    <text x="127" y="134" text-anchor="middle" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">Zed / VS Code / 桌面客户端</text>
+    <text x="127" y="152" text-anchor="middle" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">渲染 Diff / Plan / HITL 审批</text>
+    <text x="127" y="168" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.6">通过 session/new 注入 MCP</text>
+
+    <!-- ACP Arrow -->
+    <line x1="212" y1="136" x2="314" y2="136" stroke="#2563eb" stroke-width="2.2" marker-start="url(#mp-arrow-b)" marker-end="url(#mp-arrow-b)"/>
+    <rect x="224" y="106" width="78" height="22" rx="5" fill="#2563eb"/>
+    <text x="263" y="121" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="700">ACP 协议</text>
+    <text x="263" y="154" text-anchor="middle" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.4">高信任 · 透明会话</text>
+    <text x="263" y="167" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9">Coding Agent 的 LSP</text>
+
+    <!-- Primary Coding Agent -->
+    <rect x="320" y="74" width="218" height="122" rx="10" fill="#f8fafc" stroke="#334155" stroke-width="1.8"/>
+    <text x="429" y="98" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.2" font-weight="700">主 Coding / 编排 Agent</text>
+    <text x="429" y="117" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">OpenCode / DSH / Codex / OpenClaw</text>
+    <rect x="336" y="128" width="186" height="54" rx="7" fill="#ffffff" stroke="#cbd5e1"/>
+    <text x="429" y="146" text-anchor="middle" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• 内部掌握 Prompt / Memory / 沙箱</text>
+    <text x="429" y="163" text-anchor="middle" fill="#0f766e" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• 向下用 MCP 调工具与数据源</text>
+    <text x="429" y="177" text-anchor="middle" fill="#b45309" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">• 向右用 A2A 委派远端黑盒 Agent</text>
+
+    <!-- A2A Arrow -->
+    <line x1="540" y1="136" x2="672" y2="136" stroke="#b45309" stroke-width="2.2" marker-start="url(#mp-arrow-a)" marker-end="url(#mp-arrow-a)"/>
+    <rect x="564" y="106" width="84" height="22" rx="5" fill="#b45309"/>
+    <text x="606" y="121" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.5" font-weight="700">A2A v1.0</text>
+    <text x="606" y="154" text-anchor="middle" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.4">横向 · 不透明零信任</text>
+    <text x="606" y="167" text-anchor="middle" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9">AgentCard + Task 状态机</text>
+
+    <!-- Remote Opaque Agent -->
+    <rect x="678" y="84" width="256" height="104" rx="10" fill="#fffbeb" stroke="#b45309" stroke-width="1.6"/>
+    <text x="806" y="108" text-anchor="middle" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">跨组织远端专业 Agent（黑盒）</text>
+    <text x="806" y="128" text-anchor="middle" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">财务审批 / 运维排障 / 第三方 SaaS Agent</text>
+    <text x="806" y="147" text-anchor="middle" fill="#b45309" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">不暴露内部 Prompt、记忆与私有工具</text>
+    <text x="806" y="165" text-anchor="middle" fill="#0f766e" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">其内部同样通过 MCP 访问自有数据库/API</text>
+
+    <!-- Vertical MCP Arrows & Bottom Bar inside topology -->
+    <line x1="429" y1="198" x2="429" y2="216" stroke="#0f766e" stroke-width="2" marker-end="url(#mp-arrow-t)"/>
+    <line x1="806" y1="190" x2="806" y2="216" stroke="#0f766e" stroke-width="2" marker-end="url(#mp-arrow-t)"/>
+    <rect x="320" y="218" width="614" height="28" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+    <text x="627" y="236" text-anchor="middle" fill="#115e59" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">纵向统一工具/数据总线 · MCP（2026-07-28）：Tools / Resources / Prompts / Elicitation → DB · GitHub · 内部 API</text>
+  </g>
+
+  <!-- Bottom 3 Cards -->
+  <!-- Card 1: MCP -->
+  <g filter="url(#mp-shadow)">
+    <rect x="24" y="274" width="298" height="196" rx="12" fill="#ffffff" stroke="#0f766e" stroke-width="1.6"/>
+    <rect x="24" y="274" width="298" height="30" rx="12" fill="#0f766e"/>
+    <rect x="24" y="292" width="298" height="12" fill="#0f766e"/>
+    <text x="173" y="294" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">MCP · 纵向工具与数据（2026-07-28）</text>
+    <text x="38" y="324" fill="#115e59" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8" font-weight="700">定位：AI 世界的 USB-C 外设总线</text>
+    <text x="38" y="344" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 原语：Tools / Resources / Prompts + Elicitation</text>
+    <text x="38" y="362" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 传输：stdio + 二代无状态 POST Streamable HTTP</text>
+    <text x="38" y="380" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 2026 巨变：去 Session、MRTR 反问、弃 Roots/Sampling</text>
+    <text x="38" y="398" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 安全：OAuth 2.1 + CIMD（弃 DCR）+ 反投毒/防透传</text>
+    <rect x="38" y="414" width="270" height="42" rx="7" fill="#f0fdfa" stroke="#99f6e4"/>
+    <text x="48" y="432" fill="#134e4a" font-family="-apple-system,PingFang SC,sans-serif" font-size="10" font-weight="700">核心边界：显式 JSON Schema 透明契约</text>
+    <text x="48" y="447" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">Server 不读全局对话，也不窥视其他 Server</text>
+  </g>
+
+  <!-- Card 2: ACP -->
+  <g filter="url(#mp-shadow)">
+    <rect x="341" y="274" width="298" height="196" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="1.6"/>
+    <rect x="341" y="274" width="298" height="30" rx="12" fill="#2563eb"/>
+    <rect x="341" y="292" width="298" height="12" fill="#2563eb"/>
+    <text x="490" y="294" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">ACP · IDE 宿主接入（v1.35 / v2-beta）</text>
+    <text x="355" y="324" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8" font-weight="700">定位：Coding Agent 领域的 LSP 标准</text>
+    <text x="355" y="344" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 原语：Session + Prompt Turn + 19 种流式 Update</text>
+    <text x="355" y="362" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 传输：stdio NDJSON（远程 HTTP/2 + WS 为 RFD）</text>
+    <text x="355" y="380" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 交互：原生 Diff 展示、Plan、HITL 权限弹窗</text>
+    <text x="355" y="398" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• v2 演进：移除反向 fs/terminal，改由 MCP 暴露</text>
+    <rect x="355" y="414" width="270" height="42" rx="7" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="365" y="432" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="10" font-weight="700">消歧提示：非 IBM BeeAI 的同名 ACP</text>
+    <text x="365" y="447" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">IBM Agent Comm Protocol 已于 2025-08 并入 A2A</text>
+  </g>
+
+  <!-- Card 3: A2A -->
+  <g filter="url(#mp-shadow)">
+    <rect x="658" y="274" width="298" height="196" rx="12" fill="#ffffff" stroke="#b45309" stroke-width="1.6"/>
+    <rect x="658" y="274" width="298" height="30" rx="12" fill="#b45309"/>
+    <rect x="658" y="292" width="298" height="12" fill="#b45309"/>
+    <text x="807" y="294" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">A2A · 跨组织 Agent 协作（v1.0.1）</text>
+    <text x="672" y="324" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8" font-weight="700">定位：Linux 基金会 AAIF 跨边界委派标准</text>
+    <text x="672" y="344" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 发现：/.well-known/agent-card.json（JWS 签名）</text>
+    <text x="672" y="362" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 绑定：a2a.proto 统领 JSON-RPC / gRPC / REST</text>
+    <text x="672" y="380" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 状态：不可变 Task 状态机 + Webhook + 断线重订</text>
+    <text x="672" y="398" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• v1.0 变化：PascalCase 方法名 + 统一 oneof Part</text>
+    <rect x="672" y="414" width="270" height="42" rx="7" fill="#fffbeb" stroke="#fcd34d"/>
+    <text x="682" y="432" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="10" font-weight="700">核心边界：Opaque Execution（不透明执行）</text>
+    <text x="682" y="447" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">只交接消息、状态与产出 Artifact，保护双方隐私</text>
+  </g>
+</svg>

@@ -90,4 +90,4 @@ console.log(res.stdout); // "42"
 await sbx.kill();
 ```
 
-- **交互特点**：整个过程不碰本机文件系统、不消耗本机 CPU；结果经 HTTPS/gRPC 流式回传给 Agent Loop，若沙箱内启动了 Web 服务，还可通过 `sbx.getHost(port)` 直接拿到云端公网预览地址。
+- **交互特点**：整个过程不碰本机文件系统、不消耗本机 CPU；结果经 HTTPS/gRPC 流式回传给 Agent Loop，若沙箱内启动了 Web 服务，还可通过 `sbx.getHost(port)` 直接拿到云端公网预览地址。在大规模 Agent 强化学习（RLVR）场景中，E2B 这类快照秒启 MicroVM 也是万级并发 Rollout 的核心环境底座（详见 [多轮 Agentic Rollout 与沙箱并发治理](#/agent-post-training/agentic-rollout-and-sandbox)）。

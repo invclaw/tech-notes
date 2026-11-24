@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 480" width="980" height="480" role="img" aria-label="MCP 2026-07-28 架构大重构：无状态 Streamable HTTP、L7 镜像头与 MRTR 交互模型对照">
+  <defs>
+    <linearGradient id="ms-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <filter id="ms-shadow" x="-3%" y="-5%" width="106%" height="114%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="480" rx="14" fill="url(#ms-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">MCP 架构代际跃迁：从 Legacy 有状态会话到 Modern 2026-07-28 无状态 + MRTR</text>
+
+  <!-- Left: Legacy <= 2025-11-25 -->
+  <g filter="url(#ms-shadow)">
+    <rect x="24" y="54" width="440" height="256" rx="12" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+    <rect x="24" y="54" width="440" height="32" rx="12" fill="#475569"/>
+    <rect x="24" y="74" width="440" height="12" fill="#475569"/>
+    <text x="244" y="75" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">Legacy 时代（2024-11-05 ~ 2025-11-25）</text>
+
+    <rect x="40" y="98" width="408" height="58" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="52" y="117" fill="#1e293b" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">1. 有状态连接握手与会话粘性</text>
+    <text x="52" y="135" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 强制 initialize → InitializeResult → initialized 三段握手</text>
+    <text x="52" y="150" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 依赖 Mcp-Session-Id 内存态，多副本无状态扩缩容极难</text>
+
+    <rect x="40" y="164" width="408" height="62" rx="8" fill="#fef2f2" stroke="#fca5a5"/>
+    <text x="52" y="183" fill="#991b1b" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">2. 一代 Streamable HTTP（POST + GET + DELETE）</text>
+    <text x="52" y="201" fill="#7f1d1d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 需维护长连接 GET SSE 接收服务端主动反推 Request</text>
+    <text x="52" y="217" fill="#7f1d1d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 靠 Last-Event-ID 缓冲重放事件，Serverless 网关极不友好</text>
+
+    <rect x="40" y="234" width="408" height="62" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="52" y="253" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">3. 双向主动 Request 与臃肿核心原语</text>
+    <text x="52" y="271" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• Server 反向发 sampling / roots / elicitation JSON-RPC 请求</text>
+    <text x="52" y="287" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 实验性 Tasks 塞在核心层；网关看不到具体调了哪个 Tool</text>
+  </g>
+
+  <!-- Right: Modern 2026-07-28 -->
+  <g filter="url(#ms-shadow)">
+    <rect x="484" y="54" width="472" height="256" rx="12" fill="#ffffff" stroke="#0f766e" stroke-width="1.8"/>
+    <rect x="484" y="54" width="472" height="32" rx="12" fill="#0f766e"/>
+    <rect x="484" y="74" width="472" height="12" fill="#0f766e"/>
+    <text x="720" y="75" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12" font-weight="700">Modern 时代（2026-07-28 稳定版 · 无状态云原生）</text>
+
+    <rect x="500" y="98" width="440" height="58" rx="8" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="512" y="117" fill="#115e59" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">1. 彻底无状态（SEP-2567 / SEP-2575）</text>
+    <text x="512" y="135" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 移除 initialize 与 Mcp-Session-Id，新增必选 server/discover</text>
+    <text x="512" y="150" fill="#0f766e" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 每请求 params._meta 自携带协议版本与 clientCapabilities</text>
+
+    <rect x="500" y="164" width="440" height="62" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="512" y="183" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">2. 二代纯 POST Streamable HTTP + L7 路由镜像头</text>
+    <text x="512" y="201" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 废除 GET/DELETE/Last-Event-ID；订阅改 POST subscriptions/listen</text>
+    <text x="512" y="217" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 强制 Mcp-Method / Mcp-Name / Mcp-Param-* 校验一致（防 -32020）</text>
+
+    <rect x="500" y="234" width="440" height="62" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="512" y="253" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11" font-weight="700">3. 单向请求 + MRTR + 缓存与核心瘦身</text>
+    <text x="512" y="271" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 必带 CacheableResult (ttlMs/cacheScope) + 多态 resultType</text>
+    <text x="512" y="287" fill="#15803d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 仅留 Elicitation 活跃；弃用 Roots/Sampling/Logging；Tasks 进扩展</text>
+  </g>
+
+  <!-- Bottom: MRTR Flow -->
+  <g filter="url(#ms-shadow)">
+    <rect x="24" y="328" width="932" height="134" rx="12" fill="#ffffff" stroke="#6d28d9" stroke-width="1.5"/>
+    <rect x="24" y="328" width="932" height="28" rx="12" fill="#6d28d9"/>
+    <rect x="24" y="344" width="932" height="12" fill="#6d28d9"/>
+    <text x="490" y="347" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.8" font-weight="700">MRTR（Multi Round-Trip Requests · SEP-2322）：无状态服务器如何向人类反问？</text>
+
+    <rect x="40" y="368" width="276" height="80" rx="8" fill="#faf5ff" stroke="#d8b4fe"/>
+    <text x="52" y="387" fill="#5b21b6" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8" font-weight="700">Step 1 · Client 发起工具调用（id: 2）</text>
+    <text x="52" y="405" fill="#334155" font-family="Menlo,monospace" font-size="9.8">POST /mcp → tools/call</text>
+    <text x="52" y="422" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">任意无状态副本接单，发现需用户补充</text>
+    <text x="52" y="438" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">表单参数或完成第三方 OAuth 授权</text>
+
+    <rect x="348" y="368" width="284" height="80" rx="8" fill="#fffbeb" stroke="#fcd34d"/>
+    <text x="360" y="387" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8" font-weight="700">Step 2 · Server 返回 input_required</text>
+    <text x="360" y="405" fill="#334155" font-family="Menlo,monospace" font-size="9.8">resultType: "input_required"</text>
+    <text x="360" y="422" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">携带 inputRequests（elicitation/create）</text>
+    <text x="360" y="438" fill="#b45309" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">+ HMAC/AEAD 签名保护的 requestState</text>
+
+    <rect x="664" y="368" width="276" height="80" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="676" y="387" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.8" font-weight="700">Step 3 · Client 用新 ID 重试（id: 3）</text>
+    <text x="676" y="405" fill="#334155" font-family="Menlo,monospace" font-size="9.8">inputResponses + requestState</text>
+    <text x="676" y="422" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">原样回传不透明句柄；可路由到集群内</text>
+    <text x="676" y="438" fill="#15803d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10">任意副本续跑并最终返回 complete</text>
+  </g>
+</svg>
