@@ -6,7 +6,8 @@
   "home": "home.md",
   "categories": [
     "主流 Agent 解析",
-    "Agent 基建"
+    "Agent 基建",
+    "AI Infra 底层原理"
   ],
   "projects": [
     {
@@ -578,6 +579,52 @@
           "updatedAt": "2026-11-22",
           "summary": "源码级盘点 Pi（7个）、Codex（~12个）、OpenCode（~20个）、OpenClaw（40+分组）全部内置工具、真实工具提示词与参数设计。",
           "tags": ["Built-in Tools", "Tool Schema", "apply_patch"]
+        }
+      ]
+    },
+    {
+      "id": "inference-engines",
+      "category": "AI Infra 底层原理",
+      "name": "大模型推理引擎解析",
+      "status": "active",
+      "description": "面向 Agent 工作负载的大模型推理引擎底层原理与源码横评（vLLM V1 / SGLang / TensorRT-LLM 1.4）：Prefill vs Decode 物理模型、KV Cache 与 Prefix Caching、多级卸载与缓存路由、连续批处理与 PD 分离、投机/受约束解码及七段端到端架构对比。",
+      "tags": ["vLLM V1", "SGLang", "TensorRT-LLM", "KV Cache", "Prefix Caching", "PD 分离"],
+      "docs": [
+        {
+          "slug": "overview",
+          "title": "01 · 全景与物理模型",
+          "file": "inference-engines/overview.md",
+          "status": "done",
+          "updatedAt": "2026-11-24",
+          "summary": "Prefill（算力受限 / TTFT）与 Decode（显存带宽受限 / TPOT）物理根源、MHA→GQA→MLA 显存账本、长上下文与 Context Rot 悬崖，以及 2026 三大推理引擎演进基线。",
+          "tags": ["Prefill/Decode", "TTFT/TPOT", "MLA", "Context Rot"]
+        },
+        {
+          "slug": "kv-cache-and-prefix",
+          "title": "02 · KV Cache 与 Prefix Caching",
+          "file": "inference-engines/kv-cache-and-prefix.md",
+          "status": "done",
+          "updatedAt": "2026-11-24",
+          "summary": "Prompt Cache 5–10 倍收益物理本质、vLLM V1 BlockPool+HMA vs SGLang UnifiedRadixCache vs TRT-LLM V2 SHA-256 树横评、多级 KV 卸载与跨节点 Cache-Aware 路由。",
+          "tags": ["KV Cache", "Prefix Caching", "RadixCache", "HiCache", "Cache Routing"]
+        },
+        {
+          "slug": "scheduling-and-acceleration",
+          "title": "03 · 调度器、合批与加速栈",
+          "file": "inference-engines/scheduling-and-acceleration.md",
+          "status": "done",
+          "updatedAt": "2026-11-24",
+          "summary": "Continuous Batching 与 Chunked Prefill、CPU/GPU 1-Step 异步重叠、PD 分离（NIXL/Mooncake/UCX）、EAGLE3/MTP/SA 投机解码、XGrammar 推理门控与 Wide-EP MoE 加速。",
+          "tags": ["Overlap Scheduling", "PD 分离", "Speculative", "XGrammar", "Wide-EP"]
+        },
+        {
+          "slug": "three-engines-architecture",
+          "title": "04 · 三家引擎源码架构横评",
+          "file": "inference-engines/three-engines-architecture.md",
+          "status": "done",
+          "updatedAt": "2026-11-24",
+          "summary": "一条多轮 Agent 工具调用请求穿透 vLLM V1、SGLang 与 TensorRT-LLM 1.4 的七段端到端源码路径对照，以及面向六大生产场景的选型决策矩阵。",
+          "tags": ["源码横评", "vLLM V1", "SGLang", "TensorRT-LLM", "选型矩阵"]
         }
       ]
     }

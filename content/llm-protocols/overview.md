@@ -24,3 +24,4 @@
 
 - **[Codex 架构设计解析](#/codex/overview)**：主力引擎绑定 [OpenAI Responses 协议](#/llm-protocols/openai-responses)，其 [远端压缩 V2 与后台投机预压缩](#/codex/core/compaction) 直接建立在 `/responses/compact` 之上；本地 Ollama / LM Studio 兼容层走 [Chat Completions](#/llm-protocols/openai-chat-completions)。
 - **[OpenClaw 架构设计解析](#/openclaw/overview)**：在 [Agent Loop 续跑判定](#/openclaw/agent-loop) 中消费 Responses 的 `end_turn: false`；在 [Session Pruning 与压缩](#/openclaw/agent-loop/compaction) 中，Anthropic 直连路由委托 [Anthropic Messages](#/llm-protocols/anthropic-messages) 的服务端 `clear_tool_uses`，OpenAI 直连路由则兼容 `/responses/compact`。
+- **越过 HTTP 协议边界往下看**：这些协议字段如何落入推理引擎的 Prefix Caching、连续批处理、受约束解码与 SSE 流式解析，详见 [大模型推理引擎解析：全景与物理模型](#/inference-engines/overview) 与 [三家引擎源码架构横评](#/inference-engines/three-engines-architecture)。

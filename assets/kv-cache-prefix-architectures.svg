@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 520" width="980" height="520" role="img" aria-label="三大推理引擎 KV Cache、Prefix Caching 与多级卸载架构深度对比">
+  <defs>
+    <linearGradient id="kv-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <filter id="kv-shadow" x="-3%" y="-5%" width="106%" height="114%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="520" rx="14" fill="url(#kv-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="34" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16.5" font-weight="700">KV Cache 与 Prefix Caching 三强架构横评：索引结构、混合架构、多级卸载与路由</text>
+
+  <!-- Column 1: vLLM V1 -->
+  <g filter="url(#kv-shadow)">
+    <rect x="24" y="54" width="298" height="444" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="1.7"/>
+    <rect x="24" y="54" width="298" height="34" rx="12" fill="#2563eb"/>
+    <rect x="24" y="76" width="298" height="12" fill="#2563eb"/>
+    <text x="173" y="76" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">vLLM V1 · 链式块哈希 + HMA</text>
+
+    <rect x="38" y="100" width="270" height="92" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="50" y="119" fill="#1e3a8a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">1. 前缀索引（Automatic Prefix Caching）</text>
+    <text x="50" y="138" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• hash(parent_hash, block_tokens, extra_keys)</text>
+    <text x="50" y="155" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• BlockHashToBlockMap 按块粒度 O(1) 查表</text>
+    <text x="50" y="172" fill="#2563eb" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.4">• extra_keys 隔离多模态 / LoRA / prompt_embeds</text>
+    <text x="50" y="186" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 侵入式双向链表 LRU：逆序释放，尾块先驱逐</text>
+
+    <rect x="38" y="202" width="270" height="84" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="50" y="221" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">2. 异构混合模型（HMA）</text>
+    <text x="50" y="240" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• HybridKVCacheCoordinator 共享物理页池</text>
+    <text x="50" y="257" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• Full + SWA + Mamba 固定点迭代协商最长命中</text>
+    <text x="50" y="274" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.3">• 支持 Mamba 公共前缀打点与 COW 复制</text>
+
+    <rect x="38" y="296" width="270" height="92" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="50" y="315" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">3. 多级卸载（KVConnectorBase_V1）</text>
+    <text x="50" y="334" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• SCHEDULER / WORKER 角色解耦标准接口</text>
+    <text x="50" y="351" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• 内置 Offloading / LMCache / MooncakeStore /</text>
+    <text x="50" y="366" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">  HF3FS / NixlConnector 等多种插件</text>
+    <text x="50" y="381" fill="#15803d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.3">• MultiConnector 串联 L2 卸载 + PD 传输</text>
+
+    <rect x="38" y="398" width="270" height="86" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="50" y="417" fill="#1e293b" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">4. 跨节点缓存路由与权衡</text>
+    <text x="50" y="436" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• KVCacheManager.take_events() 发布块事件</text>
+    <text x="50" y="453" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• 依赖外部路由网关（vLLM Router / Gateway）</text>
+    <text x="50" y="470" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.3">• 强项：实现极轻、O(1) 驱逐、混合模型统一</text>
+  </g>
+
+  <!-- Column 2: SGLang -->
+  <g filter="url(#kv-shadow)">
+    <rect x="341" y="54" width="298" height="444" rx="12" fill="#ffffff" stroke="#0f766e" stroke-width="1.7"/>
+    <rect x="341" y="54" width="298" height="34" rx="12" fill="#0f766e"/>
+    <rect x="341" y="76" width="298" height="12" fill="#0f766e"/>
+    <text x="490" y="76" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">SGLang · UnifiedRadixCache + HiCache</text>
+
+    <rect x="355" y="100" width="270" height="92" rx="8" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="367" y="119" fill="#115e59" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">1. 前缀索引（显式基数树）</text>
+    <text x="367" y="138" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• UnifiedRadixCache + UnifiedTreeCore / Rust 核</text>
+    <text x="367" y="155" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• 任意页边界 _split_node 分裂，原生多分支共享</text>
+    <text x="367" y="172" fill="#0f766e" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.4">• lock_ref 引用计数锁保护在途共享路径</text>
+    <text x="367" y="186" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 可插拔叶节点驱逐：LRU / LFU / TLRU / StateCost</text>
+
+    <rect x="355" y="202" width="270" height="84" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="367" y="221" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">2. 双层池与混合架构</text>
+    <text x="367" y="240" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• ReqToTokenPool（逻辑→物理槽位，0 号留空）</text>
+    <text x="367" y="257" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• MHA / MLA / FP4 / HybridLinear 专用物理池</text>
+    <text x="367" y="274" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.3">• 单树统一承载 Full KV、SWA 与 Mamba 状态</text>
+
+    <rect x="355" y="296" width="270" height="92" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="367" y="315" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">3. 多级卸载（HiCache L1 / L2 / L3）</text>
+    <text x="367" y="334" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• L1 HBM → L2 HostKVCache → L3 13 种后端</text>
+    <text x="367" y="351" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">  (Mooncake / NIXL / HF3FS / AIBrix / File 等)</text>
+    <text x="367" y="366" fill="#0f766e" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.4">• LayerDoneCounter 按层异步加载与前向重叠</text>
+    <text x="367" y="381" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 支持 write_through / write_back 与异步预取</text>
+
+    <rect x="355" y="398" width="270" height="86" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="367" y="417" fill="#1e293b" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">4. 内置 Rust 缓存路由（sgl-router）</text>
+    <text x="367" y="436" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• ZmqEventPublisher → sgl-kv-indexer 全局树</text>
+    <text x="367" y="453" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• CacheAwarePolicy（命中 vs Power-of-Two）</text>
+    <text x="367" y="470" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.3">• 强项：树状多分支复用 + LPM 调度一体化</text>
+  </g>
+
+  <!-- Column 3: TensorRT-LLM 1.4 -->
+  <g filter="url(#kv-shadow)">
+    <rect x="658" y="54" width="298" height="444" rx="12" fill="#ffffff" stroke="#b45309" stroke-width="1.7"/>
+    <rect x="658" y="54" width="298" height="34" rx="12" fill="#b45309"/>
+    <rect x="658" y="76" width="298" height="12" fill="#b45309"/>
+    <text x="807" y="76" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5" font-weight="700">TRT-LLM 1.4 · C++ V2 SHA-256 树</text>
+
+    <rect x="672" y="100" width="270" height="92" rx="8" fill="#fffbeb" stroke="#fcd34d"/>
+    <text x="684" y="119" fill="#92400e" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">1. 前缀索引（密码学安全防碰撞）</text>
+    <text x="684" y="138" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• V2 BlockRadixTree：32 字节 SHA-256 链式哈希</text>
+    <text x="684" y="155" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• ReuseScope(loraId, salt) 防跨租户数据泄漏</text>
+    <text x="684" y="172" fill="#b45309" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.4">• V1 两阶段 claim-then-onboard 防批内互逐</text>
+    <text x="684" y="186" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• 支持业务显式保留优先级（RetentionPriority）</text>
+
+    <rect x="672" y="202" width="270" height="84" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="684" y="221" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">2. C++ 核心 + 统一生命周期</text>
+    <text x="684" y="240" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• 全 C++ 实现经 nanobind 零拷贝暴露 Python</text>
+    <text x="684" y="257" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• LifeCycleRegistry 统一 Full/VSWA/Sparse/SSM</text>
+    <text x="684" y="274" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.3">• 支持 REQUIRED / OPTIONAL / PRIVATE 复用策略</text>
+
+    <rect x="672" y="296" width="270" height="92" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="684" y="315" fill="#14532d" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">3. 四级统一存储 + Connector 生态</text>
+    <text x="684" y="334" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• StorageManager 原生四级：</text>
+    <text x="684" y="351" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">  GPU HBM → Host DRAM → Disk → Remote</text>
+    <text x="684" y="366" fill="#15803d" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.4">• 含冷页编解码、GPUDirect Storage (GDS)</text>
+    <text x="684" y="381" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">• KvCacheConnector 对接 KVBM / LMCache / Mooncake</text>
+
+    <rect x="672" y="398" width="270" height="86" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="684" y="417" fill="#1e293b" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">4. Agent 会话与子 Agent 亲和路由</text>
+    <text x="684" y="436" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• /kv_cache_events → KvCacheAwareRouter</text>
+    <text x="684" y="453" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.6">• ConversationRouter + subagent_affinity_id</text>
+    <text x="684" y="470" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.3">• 强项：多租户安全哈希 + 企业级优先级与亲和</text>
+  </g>
+</svg>

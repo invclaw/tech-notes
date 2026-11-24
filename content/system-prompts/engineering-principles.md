@@ -7,7 +7,7 @@
 
 ## 法则 1：死守 Prompt Cache 边界（静态在上，动态在下）
 
-这是最容易被忽视、但对**延迟和成本影响高达 5–10 倍**的架构铁律（底层机制详见 [Anthropic 显式缓存断点](#/llm-protocols/anthropic-messages) 与 [OpenAI Responses 前缀缓存](#/llm-protocols/openai-responses)）：
+这是最容易被忽视、但对**延迟和成本影响高达 5–10 倍**的架构铁律（协议层详见 [Anthropic 显式缓存断点](#/llm-protocols/anthropic-messages) 与 [OpenAI Responses 前缀缓存](#/llm-protocols/openai-responses)，推理引擎 KV Cache 链式哈希 / Radix Tree 物理机制详见 [KV Cache 与 Prefix Caching 原理](#/inference-engines/kv-cache-and-prefix)）：
 
 - **绝对禁止**把会随每轮变化的内容（当前精确到秒的时间戳、实时活跃进程列表、刚刷新的动态记忆、临时状态计数）插在 System Prompt 开头！只要第 100 个字节变了，后面几万 token 的缓存就全部失效重算；
 - **正确做法**（OpenClaw 与 Codex 的共同范式）：

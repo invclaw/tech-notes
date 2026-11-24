@@ -20,6 +20,6 @@
 
 ## 3. 仓库结构与发布流程
 
-- 顶级分类固定为 `主流 Agent 解析` 与 `Agent 基建`（定义于 `content/manifest.json` 的 `categories`）。
+- 顶级分类固定为 `主流 Agent 解析`、`Agent 基建` 与 `AI Infra 底层原理`（定义于 `content/manifest.json` 的 `categories`）。
 - 每次修改后本地先校验 `python3 -m json.tool content/manifest.json >/dev/null`（改了 JS 需跑 `node --check assets/app.js`），提交并 `git push origin main`，由 `.github/workflows/deploy.yml` 自动校验并 `rsync` 部署到线上站点。
 - 严禁将任何服务器 IP、SSH 私钥、API Key 或凭据提交进仓库。
