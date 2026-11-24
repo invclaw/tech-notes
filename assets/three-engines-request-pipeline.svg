@@ -1,0 +1,181 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" width="980" height="560" role="img" aria-label="单条 Agent 工具调用请求在 vLLM V1、SGLang 与 TensorRT-LLM 1.4 中的七段端到端流水线对照">
+  <defs>
+    <linearGradient id="te-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <filter id="te-shadow" x="-2%" y="-4%" width="104%" height="110%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.05"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="560" rx="14" fill="url(#te-bg)" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text x="490" y="32" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="16" font-weight="700">单条 Agent 工具调用请求的七段源码级生命周期：vLLM V1 vs SGLang vs TRT-LLM 1.4</text>
+
+  <!-- Header Row -->
+  <rect x="20" y="48" width="126" height="30" rx="7" fill="#334155"/>
+  <text x="83" y="68" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">生命周期阶段</text>
+
+  <rect x="154" y="48" width="262" height="30" rx="7" fill="#2563eb"/>
+  <text x="285" y="68" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">vLLM V1 (commit 9cd5cde)</text>
+
+  <rect x="424" y="48" width="262" height="30" rx="7" fill="#0f766e"/>
+  <text x="555" y="68" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">SGLang (commit dacaf1d7)</text>
+
+  <rect x="694" y="48" width="266" height="30" rx="7" fill="#b45309"/>
+  <text x="827" y="68" text-anchor="middle" fill="#ffffff" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.5" font-weight="700">TensorRT-LLM 1.4.0rc5 (e627ac85)</text>
+
+  <!-- Stage 1 -->
+  <g filter="url(#te-shadow)">
+    <rect x="20" y="86" width="126" height="58" rx="8" fill="#ffffff" stroke="#94a3b8"/>
+    <text x="83" y="110" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.2" font-weight="700">① HTTP 协议面</text>
+    <text x="83" y="128" text-anchor="middle" fill="#64748b" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">API / 模板 / 准入</text>
+
+    <rect x="154" y="86" width="262" height="58" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="164" y="106" fill="#1e3a8a" font-family="Menlo,monospace" font-size="10" font-weight="700">OpenAIServingChat / Responses</text>
+    <text x="164" y="122" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">FastAPI P0 + SharedAdmissionStats 限流</text>
+    <text x="164" y="137" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">AsyncLLM + InputProcessor 生成请求</text>
+
+    <rect x="424" y="86" width="262" height="58" rx="8" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="434" y="106" fill="#115e59" font-family="Menlo,monospace" font-size="10" font-weight="700">ORJSONRoute + OpenAI/Anthropic</text>
+    <text x="434" y="122" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">FastAPI/Granian/可选 Rust 监听 + 多 Worker</text>
+    <text x="434" y="137" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">原生支持 /v1/responses 与 /v1/messages</text>
+
+    <rect x="694" y="86" width="266" height="58" rx="8" fill="#fffbeb" stroke="#fcd34d"/>
+    <text x="704" y="106" fill="#92400e" font-family="Menlo,monospace" font-size="10" font-weight="700">OpenAIServer / MultiFrontend</text>
+    <text x="704" y="122" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">FastAPI+uvloop，多前端共享底层 Executor</text>
+    <text x="704" y="137" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">原生 Anthropic /v1/messages 与 Responses</text>
+  </g>
+
+  <!-- Stage 2 -->
+  <g filter="url(#te-shadow)">
+    <rect x="20" y="152" width="126" height="58" rx="8" fill="#ffffff" stroke="#94a3b8"/>
+    <text x="83" y="176" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.2" font-weight="700">② IPC 进程隔离</text>
+    <text x="83" y="194" text-anchor="middle" fill="#64748b" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">抗 Python GIL 抖动</text>
+
+    <rect x="154" y="152" width="262" height="58" rx="8" fill="#ffffff" stroke="#bfdbfe"/>
+    <text x="164" y="172" fill="#1e3a8a" font-family="Menlo,monospace" font-size="10" font-weight="700">AsyncMPClient ↔ EngineCoreProc</text>
+    <text x="164" y="188" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">ZMQ ROUTER/DEALER + msgspec 零拷贝</text>
+    <text x="164" y="203" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">大张量走 TensorIPC；独立 IO 线程解耦</text>
+
+    <rect x="424" y="152" width="262" height="58" rx="8" fill="#ffffff" stroke="#99f6e4"/>
+    <text x="434" y="172" fill="#115e59" font-family="Menlo,monospace" font-size="10" font-weight="700">TokenizerMgr → Scheduler</text>
+    <text x="434" y="188" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">异步 ZMQ PUSH/PULL（多模态走 SHM）</text>
+    <text x="434" y="203" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">Rank 0 收包广播至 TP/CP；DP 经 Controller</text>
+
+    <rect x="694" y="152" width="266" height="58" rx="8" fill="#ffffff" stroke="#fde68a"/>
+    <text x="704" y="172" fill="#92400e" font-family="Menlo,monospace" font-size="10" font-weight="700">ExecutorProxy → ExecutorWorker</text>
+    <text x="704" y="188" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">HMAC 签名 ZMQ IpcQueue / FusedIpcQueue</text>
+    <text x="704" y="203" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">支持 MPI / RPC / Ray 编排与批量合发</text>
+  </g>
+
+  <!-- Stage 3 -->
+  <g filter="url(#te-shadow)">
+    <rect x="20" y="218" width="126" height="58" rx="8" fill="#ffffff" stroke="#94a3b8"/>
+    <text x="83" y="242" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.2" font-weight="700">③ 调度与批组织</text>
+    <text x="83" y="260" text-anchor="middle" fill="#64748b" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">队列 / 预算 / 重叠</text>
+
+    <rect x="154" y="218" width="262" height="58" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="164" y="238" fill="#1e3a8a" font-family="Menlo,monospace" font-size="10" font-weight="700">Scheduler / AsyncScheduler</text>
+    <text x="164" y="254" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">对称 token_budget + 默认 Chunked Prefill</text>
+    <text x="164" y="269" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">仅下发增量 SchedulerOutput；纯重算抢占</text>
+
+    <rect x="424" y="218" width="262" height="58" rx="8" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="434" y="238" fill="#115e59" font-family="Menlo,monospace" font-size="10" font-weight="700">Scheduler.event_loop_overlap</text>
+    <text x="434" y="254" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">Prefill 优先 + LPM（bounded）树感知排序</text>
+    <text x="434" y="269" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">双流异步 + FutureMap 占位消除同步等待</text>
+
+    <rect x="694" y="218" width="266" height="58" rx="8" fill="#fffbeb" stroke="#fcd34d"/>
+    <text x="704" y="238" fill="#92400e" font-family="Menlo,monospace" font-size="10" font-weight="700">PyExecutor + V1/V2 Scheduler</text>
+    <text x="704" y="254" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">C++ Capacity/MicroBatch 或 KVCacheV2</text>
+    <text x="704" y="269" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">_executor_loop_overlap + beneficialToSkip</text>
+  </g>
+
+  <!-- Stage 4 -->
+  <g filter="url(#te-shadow)">
+    <rect x="20" y="284" width="126" height="58" rx="8" fill="#ffffff" stroke="#94a3b8"/>
+    <text x="83" y="308" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.2" font-weight="700">④ 执行与图加速</text>
+    <text x="83" y="326" text-anchor="middle" fill="#64748b" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">Runner / CUDA Graph</text>
+
+    <rect x="154" y="284" width="262" height="58" rx="8" fill="#ffffff" stroke="#bfdbfe"/>
+    <text x="164" y="304" fill="#1e3a8a" font-family="Menlo,monospace" font-size="10" font-weight="700">GPUModelRunner (V2) + Compile</text>
+    <text x="164" y="320" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">UVA 持久化 RequestState + 增量更新</text>
+    <text x="164" y="335" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">VLLM_COMPILE 分片 + FULL_AND_PIECEWISE</text>
+
+    <rect x="424" y="284" width="262" height="58" rx="8" fill="#ffffff" stroke="#99f6e4"/>
+    <text x="434" y="304" fill="#115e59" font-family="Menlo,monospace" font-size="10" font-weight="700">TpModelWorker → ModelRunner</text>
+    <text x="434" y="320" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">Decode 全图 + Piecewise Prefill 图</text>
+    <text x="434" y="335" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">TBO 双微批与 EAGLEWorkerV2 专用图</text>
+
+    <rect x="694" y="284" width="266" height="58" rx="8" fill="#ffffff" stroke="#fde68a"/>
+    <text x="704" y="304" fill="#92400e" font-family="Menlo,monospace" font-size="10" font-weight="700">ModelEngine + modeling_v2</text>
+    <text x="704" y="320" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">纯 PyTorch 后端 + Decode/Breakable 图</text>
+    <text x="704" y="335" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">SM100/107 trtllm-gen &amp; CuTe-DSL 极限核</text>
+  </g>
+
+  <!-- Stage 5 -->
+  <g filter="url(#te-shadow)">
+    <rect x="20" y="350" width="126" height="58" rx="8" fill="#ffffff" stroke="#94a3b8"/>
+    <text x="83" y="374" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.2" font-weight="700">⑤ Attn 与 KV</text>
+    <text x="83" y="392" text-anchor="middle" fill="#64748b" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">内核与前缀管理</text>
+
+    <rect x="154" y="350" width="262" height="58" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="164" y="370" fill="#1e3a8a" font-family="Menlo,monospace" font-size="10" font-weight="700">BlockPool + HMA + Multi-Attn</text>
+    <text x="164" y="386" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">FA2/3/4 · FlashInfer · FlashMLA · Mamba</text>
+    <text x="164" y="401" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">KVConnectorBase_V1 统一卸载与 PD 传输</text>
+
+    <rect x="424" y="350" width="262" height="58" rx="8" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="434" y="370" fill="#115e59" font-family="Menlo,monospace" font-size="10" font-weight="700">UnifiedRadixCache + HiCache</text>
+    <text x="434" y="386" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">FlashInfer · FA3/4 · FlashMLA · TRTLLM · DSA</text>
+    <text x="434" y="401" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">L1→L2→L3（13 种后端）逐层异步预取</text>
+
+    <rect x="694" y="350" width="266" height="58" rx="8" fill="#fffbeb" stroke="#fcd34d"/>
+    <text x="704" y="370" fill="#92400e" font-family="Menlo,monospace" font-size="10" font-weight="700">C++ KVCacheV1/V2 + trtllm-gen</text>
+    <text x="704" y="386" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">FMHA · FlashMLA · FP4-MLA · 混合 VSWA/SSM</text>
+    <text x="704" y="401" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">SHA-256 BlockRadixTree + 4 级 StorageMgr</text>
+  </g>
+
+  <!-- Stage 6 -->
+  <g filter="url(#te-shadow)">
+    <rect x="20" y="416" width="126" height="58" rx="8" fill="#ffffff" stroke="#94a3b8"/>
+    <text x="83" y="440" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.2" font-weight="700">⑥ 语法与解析</text>
+    <text x="83" y="458" text-anchor="middle" fill="#64748b" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">Tool / Reasoning</text>
+
+    <rect x="154" y="416" width="262" height="58" rx="8" fill="#ffffff" stroke="#bfdbfe"/>
+    <text x="164" y="436" fill="#1e3a8a" font-family="Menlo,monospace" font-size="10" font-weight="700">StructuredOutput + ParserEngine</text>
+    <text x="164" y="452" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">与 GPU 前向并行填码 + ConstraintBounds</text>
+    <text x="164" y="467" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">40+ Tool/Reasoning 解析器 + StructuralTag</text>
+
+    <rect x="424" y="416" width="262" height="58" rx="8" fill="#ffffff" stroke="#99f6e4"/>
+    <text x="434" y="436" fill="#115e59" font-family="Menlo,monospace" font-size="10" font-weight="700">GrammarMgr + ReasonerGrammar</text>
+    <text x="434" y="452" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">XGrammar/LLGuidance 异步编译 + 思考门控</text>
+    <text x="434" y="467" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">40+ FunctionCallParser 自动生成语法约束</text>
+
+    <rect x="694" y="416" width="266" height="58" rx="8" fill="#ffffff" stroke="#fde68a"/>
+    <text x="704" y="436" fill="#92400e" font-family="Menlo,monospace" font-size="10" font-weight="700">CapturableGuidedDecoder</text>
+    <text x="704" y="452" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">hostfunc 嵌入 CUDA Graph + 投机回滚</text>
+    <text x="704" y="467" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">ThinkingBudgetLogitsProcessor + 16+ 解析器</text>
+  </g>
+
+  <!-- Stage 7 -->
+  <g filter="url(#te-shadow)">
+    <rect x="20" y="482" width="126" height="58" rx="8" fill="#ffffff" stroke="#94a3b8"/>
+    <text x="83" y="506" text-anchor="middle" fill="#0f172a" font-family="-apple-system,PingFang SC,sans-serif" font-size="11.2" font-weight="700">⑦ 解码与 SSE</text>
+    <text x="83" y="524" text-anchor="middle" fill="#64748b" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">增量流式推送</text>
+
+    <rect x="154" y="482" width="262" height="58" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="164" y="502" fill="#1e3a8a" font-family="Menlo,monospace" font-size="10" font-weight="700">OutputProcessor → StreamProc</text>
+    <text x="164" y="518" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">P0 增量 Detokenizer + stop 即时 Abort</text>
+    <text x="164" y="533" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">ChatStreamProcessor 推送 text/event-stream</text>
+
+    <rect x="424" y="482" width="262" height="58" rx="8" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="434" y="502" fill="#115e59" font-family="Menlo,monospace" font-size="10" font-weight="700">DetokenizerMgr → msgspec SSE</text>
+    <text x="434" y="518" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">独立进程分组解码 + 停用词截断</text>
+    <text x="434" y="533" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">msgspec 零拷贝拼装 + 预跑校验防假 200</text>
+
+    <rect x="694" y="482" width="266" height="58" rx="8" fill="#fffbeb" stroke="#fcd34d"/>
+    <text x="704" y="502" fill="#92400e" font-family="Menlo,monospace" font-size="10" font-weight="700">PostprocWorker 池 → SSE</text>
+    <text x="704" y="518" fill="#334155" font-family="-apple-system,PingFang SC,sans-serif" font-size="10.2">可选多进程卸载解码 / Tool / JSON 拼装</text>
+    <text x="704" y="533" fill="#475569" font-family="-apple-system,PingFang SC,sans-serif" font-size="9.8">客户端断连监听即时取消后端请求</text>
+  </g>
+</svg>
